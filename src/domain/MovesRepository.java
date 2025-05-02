@@ -1,0 +1,57 @@
+package domain;
+
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+
+public class MovesRepository {
+    private static final String ATACKS_ARCHIVE = "resources/csv/movimientos.csv";
+
+    private static TreeMap<Integer,String[]> movimientos = new TreeMap<>();
+
+    public MovesRepository(){
+        List<String> pokemonsIput = null;
+        try {
+            pokemonsIput = Files.readAllLines(Paths.get(ATACKS_ARCHIVE));
+        } catch (IOException e) {
+            Log.record(e);
+        }
+
+        for (int i = 1; i < pokemonsIput.size(); i++) {
+            //ID_0,"Name"_1,"Type1"_3,"Type2"_4,"HP"_6,"Attack"_7,"Defense"_8,"Sp. Atk"_9,"Sp. Def"_10,"Speed"_11,
+            String[] valores = pokemonsIput.get(i).split(",");
+            this.movimientos.put(Integer.parseInt(valores[0]),valores);
+        }
+
+    }
+
+    public ArrayList<String[]> getMoves() {
+        ArrayList<String[]> moves = new ArrayList<>();
+        for (String[] s:this.movimientos.values()) {
+            //ID_0,"Name"_1,"Description"_3,"Type"_4,"Class"_6,"Power"_7,"Presicion"_8,"PP"_9
+            moves.add(s);
+        }
+        return moves;
+    }
+    public String[] getAttacksId(int id) {
+        if (movimientos.containsKey(id)) {
+            return movimientos.get(id);
+        } else {
+            return null;
+        }
+    }
+    public String getAttackId(int id) {
+        if (movimientos.containsKey(id)) {
+        	String[] attack = getAttacksId(id);
+        	
+            return attack[0]+" - "+attack[1]+" - "+attack[3]+" - "+attack[4];
+        } else {
+            return null;
+        }
+    }
+}
+
