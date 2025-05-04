@@ -17,14 +17,14 @@
 16,Tornado,Crea un tornado con las alas y lo lanza contra el objetivo.,Volador,especial,40,100,35
 17,Ataque Ala,Golpea al objetivo con unas grandes alas.,Volador,físico,60,100,35
 18,Remolino,Se lleva al objetivo  que es cambiado por otro Pokémon. Si es un Pokémon salvaje acaba el combate.,Normal,estado,,100,20
-19,Vuelo,Primer turno: vuela. Segundo turno: ataca. Fuera de combate, permite ir a sitios ya conocidos.,Volador,físico,90,95,15
+19,Vuelo,Primer turno: vuela. Segundo turno: ataca. Fuera de combate permite ir a sitios ya conocidos.,Volador,físico,90,95,15
 20,Atadura,Ata y oprime de cuatro a cinco turnos.,Normal,físico,15,85,20
 21,Atizar,Golpea con las extremidades.,Normal,físico,80,75,20
 22,Látigo Cepa,Azota al objetivo con ramas finas.,Planta,físico,45,100,25
 23,Pisotón,Tremendo pisotón que puede hacer retroceder al objetivo.,Normal,físico,65,100,20
 24,Doble Patada,Una patada doble. Golpea dos veces.,Lucha,físico,30,100,30
 25,Megapatada,Patada de extrema fuerza.,Normal,físico,120,75,5
-26,Patada Salto,Da un salto y pega una patada. Si falla, se lesiona.,Lucha,físico,100,95,10
+26,Patada Salto,Da un salto y pega una patada. Si falla se lesiona.,Lucha,físico,100,95,10
 27,Patada Giro,Da una patada rápida y circular. Puede hacer retroceder al objetivo.,Lucha,físico,60,85,15
 28,Ataque Arena,Arroja arena a la cara y baja la Precisión.,Tierra,estado,,100,15
 29,Golpe Cabeza,Lanza un potente cabezazo que puede hacer retroceder al objetivo.,Normal,físico,70,100,15
@@ -65,7 +65,7 @@
 64,Picotazo,Ensarta al objetivo con un cuerno o pico punzante.,Volador,físico,35,100,35
 65,Pico Taladro,Picotazo giratorio y perforador muy potente.,Volador,físico,80,100,20
 66,Sumisión,Tira al objetivo al suelo. También hiere al agresor.,Lucha,físico,80,80,20
-67,Patada Baja,Patada baja. Cuanto más pesa el objetivo, más daño causa.,Lucha,físico,80,100,20
+67,Patada Baja,Patada baja. Cuanto más pesa el objetivo más daño causa.,Lucha,físico,80,100,20
 68,Contraataque,Devuelve un golpe físico por duplicado.,Lucha,físico,80,100,20
 69,Mov. Sísmico,La gravedad derriba al objetivo. Se restarán tantos PS como nivel tenga el agresor.,Lucha,físico,80,100,20
 70,Fuerza,Potente puñetazo. Fuera de combate sirve para mover rocas.,Normal,físico,80,100,15
@@ -173,7 +173,7 @@
 172,Rueda Fuego,Ataca envuelto en fuego. Puede causar quemaduras.,Fuego,físico,60,100,25
 173,Ronquido,Fuerte ronquido que solo puede usarse dormido. Puede hacer retroceder al objetivo.,Normal,especial,50,100,15
 174,Maldición,Un movimiento que tiene efectos distintos si el usuario es de tipo Fantasma o no.,Fantasma,estado,,100,10
-175,Azote,Ataque frenético. Cuantos menos PS tenga el usuario, más daño producirá.,Normal,físico,80,100,15
+175,Azote,Ataque frenético. Cuantos menos PS tenga el usuario más daño producirá.,Normal,físico,80,100,15
 176,Conversión2,El usuario cambia de tipo para hacerse resistente al último tipo de movimiento usado por el objetivo.,Normal,estado,,100,30
 177,Aerochorro,Lanza un chorro de aire que suele dar un golpe crítico.,Volador,especial,100,95,5
 178,Esporagodón,Adhiere esporas a los rivales para reducir mucho su Velocidad.,Planta,estado,,100,40
@@ -193,7 +193,7 @@
 192,Electrocañón,Dispara una descarga eléctrica que causa daño y parálisis.,Eléctrico,especial,120,50,5
 193,Profecía,Permite atacar con cualquier movimiento a objetivos de tipo Fantasma y golpear a Pokémon evasivos.,Normal,estado,,100,40
 194,Mismo Destino,Si el usuario se debilita por un ataque rival antes de usar otro movimiento el Pokémon rival se debilitará también.,Fantasma,estado,,100,5
-195,Canto Mortal,Si un Pokémon escucha este canto y no es cambiado por otro en tres turnos, acaba debilitándose.,Normal,estado,,100,5
+195,Canto Mortal,Si un Pokémon escucha este canto y no es cambiado por otro en tres turnos acaba debilitándose.,Normal,estado,,100,5
 196,Viento Hielo,Ataque con aire helado que baja la Velocidad de los rivales.,Hielo,especial,55,95,15
 197,Detección,Frena todos los ataques pero puede fallar si se usa repetidamente.,Lucha,estado,,100,5
 198,Ataque Óseo,Hueso en ristre aporrea al objetivo de dos a cinco veces.,Tierra,físico,25,90,10
@@ -231,7 +231,7 @@
 230,Dulce Aroma,Un dulce aroma engatusa al objetivo por lo que se reduce mucho su Evasión. En la hierba alta sirve para atraer a Pokémon salvajes.,Normal,estado,,100,20
 231,Cola Férrea,Ataca con una cola férrea y puede bajar la Defensa del objetivo.,Acero,físico,100,75,15
 232,Garra Metal,Ataque con garras de acero que puede aumentar el Ataque del usuario.,Acero,físico,50,95,35
-233,Tiro Vital,El usuario ataca el último, pero no falla.,Lucha,físico,70,100,10
+233,Tiro Vital,El usuario ataca el último pero no falla.,Lucha,físico,70,100,10
 234,Sol Matinal,Restaura PS del usuario. La cantidad varía según el tiempo que haga.,Normal,estado,,100,5
 235,Síntesis,Restaura PS del usuario. La cantidad varía según el tiempo que haga.,Planta,estado,,100,5
 236,Luz Lunar,Restaura PS del usuario. La cantidad varía según el tiempo que haga.,Hada,estado,,100,5
@@ -249,7 +249,7 @@
 248,Premonición,Concentra energía psíquica para golpear al objetivo dos turnos después.,Psíquico,especial,120,100,10
 249,Golpe Roca,Ataque con los puños. Puede bajar la Defensa del objetivo. Puede romper rocas fuera del combate.,Lucha,físico,40,100,15
 250,Torbellino,Una tromba de agua atrapa al objetivo durante cuatro o cinco turnos.,Agua,especial,35,85,15
-251,Paliza,Ataque de todo el equipo Pokémon. Cuantos más haya, más veces se atacará.,Siniestro,físico,80,100,10
+251,Paliza,Ataque de todo el equipo Pokémon. Cuantos más haya más veces se atacará.,Siniestro,físico,80,100,10
 252,Sorpresa,Ataca primero y hace retroceder al objetivo. Solo sirve en el primer turno.,Normal,físico,40,100,10
 253,Alboroto,Ataca de forma alborotada durante tres turnos. Mantiene despiertos a todos.,Normal,especial,90,100,10
 254,Reserva,Acumula energía y sube la Defensa y la Defensa Especial. Puede utilizarse hasta tres veces.,Normal,estado,,100,20

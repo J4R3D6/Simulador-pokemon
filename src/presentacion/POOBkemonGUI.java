@@ -27,6 +27,7 @@ public class POOBkemonGUI extends JFrame {
 	private ArrayList<String> players = new ArrayList<>(); //[trainer1, trainer2]
 	private HashMap<String,ArrayList<Integer>> pokemones = new HashMap<>(); //<trainer, pokemones(int)>
 	private HashMap<String,ArrayList<Integer>> moves = new HashMap<>(); //trianer, moves (en el orden de los pokemones)>
+    private HashMap<String,ArrayList<int[]>> items = new HashMap<>();
 	//private POOBkemon poobkemon;
 	//
 	private JPanel IntroductionPanel;
@@ -59,12 +60,11 @@ public class POOBkemonGUI extends JFrame {
     private JButton machine4;
     private JButton backButtonMenu;
     //
-    private static final String MENU2 = "resources/menu/";
     private static final String selectionPanel = "resources/menu/selectionPanel.png";
     private static final String CHARACTER = "resources/personaje/";
     private static final String ITEMS = "resources/Items/";
     private static final String BUTTONS = "resources/menu/buttons/";
-    private static final String MENU = "resources/menu/menuPrincipal.png";
+    private static final String MENU = "resources/menu/";
     private static final String INTRODUCTION = "resources/menu/start.png";
     private static final String POKEDEX = "resources/menu/pokedex.png";
     private static final String POKEMONES =  "resources/pokemones/Emerald/";
@@ -76,6 +76,8 @@ public class POOBkemonGUI extends JFrame {
         setTitle("POOBkemon");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(750, 550);
+        setMinimumSize(new Dimension(750, 550));
+        setMaximumSize(new Dimension(750, 550));
         setLocationRelativeTo(null);
         prepareElements();
         prepareActions();   
@@ -155,7 +157,7 @@ public class POOBkemonGUI extends JFrame {
         IntroductionPanel.requestFocusInWindow(); // Fuerza el foco
     }
     private void prepareMenuPanel() {
-    	menuPanel = new ImagePanel(new BorderLayout(), MENU);
+    	menuPanel = new ImagePanel(new BorderLayout(), MENU+"menuPrincipal.png");
         prepareElementsMenuPanel();
     }
     private void prepareElementsMenuPanel() {
@@ -501,25 +503,27 @@ public class POOBkemonGUI extends JFrame {
     	gameMode.add(centerPanel, BorderLayout.CENTER);
     	gameMode.add(izqPrincipal, BorderLayout.WEST);
     }
-    
     private void prepareActionsGameMode() {
     	onePlayer.addActionListener(e -> {
     		String machine = chooseMachine("Escoge maquina","Por escoger una maquina");
     		createTrainers("Player1",machine);
+            prepareItem();
 			choosePokemon();
-    		
     		});
     	twoPlayers.addActionListener(e -> {
     		createTrainers("Player1","Player2");
     		if(!booleanInput("Quiere inicial partida en survival?")){
+                prepareItem();
     			choosePokemon();
     		}else {
     			createDataForGame();
+                showTimer("survival");
     		}});
     	machines.addActionListener(e -> {
     		String machine1 = chooseMachine("Escoge maquina1","Por escoger una maquina \n(En caso de ser cancelado se tomara Defensive)");
     		String machine2 = chooseMachine("Escoge maquina2","Por escoger una maquina \n(En caso de ser cancelado se tomara Defensive)");
     		createTrainers(machine1+"1",machine2+"2");
+            prepareItem();
     		choosePokemon();
     		});
     	backButtonMenu.addActionListener(e -> refresh(menuPanel));
@@ -556,7 +560,7 @@ public class POOBkemonGUI extends JFrame {
         panelSur.setOpaque(false);
         panelSur.add(new JLabel(" "), BorderLayout.SOUTH);
         panelSur.add(backButtonGameMode, BorderLayout.CENTER);
-        panelSur.add(new JLabel(" "), BorderLayout.WEST);
+        //panelSur.add(new JLabel(" "), BorderLayout.WEST);
 	    JPanel leftPanel = new JPanel(new BorderLayout());
 	    leftPanel.setOpaque(false);
 	    leftPanel.setPreferredSize(new Dimension((int) (getWidth() * 0.25), getHeight()));
@@ -568,7 +572,7 @@ public class POOBkemonGUI extends JFrame {
         JLabel characterImage = new JLabel(scaledCharacter);
         characterImage.setHorizontalAlignment(JLabel.CENTER);
         
-        ImageIcon originalball = new ImageIcon(MENU2 + "ball_display_" + selectedPokemons1.size() + ".png");
+        ImageIcon originalball = new ImageIcon(MENU + "ball_display_" + selectedPokemons1.size() + ".png");
         ImageIcon scaledoriginalball = scaleIcon(originalball, 141, 21);
         JLabel counterImage = new JLabel(scaledoriginalball);
         counterImage.setHorizontalAlignment(JLabel.CENTER);
@@ -578,12 +582,12 @@ public class POOBkemonGUI extends JFrame {
         JLabel characterImage2 = new JLabel(scaledCharacter2);
         characterImage2.setHorizontalAlignment(JLabel.CENTER);
         
-        ImageIcon originalball2 = new ImageIcon(MENU2 + "ball_display_" + selectedPokemons2.size() + ".png");
+        ImageIcon originalball2 = new ImageIcon(MENU + "ball_display_" + selectedPokemons2.size() + ".png");
         ImageIcon scaledoriginalball2 = scaleIcon(originalball2, 141, 21);
         JLabel counterImage2 = new JLabel(scaledoriginalball2);
         counterImage2.setHorizontalAlignment(JLabel.CENTER);
 	  
-        JButton doneButton = crearBotonEstilizado("Listo", new Rectangle(275, 100, 200, 60), new Color(240, 240, 240, 200));
+        JButton doneButton = crearBotonEstilizado("Listo", new Rectangle(275, 100, 100, 60), new Color(240, 240, 240, 200));
         doneButton.setBackground(new Color(200, 200, 200, 150));
         doneButton.setVisible(false);
         JPanel rightContent = new JPanel(new GridBagLayout());
@@ -603,7 +607,7 @@ public class POOBkemonGUI extends JFrame {
 	    JPanel centerPanel = new JPanel(new BorderLayout());
 	    centerPanel.setOpaque(false);
 	
-	    ImagePanel gridPanel = new ImagePanel(new GridLayout(0, 5, 0, 0), MENU2 + "blue.png");
+	    ImagePanel gridPanel = new ImagePanel(new GridLayout(0, 5, 0, 0), MENU + "blue.png");
 	
 	    JScrollPane scrollPane = new JScrollPane(gridPanel);
 	    scrollPane.setPreferredSize(new Dimension(300, 400));
@@ -660,7 +664,7 @@ public class POOBkemonGUI extends JFrame {
 	            addButton.addActionListener(ev -> {
 	                if (selectedPokemons1.size() < 6) {
 	                    selectedPokemons1.add(pokemonId);
-	                    ImageIcon originalMoreball = new ImageIcon(MENU2 + "ball_display_" + selectedPokemons1.size() + ".png");
+	                    ImageIcon originalMoreball = new ImageIcon(MENU + "ball_display_" + selectedPokemons1.size() + ".png");
 	                    Image scaledMoreball = originalMoreball.getImage().getScaledInstance(141, 21, Image.SCALE_SMOOTH);
 	                    counterImage.setIcon(new ImageIcon(scaledMoreball));
 	                    
@@ -671,18 +675,18 @@ public class POOBkemonGUI extends JFrame {
 	                        rightContentPanel.add(doneButton, BorderLayout.SOUTH);
 	                        rightContentPanel.revalidate();
 	                        rightContentPanel.repaint();
-	                        gridPanel.setBackgroundImage(MENU2 + "red.png");
+	                        gridPanel.setBackgroundImage(MENU + "red.png");
 	                        turnLabel.setText("Jugador 2 elige");
 	                        turnLabel.setForeground(new Color(255, 100, 100));
 	                    }
 	                } else if (selectedPokemons1.size() == 6 && selectedPokemons2.size() < 6) {
 	                    selectedPokemons2.add(pokemonId);
-	                    ImageIcon originalMoreball = new ImageIcon(MENU2 + "ball_display_" + selectedPokemons2.size() + ".png");
+	                    ImageIcon originalMoreball = new ImageIcon(MENU + "ball_display_" + selectedPokemons2.size() + ".png");
 	                    Image scaledMoreball = originalMoreball.getImage().getScaledInstance(141, 21, Image.SCALE_SMOOTH);
 	                    counterImage2.setIcon(new ImageIcon(scaledMoreball));
 	                    
 	                    if (selectedPokemons2.size() == 6 && !doneButton.isVisible()) {
-	                    	gridPanel.setBackgroundImage(MENU2 + "white.png");
+	                    	gridPanel.setBackgroundImage(MENU + "white.png");
 	                        turnLabel.setText("Presione Listo");
 	                        turnLabel.setForeground(Color.white);
 	                        doneButton.setVisible(true);
@@ -751,7 +755,7 @@ public class POOBkemonGUI extends JFrame {
         panelSur.setOpaque(false);
         panelSur.add(new JLabel(" "), BorderLayout.SOUTH);
         panelSur.add(backButtonGameMode, BorderLayout.CENTER);
-        panelSur.add(new JLabel(" "), BorderLayout.WEST);
+        //panelSur.add(new JLabel(" "), BorderLayout.WEST);
 
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.setOpaque(false);
@@ -789,7 +793,7 @@ public class POOBkemonGUI extends JFrame {
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
 
-        ImagePanel gridPanel = new ImagePanel(new GridLayout(0, 1, 0, 0), MENU2 + "blue.png");
+        ImagePanel gridPanel = new ImagePanel(new GridLayout(0, 1, 0, 0), MENU + "blue.png");
 
         JScrollPane scrollPane = new JScrollPane(gridPanel);
         scrollPane.setPreferredSize(new Dimension(300, 400));
@@ -828,7 +832,7 @@ public class POOBkemonGUI extends JFrame {
         final int[] pokemonActualIndex = {0};
 
         for (int i = 1; i <= 354; i++) {
-            final int pokemonId = i;
+            final Integer pokemonId = i;
 
             ImageIcon original = new ImageIcon(POKEMONES + "Normal/" + pokemones.get(0) + ".png");
             Image scaled = original.getImage().getScaledInstance(138, 138, Image.SCALE_SMOOTH);
@@ -868,7 +872,7 @@ public class POOBkemonGUI extends JFrame {
                             rightContentPanel.add(doneButton, BorderLayout.SOUTH);
                             rightContentPanel.revalidate();
                             rightContentPanel.repaint();
-                            gridPanel.setBackgroundImage(MENU2 + "red.png");
+                            gridPanel.setBackgroundImage(MENU + "red.png");
                             turnLabel.setText("Jugador 2 elige");
                             turnLabel.setForeground(new Color(255, 100, 100));
                         }
@@ -886,7 +890,7 @@ public class POOBkemonGUI extends JFrame {
                             }
                         }
                         if (selectedMoves2.size() == 24 && !doneButton.isVisible()) {
-                            gridPanel.setBackgroundImage(MENU2 + "white.png");
+                            gridPanel.setBackgroundImage(MENU + "white.png");
                             turnLabel.setText("Presione Listo");
                             turnLabel.setForeground(Color.white);
                             doneButton.setVisible(true);
@@ -906,7 +910,7 @@ public class POOBkemonGUI extends JFrame {
         backButtonGameMode.addActionListener(e -> choosePokemon());
         doneButton.addActionListener(ev -> {
             assingMoves(selectedMoves1, selectedMoves2);
-            //chooseItems();
+            chooseItems();
         });
         chooseMovesPanel.add(leftPanel, BorderLayout.WEST);
         chooseMovesPanel.add(centerPanel, BorderLayout.CENTER);
@@ -916,6 +920,206 @@ public class POOBkemonGUI extends JFrame {
         revalidate();
         repaint();
     }
+    private void chooseItems() {
+        JPanel chooseItemsPanel = new ImagePanel(new BorderLayout(), selectionPanel);
+        chooseItemsPanel.setOpaque(false);
+        //
+        JLabel turnLabel = new JLabel("Jugador 1 elige", JLabel.CENTER);
+        turnLabel.setOpaque(true);  // Esto es crucial para que el fondo sea visible
+        turnLabel.setBackground(new Color(50, 50, 50));
+        turnLabel.setFont(cargarFuentePixel(18));
+        turnLabel.setForeground(Color.blue);
+        chooseItemsPanel.add(turnLabel, BorderLayout.NORTH);
+        //
+        JButton backButtonGameMode = crearBotonEstilizado("Back",new Rectangle(275, 100, 20, 60),new Color(240, 240, 240, 200));
+        //
+        JPanel panelSur = new JPanel(new BorderLayout());
+        panelSur.setOpaque(false);
+        panelSur.add(new JLabel(" "), BorderLayout.SOUTH);
+        panelSur.add(backButtonGameMode, BorderLayout.CENTER);
+        //panelSur.add(new JLabel(" "), BorderLayout.WEST);
+        JPanel leftPanel = new JPanel(new BorderLayout());
+        leftPanel.setOpaque(false);
+        leftPanel.setPreferredSize(new Dimension((int) (getWidth() * 0.25), getHeight()));
+        leftPanel.add(panelSur, BorderLayout.SOUTH);
+        //
+        ImageIcon Character = new ImageIcon(CHARACTER + "Bruno.png");
+        ImageIcon scaledCharacter = scaleIcon(Character, 192, 192);
+        JLabel characterImage = new JLabel(scaledCharacter);
+        characterImage.setHorizontalAlignment(JLabel.CENTER);
+
+        ImageIcon Character2 = new ImageIcon(CHARACTER + "Aura.png");
+        ImageIcon scaledCharacter2 = scaleIcon(Character2, 192, 192);
+        JLabel characterImage2 = new JLabel(scaledCharacter2);
+        characterImage2.setHorizontalAlignment(JLabel.CENTER);
+
+        JButton doneButton = crearBotonEstilizado("Listo", new Rectangle(275, 100, 100, 60), new Color(240, 240, 240, 200));
+        doneButton.setBackground(new Color(200, 200, 200, 150));
+
+        JPanel rightContent = new JPanel(new GridBagLayout());
+        rightContent.setOpaque(false);
+        JPanel rightContentPanel = new JPanel(new BorderLayout());
+        rightContentPanel.setOpaque(false);
+        rightContentPanel.add(characterImage,BorderLayout.NORTH);
+        rightContentPanel.add(doneButton,BorderLayout.SOUTH);
+        rightContent.add(rightContentPanel);
+
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.setOpaque(false);
+        rightPanel.setPreferredSize(new Dimension((int) (getWidth() * 0.25), getHeight()));
+        rightPanel.add(rightContent,BorderLayout.CENTER);
+        //
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setOpaque(false);
+
+        ImagePanel gridPanel = new ImagePanel(new GridLayout(0, 3, 0, 0), MENU + "blue.png");
+
+        JScrollPane scrollPane = new JScrollPane(gridPanel);
+        scrollPane.setPreferredSize(new Dimension(300, 400));
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        InputMap inputMap = scrollPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = scrollPane.getActionMap();
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), "up");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "down");
+        actionMap.put("up", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JScrollBar vertical = scrollPane.getVerticalScrollBar();
+                vertical.setValue(vertical.getValue() - vertical.getUnitIncrement());
+            }
+        });
+        actionMap.put("down", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JScrollBar vertical = scrollPane.getVerticalScrollBar();
+                vertical.setValue(vertical.getValue() + vertical.getUnitIncrement());
+            }
+        });
+
+        JPanel scrollContainer = new JPanel();
+        scrollContainer.setOpaque(false);
+        scrollContainer.setLayout(new BoxLayout(scrollContainer, BoxLayout.Y_AXIS));
+        scrollContainer.add(Box.createVerticalGlue());
+        scrollContainer.add(scrollPane);
+        scrollContainer.add(Box.createVerticalGlue());
+        centerPanel.add(scrollContainer, BorderLayout.CENTER);
+        //botones item
+        final int[] contador = {0};
+        JButton itemButton1 = createImageButton("x2", ITEMS+"potion.png",100,100);
+        JButton itemButton2= createImageButton("x2", ITEMS+"superPotion.png",100,100);
+        JButton itemButton3 = createImageButton("x2", ITEMS+"hyperPotion.png",100,100);
+        JButton itemButton4 = createImageButton("x1", ITEMS+"revive.png",100,100);
+        itemButton1.addActionListener(ev -> {
+            String currentPlayer = players.get(contador[0]);
+            if(this.items.get(currentPlayer).get(0)[1] < 2){
+                assingItem(contador[0], 0);
+                itemButton1.setText("x"+(2-this.items.get(currentPlayer).get(0)[1]));
+            } else {
+                mostrarError("Maximo de item", "Ya tiene el maximo de este item");
+            }
+        });
+        itemButton2.addActionListener(ev -> {
+            String currentPlayer = players.get(contador[0]);
+            if(this.items.get(currentPlayer).get(1)[1] < 2){
+                assingItem(contador[0], 1);
+                itemButton2.setText("x"+(2-this.items.get(currentPlayer).get(1)[1]));
+            } else {
+                mostrarError("Maximo de item", "Ya tiene el maximo de este item");
+            }
+        });
+        itemButton3.addActionListener(ev -> {
+            String currentPlayer = players.get(contador[0]);
+            if(this.items.get(currentPlayer).get(2)[1] < 2){
+                assingItem(contador[0], 2);
+                itemButton3.setText("x"+(2-this.items.get(currentPlayer).get(2)[1]));
+            } else {
+                mostrarError("Maximo de item", "Ya tiene el maximo de este item");
+            }
+        });
+        itemButton4.addActionListener(ev -> {
+            String currentPlayer = players.get(contador[0]);
+            if(this.items.get(currentPlayer).get(3)[1] < 1){
+                assingItem(contador[0], 3);
+                itemButton4.setText("x"+(1-this.items.get(currentPlayer).get(3)[1]));
+            } else {
+                mostrarError("Maximo de item", "Ya tiene el maximo de este item");
+            }
+        });
+
+        gridPanel.add(itemButton1);
+        gridPanel.add(itemButton2);
+        gridPanel.add(itemButton3);
+        gridPanel.add(itemButton4);
+        backButtonGameMode.addActionListener(e -> chooseMoves());
+        doneButton.addActionListener(ev -> {
+            if(contador[0] == 0){
+                rightContentPanel.removeAll();
+                itemButton1.setText("x2");
+                itemButton2.setText("x2");
+                itemButton3.setText("x2");
+                itemButton4.setText("x1");
+                gridPanel.repaint();
+                rightContentPanel.add(characterImage2, BorderLayout.NORTH);
+                rightContentPanel.add(doneButton, BorderLayout.SOUTH);
+                rightContentPanel.revalidate();
+                rightContentPanel.repaint();
+                gridPanel.setBackgroundImage(MENU + "red.png");
+                turnLabel.setText("Jugador 2 elige");
+                turnLabel.setForeground(new Color(255, 100, 100));
+                contador[0]++;
+            }else{
+                showTimer("POOBkemon");
+            }
+        });
+        chooseItemsPanel.add(leftPanel, BorderLayout.WEST);
+        chooseItemsPanel.add(centerPanel, BorderLayout.CENTER);
+        chooseItemsPanel.add(rightPanel, BorderLayout.EAST);
+
+        setContentPane(chooseItemsPanel);
+        revalidate();
+        repaint();
+    }
+    private void showTimer(String mode) {
+        JPanel timerPanel = new ImagePanel(null, MENU + "3.png");
+        refresh(timerPanel);
+
+        Timer timer1 = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((ImagePanel) timerPanel).setBackgroundImage(MENU + "2.png");
+                timerPanel.repaint(); // Redibuja para aplicar el cambio visual
+            }
+        });
+        Timer timer2 = new Timer(2000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((ImagePanel) timerPanel).setBackgroundImage(MENU + "1.png");
+                timerPanel.repaint();
+            }
+        });
+
+        Timer timer3 = new Timer(3000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("battle");
+                // Aquí podrías llamar a tu método que inicia la batalla
+                // e.g., startBattle();
+            }
+        });
+
+        timer1.setRepeats(false);
+        timer2.setRepeats(false);
+        timer3.setRepeats(false);
+
+        timer1.start();
+        timer2.start();
+        timer3.start();
+    }
+
     // ========== Métodos auxiliares para diferentes botones ========== //
     private JButton createImageButton(String imagePath, int x, int y, int width, int height) {
         JButton button = new JButton();
@@ -936,6 +1140,28 @@ public class POOBkemonGUI extends JFrame {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         
+        return button;
+    }
+    private JButton createImageButton(String text, String imagePath, int width, int height) {
+        JButton button = new JButton(text);
+
+        ImageIcon icon = new ImageIcon(imagePath);
+        Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        button.setIcon(new ImageIcon(scaledImage));
+
+        button.setHorizontalTextPosition(SwingConstants.CENTER);
+        button.setVerticalTextPosition(SwingConstants.CENTER);
+        button.setFont(cargarFuentePixel(20));
+        button.setForeground(Color.BLACK);
+
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setOpaque(false);
+
+        button.setPreferredSize(new Dimension(width, height));
+        button.setMaximumSize(new Dimension(width, height));
+
         return button;
     }
     private boolean booleanInput(String m){
@@ -982,7 +1208,6 @@ public class POOBkemonGUI extends JFrame {
         }
         return boton;
     }
-    
     private JButton crearBotonEstilizado(String texto, Rectangle bounds, Color color) {
         JButton boton = new JButton(texto) {
             @Override
@@ -1016,7 +1241,6 @@ public class POOBkemonGUI extends JFrame {
         
         return boton;
     }
-    
     private static Font cargarFuentePixel(float tamaño) {
         try {
             Font fuenteBase = Font.createFont(Font.TRUETYPE_FONT, 
@@ -1031,13 +1255,11 @@ public class POOBkemonGUI extends JFrame {
             return new Font("Monospaced", Font.BOLD, (int)tamaño);
         }
     }
-    
     private ImageIcon scaleIcon(ImageIcon icon, int width, int height) {
         Image img = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(img);
     }
     //Metodos de los botones.
-    
     private void actualizarTextoDificultad() {
     	
     	random = !random;
@@ -1068,8 +1290,6 @@ public class POOBkemonGUI extends JFrame {
         });
         timer.start();
     }
-    
-    
     private String chooseMachine(String tittle, String mensaje) {
         String[] opciones = {"Defensive", "Offensive", "Random", "Expert"};
         
@@ -1094,17 +1314,14 @@ public class POOBkemonGUI extends JFrame {
     private void startNewGame() {
     	refresh(gameMode);
     }
-    
     private void openGame() {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(this);
     }
-    
     private void saveGame() {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showSaveDialog(this);
     }
-    
     private void confirmExit(){
         int option = JOptionPane.showConfirmDialog(
                 this,
@@ -1121,6 +1338,7 @@ public class POOBkemonGUI extends JFrame {
     private void createDataForGame(){
     	createPokemones();
     	createMoves();
+        prepareItem();
     }
     private void createPokemones(){
     	ArrayList<Integer> pokemones1 = new ArrayList<>();
@@ -1141,6 +1359,23 @@ public class POOBkemonGUI extends JFrame {
     	
     	assingMoves(pokemons1_moves, pokemons2_moves);
     }
+    private void prepareItem(){
+        for(int i =0 ; i<2; i++) {
+            ArrayList<int[]> items = new ArrayList<>();
+            int[] item1 ={0, 0};
+            items.add(item1);
+            int[] item2 ={0, 0};
+            items.add(item2);
+            int[] item3 ={0, 0};
+            items.add(item3);
+            int[] item4 ={0, 0};
+            items.add(item4);
+            items.get(0)[0]= 20;
+            items.get(1)[0]= 50;
+            items.get(2)[0]= 100;
+            this.items.put(this.players.get(i), items);
+        }
+    }
     public static int getNumerRandom(int limit) {
 		Random random = new Random();
         return random.nextInt(limit) + 1;
@@ -1149,7 +1384,6 @@ public class POOBkemonGUI extends JFrame {
     	players.add(trainer1);
     	players.add(trainer2);
     }
-    
     private void assingPokemon(ArrayList<Integer> trainer1, ArrayList<Integer> trainer2){
     	pokemones.put(players.get(0),trainer1);
     	pokemones.put(players.get(1),trainer2);
@@ -1158,13 +1392,11 @@ public class POOBkemonGUI extends JFrame {
     	moves.put(players.get(0),trainer1);
     	moves.put(players.get(1),trainer2);
     }
-    // 
-    private void mostrarError(String titulo, String ruta, Exception e) {
-    	Log.record(e);
-        String mensaje = titulo + ":\n" + e.getMessage() + 
-                       "\nRuta intentada: " + new File(ruta).getAbsolutePath();
-        JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+    private void assingItem(int player, int item){
+        ArrayList<int[]> items = this.items.get(players.get(player));
+        items.get(item)[1]++;
     }
+    //
     private void mostrarError(String titulo, String error) {
         String mensaje = titulo + ":\n"+ error;
         JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);

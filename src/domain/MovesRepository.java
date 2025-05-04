@@ -47,8 +47,12 @@ public class MovesRepository {
     public String getAttackId(int id) {
         if (movimientos.containsKey(id)) {
         	String[] attack = getAttacksId(id);
-        	
-            return attack[0]+" - "+attack[1]+" - "+attack[3]+" - "+attack[4];
+            if(attack[0].length()==1) {
+                attack[0]= "00"+attack[0];
+            }else if(attack[0].length()==2) {
+                attack[0]=  "0"+attack[0];
+            }
+            return attack[0]+" "+attack[1]+" - "+attack[3]+" - "+attack[4];
         } else {
             return null;
         }
