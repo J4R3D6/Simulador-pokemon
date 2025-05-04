@@ -4,15 +4,16 @@ import java.util.List;
 
 public class Trainer {
 
-	private int id;
-
 	private Pokemon currentPokemon;
 
 	private BagPack bagPack;
 
 	private Team team;
 
-	public Trainer(Team team, BagPack bagPack) throws POOBkemonException {
+	private int id;
+
+	public Trainer(int id,Team team, BagPack bagPack) throws POOBkemonException {
+
 		// Validación de parámetros nulos
 		if (team == null) {
 			throw new POOBkemonException(POOBkemonException.NULL_TEAM);
@@ -38,11 +39,15 @@ public class Trainer {
 		}
 
 		firstPokemon.setActive(true);
+
+		this.id = id;
 		this.team = team;
 		this.bagPack = bagPack;
 		this.currentPokemon = firstPokemon;
 	}
-
+	public int getId() {
+		return id;
+	}
 	/**
 	 * Cambia el pokémon activo al pokémon con el ID especificado.
 	 * Si ocurre un error, mantiene el pokémon actual activo.

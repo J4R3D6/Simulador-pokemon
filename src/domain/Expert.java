@@ -4,8 +4,8 @@ public class Expert extends Machine {
 
 	private POOBkemon poobkemon;
 
-	public Expert(Team team, BagPack bagPack, POOBkemon poobkemon) throws POOBkemonException {
-        super(team,bagPack);
+	public Expert(int id,Team team, BagPack bagPack, POOBkemon poobkemon) throws POOBkemonException {
+        super(id,team,bagPack);
 		this.poobkemon = poobkemon;
 	}
 	@Override

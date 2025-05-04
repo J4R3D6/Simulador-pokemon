@@ -48,6 +48,14 @@ public class Team {
 
 		return pokemonToActivate;
 	}
+	public boolean allFainted(){
+		for (Pokemon pokemon : pokemons) {
+			if(!pokemon.getWeak()) {
+				return false;
+			}
+		}
+		return true;
+	}
 	public Pokemon getPokemon(int id) {
 		return null;
 	}

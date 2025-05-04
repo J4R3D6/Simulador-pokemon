@@ -35,7 +35,8 @@ public class TrainerTest {
                 attacksIds, false);
 
         // Debilita el pokémon
-        faintedPokemon.getDamage(999, ataque1);
+        //(Fundiona bien el test pero lo uso para comprobar el csv) solo da el multiplicador por default, no coinciden idiomas en los ataques y pokemones.
+        faintedPokemon.getDamage(2, 2);
 
         ArrayList<Pokemon> pokemons = new ArrayList<>();
         pokemons.add(healthyPokemon);
@@ -59,36 +60,38 @@ public class TrainerTest {
     // Tests de Constructor
     @Test(expected = POOBkemonException.class)
     public void testConstructorWithNullTeam() throws POOBkemonException {
-        new Trainer(null, validBagPack);
+        new Trainer(1,null, validBagPack);
     }
 
     @Test(expected = POOBkemonException.class)
     public void testConstructorWithNullBagPack() throws POOBkemonException {
-        new Trainer(validTeam, null);
+        new Trainer(1,validTeam, null);
     }
 
     @Test(expected = POOBkemonException.class)
     public void testConstructorWithEmptyTeam() throws POOBkemonException {
-        new Trainer(new Team(new ArrayList<>()), validBagPack);
+        new Trainer(1,new Team(new ArrayList<>()), validBagPack);
     }
 
     @Test(expected = POOBkemonException.class)
     public void testConstructorWithNullPokemon() throws POOBkemonException {
         List<Pokemon> pokemons = new ArrayList<>();
         pokemons.add(null);
-        new Trainer(new Team((ArrayList<Pokemon>) pokemons), validBagPack);
+        new Trainer(1,new Team((ArrayList<Pokemon>) pokemons), validBagPack);
     }
 
     @Test(expected = POOBkemonException.class)
     public void testConstructorWithFaintedFirstPokemon() throws POOBkemonException {
         List<Pokemon> pokemons = new ArrayList<>();
         pokemons.add(faintedPokemon);
-        new Trainer(new Team((ArrayList<Pokemon>) pokemons), validBagPack);
+        System.out.println(faintedPokemon.currentHealth);
+        System.out.println(faintedPokemon.maxHealth);
+        new Trainer(1,new Team((ArrayList<Pokemon>) pokemons), validBagPack);
     }
 
     @Test
     public void testValidConstructor() throws POOBkemonException {
-        Trainer trainer = new Trainer(validTeam, validBagPack);
+        Trainer trainer = new Trainer(1,validTeam, validBagPack);
 
         assertNotNull(trainer);
         assertEquals(healthyPokemon, trainer.getCurrentPokemon());
@@ -99,7 +102,7 @@ public class TrainerTest {
     // Tests de changePokemon
     @Test
     public void testChangePokemonToValidId() throws POOBkemonException {
-        Trainer trainer = new Trainer(validTeam, validBagPack);
+        Trainer trainer = new Trainer(1,validTeam, validBagPack);
         Pokemon originalPokemon = trainer.getCurrentPokemon();
         Pokemon newPokemon = validTeam.getPokemons().get(1); // Cambiar al segundo pokémon
 
@@ -118,7 +121,7 @@ public class TrainerTest {
 
     @Test
     public void testChangePokemonToSameId() throws POOBkemonException {
-        Trainer trainer = new Trainer(validTeam, validBagPack);
+        Trainer trainer = new Trainer(1,validTeam, validBagPack);
         trainer.changePokemon(1); // Mismo ID
 
         assertEquals(healthyPokemon, trainer.getCurrentPokemon());
@@ -128,7 +131,7 @@ public class TrainerTest {
     @Test
     public void testChangePokemonToInvalidId() throws POOBkemonException {
         // 1. Preparación
-        Trainer trainer = new Trainer(validTeam, validBagPack);
+        Trainer trainer = new Trainer(1,validTeam, validBagPack);
         Pokemon originalPokemon = trainer.getCurrentPokemon();
         int originalActiveCount = countActivePokemons(validTeam);
 
@@ -154,20 +157,20 @@ public class TrainerTest {
     // Tests de activePokemon
     @Test
     public void testActivePokemonInfo() throws POOBkemonException {
-        Trainer trainer = new Trainer(validTeam, validBagPack);
+        Trainer trainer = new Trainer(1,validTeam, validBagPack);
         String[] info = trainer.activePokemon();
 
         assertNotNull(info);
         assertEquals("1", info[0]); // ID
         assertEquals("Bulbasaur", info[1]); // Nombre
         assertEquals("45", info[5]); // HP máximo
-        assertEquals("45", info[6]); // HP actual
+        assertEquals("45.0", info[6]); // HP actual
     }
 
     // Test adicional para verificar estado inicial
     @Test
     public void testInitialActiveState() throws POOBkemonException {
-        Trainer trainer = new Trainer(validTeam, validBagPack);
+        Trainer trainer = new Trainer(1,validTeam, validBagPack);
         assertTrue(trainer.getCurrentPokemon().getActive());
         assertEquals(1, trainer.getCurrentPokemon().getId());
     }

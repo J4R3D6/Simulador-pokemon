@@ -15,7 +15,7 @@ public class Pokemon {
 
 	public int maxHealth;
 
-	public int currentHealth;
+	public double currentHealth;
 
 	public int attack;
 
@@ -186,10 +186,16 @@ public class Pokemon {
 		};
 	}
 
-	public void getDamage(int i, Attack ataque1) {
-		this.currentHealth = this.currentHealth - i;
-		if(this.currentHealth < 0) {
+	public void getDamage(int damage,int idAttack) {
+		MovesRepository movesRepository = new MovesRepository();
+		StatsRepository statsRepository = new StatsRepository();
+		String[]info = movesRepository.getAttackDamageAndType(idAttack);
+		double multiplicator = statsRepository.getMultiplier(info[0],this.type);
+		System.out.println("Multiplier: " + multiplicator);
+		this.currentHealth = this.currentHealth - damage*multiplicator;
+		if(this.currentHealth < 0){
 			this.currentHealth = 0;
+			this.weak = true;
 		}
 	}
 }

@@ -2,8 +2,8 @@ package domain;
 
 public class Offensive extends Machine {
 
-    public Offensive(Team team, BagPack bagPack) throws POOBkemonException {
-        super(team,bagPack);
+    public Offensive(int id,Team team, BagPack bagPack) throws POOBkemonException {
+        super(id,team,bagPack);
 
     }
     @Override

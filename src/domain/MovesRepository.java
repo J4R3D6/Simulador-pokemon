@@ -57,5 +57,17 @@ public class MovesRepository {
             return null;
         }
     }
+    public String[] getAttackDamageAndType(int id) {
+        if (!movimientos.containsKey(id)) return null;
+        String[] ataque = movimientos.get(id);
+        String tipo = ataque[4];
+        String poder = ataque[7];
+        if (poder == null || poder.isEmpty()) {
+            poder = "0";
+        }
+        String[] info = {tipo,poder};
+        return info;
+    }
+
 }
 
