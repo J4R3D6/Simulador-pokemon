@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class StatsRepository {
     private final Map<String, Map<String, Double>> typeChart = new HashMap<>();
-    private static final String ROOT_STATS_LOCATION = "csv/MoveStatspok.csv";
+    private static final String ROOT_STATS_LOCATION = "resources/csv/MoveStatspok.csv";
 
     public StatsRepository() {
         try {
