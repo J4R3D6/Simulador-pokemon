@@ -1,0 +1,355 @@
+﻿id,nombre,descripcion,tipo,clase,potencia,precision,pp
+1,Destructor,Golpea con las patas o la cola.,Normal,físico,40,100,35
+2,Golpe Kárate,Da un golpe cortante. Suele ser crítico.,Lucha,físico,50,100,25
+3,Doble Bofetón,Abofetea de dos a cinco veces seguidas.,Normal,físico,15,85,10
+4,Puño Cometa,Pega de dos a cinco veces seguidas.,Normal,físico,18,85,15
+5,Megapuño,Un puñetazo de gran potencia.,Normal,físico,80,85,20
+6,Día de Pago,Arroja monedas al objetivo. Las recupera al final del combate.,Normal,físico,40,100,20
+7,Puño Fuego,Puñetazo ardiente. Puede quemar.,Fuego,físico,75,100,15
+8,Puño Hielo,Puñetazo helado. Puede congelar.,Hielo,físico,75,100,15
+9,Puño Trueno,Puñetazo eléctrico. Puede paralizar.,Eléctrico,físico,75,100,15
+10,Arañazo,Araña con afiladas garras.,Normal,físico,40,100,35
+11,Agarre,Atrapa y atenaza al objetivo.,Normal,físico,55,100,30
+12,Guillotina,Ataque con pinzas que debilita al oponente de un golpe si acierta.,Normal,físico,10000,30,5
+13,Viento Cortante,Primero se prepara y en el segundo turno ataca al oponente con ráfagas de viento cortante. Alta probabilidad de ser crítico.,Normal,especial,80,100,10
+14,Danza Espada,Baile frenético que aumenta mucho el Ataque.,Normal,estado,,100,20
+15,Corte,Corta con garras  guadañas etc. También sirve para cortar árboles finos.,Normal,físico,50,95,30
+16,Tornado,Crea un tornado con las alas y lo lanza contra el objetivo.,Volador,especial,40,100,35
+17,Ataque Ala,Golpea al objetivo con unas grandes alas.,Volador,físico,60,100,35
+18,Remolino,Se lleva al objetivo  que es cambiado por otro Pokémon. Si es un Pokémon salvaje acaba el combate.,Normal,estado,,100,20
+19,Vuelo,Primer turno: vuela. Segundo turno: ataca. Fuera de combate, permite ir a sitios ya conocidos.,Volador,físico,90,95,15
+20,Atadura,Ata y oprime de cuatro a cinco turnos.,Normal,físico,15,85,20
+21,Atizar,Golpea con las extremidades.,Normal,físico,80,75,20
+22,Látigo Cepa,Azota al objetivo con ramas finas.,Planta,físico,45,100,25
+23,Pisotón,Tremendo pisotón que puede hacer retroceder al objetivo.,Normal,físico,65,100,20
+24,Doble Patada,Una patada doble. Golpea dos veces.,Lucha,físico,30,100,30
+25,Megapatada,Patada de extrema fuerza.,Normal,físico,120,75,5
+26,Patada Salto,Da un salto y pega una patada. Si falla, se lesiona.,Lucha,físico,100,95,10
+27,Patada Giro,Da una patada rápida y circular. Puede hacer retroceder al objetivo.,Lucha,físico,60,85,15
+28,Ataque Arena,Arroja arena a la cara y baja la Precisión.,Tierra,estado,,100,15
+29,Golpe Cabeza,Lanza un potente cabezazo que puede hacer retroceder al objetivo.,Normal,físico,70,100,15
+30,Cornada,Ataca al objetivo con una cornada.,Normal,físico,65,100,25
+31,Ataque Furia,Cornea al objetivo de dos a cinco veces.,Normal,físico,15,85,20
+32,Perforador,Ataque con taladro que fulmina en un golpe al objetivo si le toca.,Normal,físico,10000,30,5
+33,Placaje,Embiste con todo el cuerpo.,Normal,físico,50,100,35
+34,Golpe Cuerpo,Salta sobre el objetivo con todo su peso. Puede paralizar.,Normal,físico,85,100,15
+35,Constricción,Oprime al objetivo de cuatro a cinco turnos con ramas o con su cuerpo.,Normal,físico,15,90,20
+36,Derribo,Carga desmedida que también hiere al agresor.,Normal,físico,90,85,20
+37,Golpe,Ataca de dos a tres turnos y acaba confundiendo al agresor.,Normal,físico,120,100,10
+38,Doble Filo,Ataque arriesgado que también hiere al agresor.,Normal,físico,120,100,15
+39,Látigo,Agita la cola para bajar la Defensa del equipo rival.,Normal,estado,,100,30
+40,Picotazo Ven,Lanza un aguijón tóxico que puede envenenar al objetivo.,Veneno,físico,15,100,35
+41,Doble Ataque,Pincha dos veces con dos espinas. Puede envenenar.,Bicho,físico,25,100,20
+42,Pin Misil,Lanza finas púas que hieren de dos a cinco veces.,Bicho,físico,25,95,20
+43,Malicioso,Intimida a los rivales para bajar su Defensa.,Normal,estado,,100,30
+44,Mordisco,Un voraz bocado que puede hacer retroceder al objetivo.,Siniestro,físico,60,100,25
+45,Gruñido,Dulce gruñido que reduce el Ataque del contrincante.,Normal,estado,,100,40
+46,Rugido,Se lleva al objetivo que es cambiado por otro Pokémon. Si es un Pokémon salvaje acaba el combate.,Normal,estado,,100,20
+47,Canto,Cancioncilla que hace dormir profundamente al objetivo.,Normal,estado,,55,15
+48,Supersónico,Raras ondas sónicas que confunden al objetivo.,Normal,estado,,55,20
+49,Bomba Sónica,Lanza ondas de choque que restan 20 PS al objetivo.,Normal,especial,20,90,20
+50,Anulación,Desactiva el último movimiento del objetivo durante cuatro turnos.,Normal,estado,,100,20
+51,Ácido,Rocía a los enemigos con un ácido corrosivo. Puede bajar la Defensa Especial.,Veneno,especial,40,100,30
+52,Ascuas,Ataca con llamas pequeñas que pueden causar quemaduras.,Fuego,especial,40,100,25
+53,Lanzallamas,Ataca con una gran ráfaga de fuego que puede causar quemaduras.,Fuego,especial,90,100,15
+54,Neblina,Rodea de fina niebla al usuario y protege las características de su equipo durante cinco turnos.,Hielo,estado,,100,30
+55,Pistola Agua,Ataca disparando agua con gran potencia.,Agua,especial,40,100,25
+56,Hidrobomba,Lanza una gran masa de agua a presión para atacar.,Agua,especial,110,80,5
+57,Surf,Inunda el campo de batalla con una ola gigante. Fuera de batalla sirve para moverse sobre el agua.,Agua,especial,90,100,15
+58,Rayo Hielo,Rayo de hielo que puede llegar a congelar.,Hielo,especial,90,100,10
+59,Ventisca,Tormenta de hielo que puede llegar a congelar.,Hielo,especial,110,70,5
+60,Psicorrayo,Extraño rayo que puede causar confusión.,Psíquico,especial,65,100,20
+61,Rayo Burbuja,Diluvio de burbujas que puede bajar la Velocidad.,Agua,especial,65,100,20
+62,Rayo Aurora,Rayo multicolor que puede reducir el Ataque.,Hielo,especial,65,100,20
+63,Hiperrayo,Es eficaz pero el atacante deberá descansar en el siguiente turno.,Normal,especial,150,90,5
+64,Picotazo,Ensarta al objetivo con un cuerno o pico punzante.,Volador,físico,35,100,35
+65,Pico Taladro,Picotazo giratorio y perforador muy potente.,Volador,físico,80,100,20
+66,Sumisión,Tira al objetivo al suelo. También hiere al agresor.,Lucha,físico,80,80,20
+67,Patada Baja,Patada baja. Cuanto más pesa el objetivo, más daño causa.,Lucha,físico,80,100,20
+68,Contraataque,Devuelve un golpe físico por duplicado.,Lucha,físico,80,100,20
+69,Mov. Sísmico,La gravedad derriba al objetivo. Se restarán tantos PS como nivel tenga el agresor.,Lucha,físico,80,100,20
+70,Fuerza,Potente puñetazo. Fuera de combate sirve para mover rocas.,Normal,físico,80,100,15
+71,Absorber,Absorbe la mitad del daño producido en el objetivo para restaurar los PS del usuario.,Planta,especial,20,100,25
+72,Megaagotar,Absorbe la mitad del daño producido en el objetivo para restaurar los PS del usuario.,Planta,especial,40,100,15
+73,Drenadoras,Planta semillas que absorben PS para recuperar la salud del usuario en cada turno.,Planta,estado,,90,10
+74,Desarrollo,El cuerpo del usuario crece a marchas forzadas y aumenta el Ataque y el Ataque Especial.,Normal,estado,,100,20
+75,Hoja Afilada,Corta con hojas afiladas. Suele ser crítico.,Planta,físico,55,95,25
+76,Rayo Solar,Primer turno: absorbe luz. Segundo turno: lanza un potente rayo de energía.,Planta,especial,120,100,10
+77,Polvo Veneno,Polvo tóxico que envenena al objetivo.,Veneno,estado,,75,35
+78,Paralizador,Esparce polvo que paraliza al objetivo.,Planta,estado,,75,30
+79,Somnífero,Esparce polvo que duerme al objetivo.,Planta,estado,,75,15
+80,Danza Pétalo,Lanza pétalos de dos a tres turnos y acaba confundiendo al atacante.,Planta,especial,120,100,10
+81,Disparo Demora,Lanza seda a los rivales y reduce mucho su Velocidad.,Bicho,estado,,95,40
+82,Furia Dragón,Ráfaga de furiosas ondas de choque que quitan 40 PS.,Dragón,especial,40,100,10
+83,Giro Fuego,Un aro de fuego que atrapa al objetivo de cuatro a cinco turnos.,Fuego,especial,35,85,15
+84,Impactrueno,Ataque eléctrico que puede paralizar al objetivo.,Eléctrico,especial,40,100,30
+85,Rayo,Potente ataque eléctrico que puede paralizar al objetivo.,Eléctrico,especial,90,100,15
+86,Onda Trueno,Una ligera descarga que paraliza al objetivo si lo alcanza.,Eléctrico,estado,,100,20
+87,Trueno,Un poderoso rayo que daña al objetivo y puede paralizarlo.,Eléctrico,especial,110,70,10
+88,Lanzarrocas,Tira una pequeña roca al objetivo.,Roca,físico,50,90,15
+89,Terremoto,Un terremoto que afecta a los Pokémon de alrededor en combate.,Tierra,físico,100,100,10
+90,Fisura,Abre una grieta en el suelo y mete al objetivo en ella. Fulmina en un golpe.,Tierra,físico,10000,30,5
+91,Excavar,Primer turno: cava. Segundo turno: ataca. También sirve para salir de ciertas zonas.,Tierra,físico,80,100,10
+92,Tóxico,Envenena gravemente al objetivo y causa un daño mayor en cada turno.,Veneno,estado,,90,10
+93,Confusión,Débil ataque telequinético que puede causar confusión.,Psíquico,especial,50,100,25
+94,Psíquico,Fuerte ataque telequinético que puede bajar la Defensa Especial del objetivo.,Psíquico,especial,90,100,10
+95,Hipnosis,Ataque hipnótico que hace dormir profundamente al objetivo.,Psíquico,estado,,60,20
+96,Meditación,El usuario reposa y medita para potenciar el Ataque.,Psíquico,estado,,100,40
+97,Agilidad,Relaja el cuerpo para ganar mucha Velocidad.,Psíquico,estado,,100,30
+98,Ataque Rápido,Ataque rápido que permite golpear en primer lugar.,Normal,físico,40,100,30
+99,Furia,Al usarse aumenta el Ataque del usuario cada vez que es golpeado.,Normal,físico,20,100,20
+100,Teletransporte,Permite huir al instante de combates contra Pokémon salvajes o viajar al último Centro Pokémon visitado.,Psíquico,estado,,100,20
+101,Tinieblas,Produce un espejismo ante el objetivo que pierde tantos PS como nivel tenga el agresor.,Fantasma,especial,89,100,15
+102,Mimético,Copia el último movimiento usado por el objetivo. Dicho movimiento se podrá usar mientras el Pokémon no sea cambiado.,Normal,estado,,100,10
+103,Chirrido,Alarido agudo que reduce mucho la Defensa del objetivo.,Normal,estado,,85,40
+104,Doble Equipo,Crea copias de sí mismo para mejorar la Evasión.,Normal,estado,,100,15
+105,Recuperación,Restaura hasta la mitad de los PS máximos.,Normal,estado,,100,10
+106,Fortaleza,Tensa la musculatura del usuario para aumentar la Defensa.,Normal,estado,,100,30
+107,Reducción,El usuario mengua para aumentar mucho la Evasión.,Normal,estado,,100,10
+108,Pantalla de Humo,Baja la Precisión del objetivo con una nube de humo o tinta.,Normal,estado,,100,20
+109,Rayo Confuso,Rayo siniestro que confunde al objetivo.,Fantasma,estado,,100,10
+110,Refugio,El usuario se protege en su coraza y sube la Defensa.,Agua,estado,,100,40
+111,Rizo Defensa,Se enrosca para ocultar su punto débil. Sube la Defensa.,Normal,estado,,100,40
+112,Barrera,Crea una barrera que aumenta mucho la Defensa.,Psíquico,estado,,100,20
+113,Pantalla de Luz,Pared de luz que reduce durante cinco turnos el daño producido por los ataques especiales.,Psíquico,estado,,100,30
+114,Niebla,Neblina que elimina los cambios de características de todos los Pokémon en combate.,Hielo,estado,,100,30
+115,Reflejo,Pared de luz que reduce durante cinco turnos el daño producido por los ataques físicos.,Psíquico,estado,,100,20
+116,Foco Energía,Concentra energía para aumentar las posibilidades de un golpe crítico.,Normal,estado,,100,30
+117,Venganza,Espera dos turnos para atacar con el doble de potencia del daño recibido.,Normal,físico,80,100,10
+118,Metrónomo,El usuario mueve un dedo y estimula su cerebro para usar al azar casi cualquier movimiento.,Normal,estado,,100,10
+119,Mov. Espejo,Contraataca con el mismo movimiento empleado por el objetivo.,Volador,estado,,100,20
+120,Autodestrucción,El atacante explota y hiere a todos a su alrededor. El usuario se debilita de inmediato.,Normal,físico,200,100,5
+121,Bomba Huevo,Arroja un huevo al objetivo con gran fuerza.,Normal,físico,100,75,10
+122,Lengüetazo,Una lengua ataca al objetivo. Puede causar parálisis.,Fantasma,físico,30,100,30
+123,Polución,El objetivo es atacado con gases tóxicos que pueden llegar a envenenar.,Veneno,especial,30,70,20
+124,Residuos,Arroja residuos al objetivo. Puede llegar a envenenar.,Veneno,especial,65,100,20
+125,Hueso Palo,Aporrea con un hueso. Puede hacer retroceder al objetivo.,Tierra,físico,65,85,20
+126,Llamarada,Llama intensa que chamusca y puede causar quemaduras.,Fuego,especial,110,85,5
+127,Cascada,Embiste con un gran impulso que puede hacer retroceder. También sirve para remontar cascadas.,Agua,físico,80,100,15
+128,Tenaza,Atrapa y atenaza con fuerza durante cuatro o cinco turnos.,Agua,físico,35,85,15
+129,Rapidez,Lanza rayos en forma de estrella que no fallan nunca.,Normal,especial,60,100,20
+130,Cabezazo,Primer turno: se prepara y sube la Defensa del usuario. Segundo turno: da el cabezazo.,Normal,físico,130,100,10
+131,Clavo Cañón,Lanza finas púas que hieren de dos a cinco veces.,Normal,físico,20,100,15
+132,Restricción,Constriñe para herir y puede bajar la Velocidad.,Normal,físico,10,100,35
+133,Amnesia,El usuario olvida sus preocupaciones y aumenta mucho la Defensa Especial.,Psíquico,estado,,100,20
+134,Kinético,Dobla una cuchara para distraer al objetivo y bajar su nivel de Precisión.,Psíquico,estado,,80,15
+135,Amortiguador,Restaura la mitad de los PS máximos del usuario. Fuera de combate se usa para transferir parte de sus PS a un aliado.,Normal,estado,,100,10
+136,Pat. Salto Alta,Salta muy alto y lanza una patada. Si falla dañará al usuario.,Lucha,físico,130,90,10
+137,Deslumbrar,Intimida y asusta al objetivo con la mirada para dejarlo paralizado.,Normal,estado,,100,30
+138,Come Sueños,Restaura al usuario la mitad del daño causado a un objetivo dormido.,Psíquico,especial,100,100,15
+139,Gas Venenoso,Lanza una nube de gas tóxico a los rivales. Produce envenenamiento.,Veneno,estado,,90,40
+140,Presa,Arroja esferas al objetivo entre dos y cinco veces seguidas.,Normal,físico,15,85,20
+141,Chupavidas,Restaura al usuario la mitad del daño causado al objetivo.,Bicho,físico,20,100,15
+142,Beso Amoroso,Con una cara que asusta da un beso al objetivo y lo adormece.,Normal,estado,,75,10
+143,Ataque Aéreo,Ataque en dos turnos que suele ser crítico. Puede hacer retroceder al objetivo.,Volador,físico,140,90,5
+144,Transformación,El usuario se transforma en una copia del objetivo con los mismos movimientos.,Normal,estado,,100,10
+145,Burbuja,Lanza burbujas a los contrincantes y puede reducir su Velocidad.,Agua,especial,40,100,30
+146,Puño Mareo,Rítmicos puñetazos que pueden causar confusión.,Normal,físico,70,100,10
+147,Espora,Esparce esporas que inducen al sueño.,Planta,estado,,100,15
+148,Destello,Luz cegadora que baja la Precisión del objetivo.,Normal,estado,,100,20
+149,Psicoonda,Ataque con una onda de energía de intensidad variable.,Psíquico,especial,80,100,15
+150,Salpicadura,No tiene ningún efecto. Solo salpica.,Normal,estado,,100,40
+151,Armadura Ácida,Transforma la estructura celular para hacerse líquido y aumenta mucho la Defensa.,Veneno,estado,,100,20
+152,Martillazo,Golpea con fuerza con una pinza enorme. Suele ser crítico.,Agua,físico,100,90,10
+153,Explosión,El atacante causa una grandísima explosión y hiere a todos a su alrededor. El usuario se debilita de inmediato.,Normal,físico,250,100,5
+154,Golpes Furia,Araña rápidamente de dos a cinco veces.,Normal,físico,18,80,15
+155,Huesomerang,Lanza un hueso a modo de bumerán que golpea dos veces.,Tierra,físico,50,90,10
+156,Descanso,Restaura todos los PS y cura todos los problemas de estado del usuario. Duerme los dos próximos turnos.,Psíquico,estado,,100,10
+157,Avalancha,Lanza grandes pedruscos. Puede hacer retroceder a los rivales.,Roca,físico,75,90,10
+158,Hipercolmillo,Ataque con finos colmillos. Puede hacer retroceder al objetivo.,Normal,físico,80,90,15
+159,Afilar,El perfil del usuario se hace más afilado y su Ataque mejora.,Normal,estado,,100,30
+160,Conversión,Cambia el tipo del usuario por el del primero de sus movimientos.,Normal,estado,,100,30
+161,Triataque,Ataque triple que puede paralizar quemar o congelar al objetivo.,Normal,especial,80,100,10
+162,Superdiente,Finos colmillos que reducen a la mitad los PS del objetivo.,Normal,físico,80,90,10
+163,Cuchillada,Ataca con cuchillas o con pinzas. Suele dar un golpe crítico.,Normal,físico,70,100,20
+164,Sustituto,Utiliza parte de los PS propios para crear un sustituto que actúa como señuelo.,Normal,estado,,100,10
+165,Combate,Solo se usa como último recurso al acabarse los PP. Hiere un poco al agresor.,Normal,físico,50,,
+166,Esquema,Aprende de forma permanente el último movimiento utilizado por el objetivo. Es de un solo uso.,Normal,estado,,100,1
+167,Triple Patada,Patea hasta tres veces seguidas y cada vez más fuerte.,Lucha,físico,10,90,10
+168,Ladrón,Ataca y le quita al objetivo el objeto que lleve. Si el agresor lleva un objeto no robará el del objetivo.,Siniestro,físico,60,100,25
+169,Telaraña,Enreda al objetivo para evitar que abandone la batalla.,Bicho,estado,,100,10
+170,Telépata,El usuario adivina los movimientos del objetivo para hacer que su siguiente ataque no falle.,Normal,estado,,100,5
+171,Pesadilla,El objetivo dormido sufre una pesadilla que le hace perder PS en cada turno.,Fantasma,estado,,100,15
+172,Rueda Fuego,Ataca envuelto en fuego. Puede causar quemaduras.,Fuego,físico,60,100,25
+173,Ronquido,Fuerte ronquido que solo puede usarse dormido. Puede hacer retroceder al objetivo.,Normal,especial,50,100,15
+174,Maldición,Un movimiento que tiene efectos distintos si el usuario es de tipo Fantasma o no.,Fantasma,estado,,100,10
+175,Azote,Ataque frenético. Cuantos menos PS tenga el usuario, más daño producirá.,Normal,físico,80,100,15
+176,Conversión2,El usuario cambia de tipo para hacerse resistente al último tipo de movimiento usado por el objetivo.,Normal,estado,,100,30
+177,Aerochorro,Lanza un chorro de aire que suele dar un golpe crítico.,Volador,especial,100,95,5
+178,Esporagodón,Adhiere esporas a los rivales para reducir mucho su Velocidad.,Planta,estado,,100,40
+179,Inversión,Ataque desesperado que causa más daño cuantos menos PS tenga el usuario.,Lucha,físico,80,100,15
+180,Rencor,Da rienda suelta a su rencor para reducir cuatro PP del último movimiento usado por el objetivo.,Fantasma,estado,,100,10
+181,Nieve Polvo,Lanza nieve que puede llegar a congelar.,Hielo,especial,40,100,25
+182,Protección,Frena todos los ataques pero puede fallar si se usa repetidamente.,Normal,estado,,100,10
+183,Ultrapuño,Puñetazo que se da rápido para golpear primero.,Lucha,físico,40,100,30
+184,Cara Susto,Asusta al objetivo para reducir mucho su Velocidad.,Normal,estado,,100,10
+185,Finta,Engaña al objetivo para acercarse y dar un puñetazo que no falla.,Siniestro,físico,60,,20
+186,Beso Dulce,Da un beso con tal dulzura que causa confusión.,Hada,estado,,75,10
+187,Tambor,Reduce la mitad de los PS máximos para mejorar al máximo el Ataque.,Normal,estado,,100,10
+188,Bomba Lodo,Arroja residuos al objetivo. Puede llegar a envenenar.,Veneno,especial,90,100,10
+189,Bofetón Lodo,Echa lodo en la cara para bajar la Precisión.,Tierra,especial,20,100,10
+190,Pulpocañón,Dispara tinta a la cara. Puede bajar la Precisión.,Agua,especial,65,85,10
+191,Púas,Esparce púas en el equipo rival. Las púas hieren a los Pokémon rivales que entran en combate.,Tierra,estado,,100,20
+192,Electrocañón,Dispara una descarga eléctrica que causa daño y parálisis.,Eléctrico,especial,120,50,5
+193,Profecía,Permite atacar con cualquier movimiento a objetivos de tipo Fantasma y golpear a Pokémon evasivos.,Normal,estado,,100,40
+194,Mismo Destino,Si el usuario se debilita por un ataque rival antes de usar otro movimiento el Pokémon rival se debilitará también.,Fantasma,estado,,100,5
+195,Canto Mortal,Si un Pokémon escucha este canto y no es cambiado por otro en tres turnos, acaba debilitándose.,Normal,estado,,100,5
+196,Viento Hielo,Ataque con aire helado que baja la Velocidad de los rivales.,Hielo,especial,55,95,15
+197,Detección,Frena todos los ataques pero puede fallar si se usa repetidamente.,Lucha,estado,,100,5
+198,Ataque Óseo,Hueso en ristre aporrea al objetivo de dos a cinco veces.,Tierra,físico,25,90,10
+199,Fijar Blanco,Fija el blanco para que el siguiente ataque no falle.,Normal,estado,,100,5
+200,Enfado,Ataca de dos a tres turnos y acaba confundiendo al agresor.,Dragón,físico,120,100,10
+201,Tormenta Arena,Tormenta de arena que dura cinco turnos y hiere a todos excepto a los de tipo Roca Tierra y Acero.,Roca,estado,,100,10
+202,Gigadrenado,Un ataque que absorbe nutrientes. Quien lo usa recupera la mitad de los PS del daño que produce.,Planta,especial,75,100,10
+203,Aguante,Resiste cualquier ataque y deja al menos 1 PS. Puede fallar si se usa repetidamente.,Normal,estado,,100,10
+204,Encanto,Engatusa al objetivo y reduce bastante su Ataque.,Hada,estado,,100,20
+205,Desenrollar,El atacante rueda contra el objetivo durante cinco turnos cada vez con mayor fuerza.,Roca,físico,30,90,20
+206,Falsotortazo,Ataque moderado que no debilita al objetivo y le deja al menos 1 PS.,Normal,físico,40,100,40
+207,Contoneo,Provoca confusión en el objetivo pero también sube mucho su Ataque.,Normal,estado,,90,15
+208,Batido,Restaura la mitad de los PS máximos del usuario. Fuera de combate se usa para transferir parte de sus PS a un aliado.,Normal,estado,,100,10
+209,Chispa,Ataque eléctrico que puede llegar a paralizar.,Eléctrico,físico,65,100,20
+210,Corte Furia,Ataque con garras o guadaña que crece en intensidad si se usa repetidas veces.,Bicho,físico,40,95,20
+211,Ala de Acero,Alas macizas que golpean al objetivo y pueden subir la Defensa del usuario.,Acero,físico,70,90,25
+212,Mal de Ojo,Mal de ojo que impide al objetivo huir de la batalla.,Normal,estado,,100,5
+213,Atracción,Si el objetivo es del sexo opuesto se enamorará y bajará la posibilidad de que ataque.,Normal,estado,,100,15
+214,Sonámbulo,Mientras duerme usa uno de sus movimientos elegido al azar.,Normal,estado,,100,10
+215,Campana Cura,Tañido que cura los problemas de estado de todos los Pokémon del equipo.,Normal,estado,,100,5
+216,Retribución,Cuanto mayor sea la amistad con el Entrenador más poderoso será este ataque.,Normal,físico,80,100,20
+217,Presente,Quien lo usa ataca al objetivo dándole un regalo con bomba trampa. Sin embargo a veces restaura sus PS.,Normal,físico,80,90,15
+218,Frustración,Cuanto menor sea la amistad con el Entrenador más poderoso será este ataque.,Normal,físico,80,100,20
+219,Velo Sagrado,Un escudo que protege de problemas de estado como el sueño o la parálisis durante cinco turnos.,Normal,estado,,100,25
+220,Divide Dolor,Suma los PS del usuario a los del objetivo y los reparte a partes iguales.,Normal,estado,,100,20
+221,Fuego Sagrado,Fuego místico de gran intensidad que puede causar quemaduras.,Fuego,físico,100,95,5
+222,Magnitud,Sacudida sísmica de intensidad variable que afecta a todos los Pokémon a su alrededor.,Tierra,físico,80,100,30
+223,Puño Dinámico,Puñetazo con toda la fuerza concentrada. Causa confusión si atina.,Lucha,físico,100,50,5
+224,Megacuerno,Violenta embestida con cuernos imponentes.,Bicho,físico,120,85,10
+225,Dragoaliento,Poderosa ráfaga de aliento que golpea al objetivo y puede paralizarlo.,Dragón,especial,60,100,20
+226,Relevo,Cambia el puesto con un compañero y le pasa los cambios de características.,Normal,estado,,100,40
+227,Otra Vez,El objetivo repite su último movimiento durante tres turnos.,Normal,estado,,100,5
+228,Persecución,Hace el doble de daño al objetivo que pide el relevo.,Siniestro,físico,40,100,20
+229,Giro Rápido,Ataque giratorio que puede eliminar movimientos como Atadura, Constricción, Drenadoras y Púas.,Normal,físico,20,100,40
+230,Dulce Aroma,Un dulce aroma engatusa al objetivo por lo que se reduce mucho su Evasión. En la hierba alta sirve para atraer a Pokémon salvajes.,Normal,estado,,100,20
+231,Cola Férrea,Ataca con una cola férrea y puede bajar la Defensa del objetivo.,Acero,físico,100,75,15
+232,Garra Metal,Ataque con garras de acero que puede aumentar el Ataque del usuario.,Acero,físico,50,95,35
+233,Tiro Vital,El usuario ataca el último, pero no falla.,Lucha,físico,70,100,10
+234,Sol Matinal,Restaura PS del usuario. La cantidad varía según el tiempo que haga.,Normal,estado,,100,5
+235,Síntesis,Restaura PS del usuario. La cantidad varía según el tiempo que haga.,Planta,estado,,100,5
+236,Luz Lunar,Restaura PS del usuario. La cantidad varía según el tiempo que haga.,Hada,estado,,100,5
+237,Poder Oculto,Movimiento cuyo tipo varía en función del Pokémon que lo usa.,Normal,especial,60,100,15
+238,Tajo Cruzado,Corte doble que suele propinar un golpe crítico.,Lucha,físico,100,80,5
+239,Ciclón,Crea un violento tornado para hacer trizas al enemigo. Puede hacerlo retroceder.,Dragón,especial,40,100,20
+240,Danza Lluvia,Genera una fuerte lluvia que refuerza los movimientos de tipo Agua durante cinco turnos.,Agua,estado,,100,5
+241,Día Soleado,Quien lo usa intensifica el efecto del sol durante cinco turnos lo que potencia los movimientos de tipo Fuego.,Fuego,estado,,100,5
+242,Triturar,Tritura con afilados colmillos y puede bajar la Defensa del objetivo.,Siniestro,físico,80,100,15
+243,Manto Espejo,Responde a un ataque especial ocasionando el doble del daño recibido.,Psíquico,especial,100,100,20
+244,Más Psique,Quien lo usa se hipnotiza y copia cualquier cambio que haya en las características de su objetivo.,Normal,estado,,100,10
+245,Veloc. Extrema,Ataque muy rápido que siempre se realiza el primero.,Normal,físico,80,100,5
+246,Poder Pasado,Ataque prehistórico que puede subir todas las características.,Roca,especial,60,100,5
+247,Bola Sombra,Lanza una bola oscura que puede bajar la Defensa Especial del objetivo.,Fantasma,especial,80,100,15
+248,Premonición,Concentra energía psíquica para golpear al objetivo dos turnos después.,Psíquico,especial,120,100,10
+249,Golpe Roca,Ataque con los puños. Puede bajar la Defensa del objetivo. Puede romper rocas fuera del combate.,Lucha,físico,40,100,15
+250,Torbellino,Una tromba de agua atrapa al objetivo durante cuatro o cinco turnos.,Agua,especial,35,85,15
+251,Paliza,Ataque de todo el equipo Pokémon. Cuantos más haya, más veces se atacará.,Siniestro,físico,80,100,10
+252,Sorpresa,Ataca primero y hace retroceder al objetivo. Solo sirve en el primer turno.,Normal,físico,40,100,10
+253,Alboroto,Ataca de forma alborotada durante tres turnos. Mantiene despiertos a todos.,Normal,especial,90,100,10
+254,Reserva,Acumula energía y sube la Defensa y la Defensa Especial. Puede utilizarse hasta tres veces.,Normal,estado,,100,20
+255,Escupir,Libera de una vez la energía acumulada con Reserva.,Normal,especial,80,100,10
+256,Tragar,Absorbe la energía acumulada con Reserva y restaura PS.,Normal,estado,,100,10
+257,Onda Ígnea,Provoca un viento abrasador que puede quemar al objetivo.,Fuego,especial,95,90,10
+258,Granizo,Tormenta de granizo que dura cinco turnos. Hiere a todos excepto a los de tipo Hielo.,Hielo,estado,,100,10
+259,Tormento,Atormenta y enfurece al objetivo que no puede usar dos veces seguidas el mismo movimiento.,Siniestro,estado,,100,15
+260,Camelo,Halaga al objetivo y lo confunde pero también sube su Ataque Especial.,Siniestro,estado,,100,15
+261,Fuego Fatuo,Siniestra llama morada que produce quemaduras.,Fuego,estado,,85,15
+262,Legado,El usuario se debilita pero baja mucho tanto el Ataque como el Ataque Especial del objetivo.,Siniestro,estado,,100,10
+263,Imagen,Ataca con el doble de potencia si el usuario está quemado paralizado o envenenado.,Normal,físico,70,100,20
+264,Puño Certero,Se concentra para dar un puñetazo. Falla si se sufre un golpe antes de su uso.,Lucha,físico,150,100,20
+265,Estímulo,Hace el doble de daño a objetivos paralizados pero también cura la parálisis.,Normal,físico,70,100,10
+266,Señuelo,Llama la atención para concentrar todos los ataques de todos los del equipo rival hacia sí mismo.,Normal,estado,,100,20
+267,Adaptación,Usa el poder de la naturaleza para atacar. Su efecto varía según el entorno de combate.,Normal,estado,,100,20
+268,Carga,Recarga energía para potenciar el siguiente movimiento de tipo Eléctrico. También sube la Defensa Especial.,Eléctrico,estado,,100,20
+269,Mofa,Enfurece al objetivo para que solo use movimientos de ataque durante tres turnos.,Siniestro,estado,,100,20
+270,Refuerzo,El usuario ayuda a un aliado reforzando la potencia de su ataque.,Normal,estado,,100,20
+271,Truco,Engaña al objetivo desprevenido e intercambia objetos.,Psíquico,estado,,100,10
+272,Imitación,Imita al objetivo por completo y copia su habilidad.,Psíquico,estado,,100,10
+273,Deseo,Restaura la mitad de los PS máximos en el siguiente turno.,Normal,estado,,100,10
+274,Ayuda,Usa un movimiento de un miembro del equipo elegido al azar.,Normal,estado,,100,20
+275,Arraigo,Echa raíces para recuperar PS en cada turno pero impide el relevo.,Planta,estado,,100,20
+276,Fuerza Bruta,Ataque de gran potencia pero que reduce el Ataque y la Defensa del agresor.,Lucha,físico,120,100,5
+277,Capa Mágica,Barrera capaz de devolver al agresor movimientos como Drenadoras y otros que alteran el estado o las características.,Psíquico,estado,,100,15
+278,Reciclaje,Recicla y así recupera un objeto equipado de un solo uso que ya haya sido empleado durante el combate.,Normal,estado,,100,10
+279,Desquite,Ataque que produce el doble de daño si el usuario es herido en el mismo turno.,Lucha,físico,60,100,10
+280,Demolición,Potente ataque que también es capaz de destruir barreras como Pantalla de Luz y Reflejo.,Lucha,físico,75,100,15
+281,Bostezo,Gran bostezo que induce al sueño al objetivo en el siguiente turno.,Normal,estado,,100,10
+282,Desarme,Impide al objetivo usar el objeto que lleva durante el combate. La potencia del movimiento se multiplica si el objetivo lleva un objeto.,Siniestro,físico,65,100,20
+283,Esfuerzo,Reduce los PS del objetivo para que igualen a los del atacante.,Normal,físico,80,100,5
+284,Estallido,Furia explosiva. Cuanto menor sea el número de PS del usuario menos daño hará el ataque.,Fuego,especial,150,100,5
+285,Intercambio,Usa el poder psíquico para intercambiar habilidades con el objetivo.,Psíquico,estado,,100,10
+286,Cerca,Impide a los contrincantes usar ataques conocidos por el usuario durante el combate.,Psíquico,estado,,100,10
+287,Alivio,Descansa para curar parálisis envenenamiento o quemaduras.,Normal,estado,,100,20
+288,Rabia,Si el usuario se debilita al recibir un ataque todos los PP de este último ataque serán eliminados.,Fantasma,estado,,100,5
+289,Robo,Roba el efecto de los movimientos de curación o de cambio de características que se usen.,Siniestro,estado,,100,10
+290,Daño Secreto,Ataque con poder secreto cuyos efectos secundarios varían según el entorno de combate.,Normal,físico,70,100,20
+291,Buceo,El usuario se sumerge en el primer turno y ataca en el segundo.,Agua,físico,80,100,10
+292,Empujón,Empujones directos que golpean de dos a cinco veces seguidas.,Lucha,físico,15,100,20
+293,Camuflaje,Modifica el tipo del Pokémon según el terreno de combate donde esté.,Normal,estado,,100,20
+294,Ráfaga,Se concentra en una ráfaga de luz que sube muchísimo el Ataque Especial.,Bicho,estado,,100,20
+295,Resplandor,Fogonazo de luz que puede bajar la Defensa Especial del objetivo.,Psíquico,especial,70,100,5
+296,Bola Neblina,Banco de niebla que puede bajar el Ataque Especial del objetivo.,Psíquico,especial,70,100,5
+297,Danza Pluma,Envuelve al objetivo con un manto de plumas para reducir mucho su Ataque.,Volador,estado,,100,15
+298,Danza Caos,Danza histérica que confunde a los Pokémon que están alrededor del usuario.,Normal,estado,,100,20
+299,Patada Ígnea,Patada que suele ser un golpe crítico y puede causar quemaduras.,Fuego,físico,85,90,10
+300,Chapoteo Lodo,El usuario esparce lodo a su alrededor lo que debilita los movimientos de tipo Eléctrico durante cinco turnos.,Tierra,estado,,100,15
+301,Bola Hielo,El atacante rueda contra el objetivo durante cinco turnos cada vez con mayor fuerza.,Hielo,físico,30,90,20
+302,Brazo Pincho,Pega con brazos de pinchos y puede hacer retroceder al objetivo.,Planta,físico,60,100,15
+303,Relajo,El usuario se relaja y restaura la mitad de sus PS máximos.,Normal,estado,,100,10
+304,Vozarrón,Grito desgarrador que inflige daño al objetivo.,Normal,especial,90,100,10
+305,Colmillo Ven,Colmillos tóxicos que pueden envenenar gravemente al objetivo.,Veneno,físico,50,100,15
+306,Garra Brutal,Hace trizas al objetivo con garras afiladas y puede bajar su Defensa.,Normal,físico,75,95,10
+307,Anillo Ígneo,Explosión de fuego. El atacante debe descansar el siguiente turno.,Fuego,especial,150,90,5
+308,Hidrocañón,Disparo de agua. El atacante debe descansar el siguiente turno.,Agua,especial,150,90,5
+309,Puño Meteoro,Puñetazo que impacta como un meteorito y puede subir el Ataque del agresor.,Acero,físico,90,90,10
+310,Impresionar,Impresiona tanto que puede hacer retroceder al objetivo.,Fantasma,físico,30,100,15
+311,Meteorobola,El tipo y fuerza del ataque varían según el tiempo que haga.,Normal,especial,50,100,10
+312,Aromaterapia,Cura todos los problemas de estado del equipo con un suave aroma.,Planta,estado,,100,5
+313,Llanto Falso,Lágrimas de cocodrilo que bajan mucho la Defensa Especial del objetivo.,Siniestro,estado,,100,20
+314,Aire Afilado,Viento cortante que azota. Suele ser un golpe crítico.,Volador,especial,60,95,25
+315,Sofoco,Ataque en toda regla que baja mucho el Ataque Especial de quien lo usa.,Fuego,especial,130,90,5
+316,Rastreo,Permite atacar con cualquier movimiento a objetivos de tipo Fantasma y golpear a Pokémon evasivos.,Normal,estado,,100,40
+317,Tumba Rocas,Tira rocas que detienen al objetivo y bajan su Velocidad.,Roca,físico,60,95,15
+318,Viento Plata,Fuerte viento con polvo de escamas. Puede subir todas las características de quien lo usa.,Bicho,especial,60,100,5
+319,Eco Metálico,Horrible chirrido metálico que baja mucho la Defensa Especial del objetivo.,Acero,estado,,85,40
+320,Silbato,Agradable melodía que adormece al objetivo.,Planta,estado,,55,15
+321,Cosquillas,Hace reír al objetivo para bajar su Ataque y Defensa.,Normal,estado,,100,20
+322,Masa Cósmica,Sube la Defensa y la Defensa Especial propias con energía mística.,Psíquico,estado,,100,20
+323,Salpicar,Chorro de agua. Cuantos menos PS tenga el usuario menos dañino será.,Agua,especial,150,100,5
+324,Doble Rayo,Ataca con un rayo de luz siniestro. Puede confundir al objetivo.,Bicho,especial,75,100,15
+325,Puño Sombra,Puñetazo ineludible procedente de las sombras.,Fantasma,físico,60,100,20
+326,Paranormal,Energía muy extraña que puede hacer retroceder al objetivo.,Psíquico,especial,80,100,20
+327,Gancho Alto,Gancho ascendente de gran ímpetu.,Lucha,físico,85,90,15
+328,Bucle Arena,Enreda al objetivo en un remolino de arena de cuatro a cinco turnos.,Tierra,físico,35,85,15
+329,Frío Polar,Ataque de frío polar que debilita al objetivo si le alcanza.,Hielo,especial,80,30,5
+330,Agua Lodosa,Ataque con agua lodosa que puede bajar la Precisión del equipo rival.,Agua,especial,90,85,10
+331,Recurrente,Dispara rápido de dos a cinco ráfagas de semillas de manera consecutiva.,Planta,físico,25,100,30
+332,Golpe Aéreo,El usuario lanza un ataque muy rápido e ineludible.,Volador,físico,60,100,20
+333,Carámbano,Ataca lanzando de dos a cinco ráfagas consecutivas de carámbanos.,Hielo,físico,25,100,30
+334,Defensa Férrea,Fortalece el cuerpo como si fuera de hierro y sube mucho la Defensa.,Acero,estado,,100,15
+335,Bloqueo,Le corta el paso al objetivo para que no pueda escapar.,Normal,estado,,100,5
+336,Aullido,Aullido que sube el ánimo y aumenta el Ataque.,Normal,estado,,100,40
+337,Garra Dragón,Araña al objetivo con garras afiladas.,Dragón,físico,80,100,15
+338,Planta Feroz,Golpea con una enorme planta. Quien lo usa no puede moverse en el siguiente turno.,Planta,especial,150,90,5
+339,Corpulencia,Robustece el cuerpo para subir el Ataque y la Defensa.,Lucha,estado,,100,20
+340,Bote,Primer turno: bota. Segundo turno: golpea. Puede paralizar.,Volador,físico,85,85,5
+341,Disparo Lodo,El usuario lanza lodo al objetivo y reduce su Velocidad.,Tierra,especial,55,95,15
+342,Cola Veneno,Puede envenenar y dar un golpe crítico.,Veneno,físico,50,100,25
+343,Antojo,Se acerca con ternura al objetivo pero le ataca y le roba el objeto que lleve.,Normal,físico,60,100,25
+344,Placaje Eléc,Quien lo usa electrifica su cuerpo para luego atacar. Se hiere mucho a sí mismo pero puede paralizar al objetivo.,Eléctrico,físico,120,100,15
+345,Hoja Mágica,Esparce extrañas hojas que persiguen al objetivo. No se puede esquivar.,Planta,especial,60,100,20
+346,Hidrochorro,El usuario se empapa en agua lo que debilita los movimientos de tipo Fuego durante cinco turnos.,Agua,estado,,100,15
+347,Paz Mental,Aumenta la concentración y calma el espíritu para subir el Ataque Especial y la Defensa Especial.,Psíquico,estado,,100,20
+348,Hoja Aguda,Acuchilla con una hoja fina. Suele dar un golpe crítico.,Planta,físico,90,100,15
+349,Danza Dragón,Danza mística que sube el Ataque y la Velocidad.,Dragón,estado,,100,20
+350,Pedrada,Lanza pedruscos al objetivo de dos a cinco veces consecutivas.,Roca,físico,25,90,10
+351,Onda Voltio,Ataque eléctrico muy rápido e ineludible.,Eléctrico,especial,60,100,20
+352,Hidropulso,Ataca con un potente chorro de agua. Puede confundir al objetivo.,Agua,especial,60,100,20
+353,Deseo Oculto,Concentra un haz de luz y ataca dos turnos después.,Acero,especial,140,100,5
+354,Psicoataque,Ataque en toda regla que baja mucho el Ataque Especial de quien lo usa.,Psíquico,especial,140,90,5

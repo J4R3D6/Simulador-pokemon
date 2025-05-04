@@ -45,9 +45,43 @@ public class Pokemon {
 
 	private ArrayList<State> states;
 
-	public Pokemon(int id,String[] info,ArrayList<Integer> attacksIds, boolean random) {
-		//ID_0,"Name"_1,"Type1"_2,"HP"_5,"Attack"_6,"Defense"_7,"Sp. Atk"_8,"Sp. Def"_9,"Speed"_10,
-		//con la información inicializo el pokemon (está en desorden).
+	public Pokemon() {
+		initDefault();
+	}
+
+	public Pokemon(int id, String[] info, ArrayList<Integer> attacksIds, boolean random) {
+		try {
+			if (info.length < 11) throw new POOBkemonException(POOBkemonException.LESS_INFORMACION_POKEMON);
+			initFromParameters(id, info, attacksIds, random);
+		} catch (POOBkemonException | NumberFormatException e) {
+			initDefault();
+			System.err.println("Error al crear Pokémon: " + e.getMessage());
+		}
+	}
+
+	private void initDefault() {
+		this.id = 0;
+		this.name = "MissingNo";
+		this.idPokedex = "0";
+		this.type = "Normal";
+		this.maxHealth = 100;
+		this.currentHealth = this.maxHealth;
+		this.attack = 10;
+		this.defense = 10;
+		this.specialAttack = 10;
+		this.specialDefense = 10;
+		this.speed = 10;
+		this.xp = 0;
+		this.level = 1;
+		this.levelRequirement = 100;
+		this.states = new ArrayList<>();
+		this.active = false;
+		this.weak = false;
+		this.random = false;
+		this.attacks = new ArrayList<>();
+	}
+
+	private void initFromParameters(int id, String[] info, ArrayList<Integer> attacksIds, boolean random) {
 		this.id = id;
 		this.name = info[1];
 		this.idPokedex = info[0];
@@ -66,9 +100,7 @@ public class Pokemon {
 		this.active = false;
 		this.weak = false;
 		this.random = random;
-		//construccción de los ataques
 		this.attacks = new ArrayList<>(this.createAttacks(attacksIds));
-
 	}
 
 	private int randomStatics(int base) {
@@ -152,5 +184,12 @@ public class Pokemon {
 				String.valueOf(active),        // 14 - Estado (activo)
 				String.valueOf(weak),          // 15 - Debilitado
 		};
+	}
+
+	public void getDamage(int i, Attack ataque1) {
+		this.currentHealth = this.currentHealth - i;
+		if(this.currentHealth < 0) {
+			this.currentHealth = 0;
+		}
 	}
 }

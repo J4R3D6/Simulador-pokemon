@@ -1,4 +1,5 @@
 
+import domain.POOBkemonException;
 import domain.Pokemon;
 import domain.PokemonRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -103,4 +104,57 @@ public class PokemonTest {
         // Este test verifica que el método no lance excepciones
         assertDoesNotThrow(() -> pokemon.getDamage());
     }
+
+    @Test
+    public void testConstructorWithIncompleteInfo_ShouldCreateDefaultPokemon() {
+        // Arrange
+        String[] incompleteInfo = {"001", "Bulbasaur"}; // Falta type, HP, etc. (menos de 11 campos)
+        ArrayList<Integer> sampleAttacksIds = new ArrayList<>(Arrays.asList(1, 2));
+
+        // Act
+        Pokemon pokemon = new Pokemon(1, incompleteInfo, sampleAttacksIds, false);
+
+        // Assert - Verifica que se creó un Pokémon por defecto
+        assertEquals(0, pokemon.getId()); // ID por defecto
+        assertEquals("MissingNo", pokemon.getName()); // Nombre por defecto
+        assertEquals("Normal", pokemon.type); // Tipo por defecto
+        assertEquals(100, pokemon.maxHealth); // HP por defecto
+        assertEquals(10, pokemon.attack); // Ataque por defecto
+        assertTrue(pokemon.getAttacks().isEmpty()); // Lista de ataques vacía
+    }
+
+    @Test
+    public void testConstructorWithInvalidNumberFormat_ShouldCreateDefaultPokemon() {
+        // Arrange - Info con un campo numérico inválido (ej: "abc" en HP)
+        String[] invalidInfo = {
+                "001", "Bulbasaur", "Grass", "", "", "abc", // HP no es número
+                "49", "65", "65", "45"
+        };
+        ArrayList<Integer> sampleAttacksIds = new ArrayList<>(Arrays.asList(1, 2));
+
+        // Act
+        Pokemon pokemon = new Pokemon(1, invalidInfo, sampleAttacksIds, false);
+
+        // Assert - Verifica valores por defecto
+        assertEquals("MissingNo", pokemon.getName());
+        assertEquals(100, pokemon.maxHealth);
+    }
+
+    @Test
+    public void testConstructorWithIncompleteInfo_ShouldCreateDefaultPokemon2() {
+        // Arrange
+        String[] incompleteInfo = {"001", "Bulbasaur"}; // Menos de 11 campos
+        ArrayList<Integer> sampleAttacksIds = new ArrayList<>(Arrays.asList(1, 2));
+
+        // Act
+        Pokemon pokemon = new Pokemon(1, incompleteInfo, sampleAttacksIds, false);
+
+        // Assert - Verifica que se creó un Pokémon por defecto
+        assertEquals(0, pokemon.getId()); // ID por defecto
+        assertEquals("MissingNo", pokemon.getName()); // Nombre por defecto
+        assertEquals("Normal", pokemon.type); // Tipo por defecto
+        assertEquals(100, pokemon.maxHealth); // HP por defecto
+        assertTrue(pokemon.getAttacks().isEmpty()); // Ataques vacíos (o según tu lógica)
+    }
 }
+

@@ -43,8 +43,13 @@ public class POOBkemonTest {
         enemyAttacks.put(2,new ArrayList<Integer>(){{add(7);add(34);}});
         attacks.put("Player1", playerAttacks);
         attacks.put("Defensive1", enemyAttacks);
+        try {
+            game = new POOBkemon(trainers, pokemons, items, attacks, false);
+        }
+        catch(POOBkemonException e){
+            System.out.println(e);
+        }
 
-        game = new POOBkemon(trainers, pokemons, items, attacks, false);
     }
 
     @Test
@@ -112,6 +117,102 @@ public class POOBkemonTest {
                     p.getId(), p.getName(), p.level, p. currentHealth, p.maxHealth);
 
             assertEquals(expected, result[0][i]);
+        }
+    }
+
+    // --- Tests para datos faltantes ---
+
+    @Test(expected = POOBkemonException.class)
+    public void testMissingTrainerData() throws POOBkemonException {
+        // Arrange
+        ArrayList<String> emptyTrainers = new ArrayList<>(); // Lista vacía
+        HashMap<String, ArrayList<Integer>> pokemons = new HashMap<>();
+        HashMap<String, String[][]> items = new HashMap<>();
+        HashMap<String, HashMap<Integer, ArrayList<Integer>>> attacks = new HashMap<>();
+
+        // Act & Assert (debe lanzar excepción)
+        new POOBkemon(emptyTrainers, pokemons, items, attacks, false);
+    }
+
+    @Test(expected = POOBkemonException.class)
+    public void testMissingPokemonData() throws POOBkemonException {
+        // Arrange
+        ArrayList<String> trainers = new ArrayList<>();
+        trainers.add("Player1");
+        HashMap<String, ArrayList<Integer>> emptyPokemons = new HashMap<>(); // Sin pokémones
+        HashMap<String, String[][]> items = new HashMap<>();
+        HashMap<String, HashMap<Integer, ArrayList<Integer>>> attacks = new HashMap<>();
+
+        // Act & Assert
+        new POOBkemon(trainers, emptyPokemons, items, attacks, false);
+    }
+
+    @Test(expected = POOBkemonException.class)
+    public void testMissingItemsData() throws POOBkemonException {
+        // Arrange
+        ArrayList<String> trainers = new ArrayList<>();
+        trainers.add("Player1");
+        HashMap<String, ArrayList<Integer>> pokemons = new HashMap<>();
+        pokemons.put("Player1", new ArrayList<>());
+        HashMap<String, String[][]> emptyItems = new HashMap<>(); // Sin ítems
+        HashMap<String, HashMap<Integer, ArrayList<Integer>>> attacks = new HashMap<>();
+
+        // Act & Assert
+        new POOBkemon(trainers, pokemons, emptyItems, attacks, false);
+    }
+
+    // --- Tests para datos incompletos ---
+
+    @Test(expected = POOBkemonException.class)
+    public void testIncompleteTrainerData() throws POOBkemonException {
+        ArrayList<String> trainers = new ArrayList<>();
+        trainers.add("Player1");
+        trainers.add("Offensive1"); // No tiene datos asociados
+
+        HashMap<String, ArrayList<Integer>> pokemons = new HashMap<>();
+        pokemons.put("Player1", new ArrayList<>()); // Solo Player1 tiene datos
+
+        HashMap<String, String[][]> items = new HashMap<>();
+        HashMap<String, HashMap<Integer, ArrayList<Integer>>> attacks = new HashMap<>();
+
+        // Act & Assert
+        new POOBkemon(trainers, pokemons, items, attacks, false);
+    }
+
+    // --- Tests para formato inválido si ingresa una letra y no un numero ---
+
+    @Test(expected = POOBkemonException.class)
+    public void testInvalidNumberFormat() throws POOBkemonException {
+        // Arrange
+        ArrayList<String> trainers = new ArrayList<>();
+        trainers.add("Player1");
+
+        HashMap<String, ArrayList<Integer>> pokemons = new HashMap<>();
+        pokemons.put("Player1", new ArrayList<>());
+
+        HashMap<String, String[][]> items = new HashMap<>();
+        items.put("Player1", new String[][]{{"not_a_number", "10"}}); // ID no es número
+
+        HashMap<String, HashMap<Integer, ArrayList<Integer>>> attacks = new HashMap<>();
+
+        // Act & Assert
+        new POOBkemon(trainers, pokemons, items, attacks, false);
+    }
+
+    // --- Test para mensajes de excepción (que lo lance pues)---
+
+    @Test
+    public void testExceptionMessageContent() {
+        // Arrange
+        ArrayList<String> emptyTrainers = new ArrayList<>();
+
+        // Act
+        try {
+            new POOBkemon(emptyTrainers, new HashMap<>(), new HashMap<>(), new HashMap<>(), false);
+            fail("Debería haber lanzado una excepción");
+        } catch (POOBkemonException e) {
+            // Assert
+            assertEquals(POOBkemonException.MISSING_TRAINER_DATA, e.getMessage());
         }
     }
 }

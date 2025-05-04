@@ -1,12 +1,9 @@
 package domain;
 
 public class Defensive extends Machine {
-    private BagPack bagPack;
-    private Team team;
 
-    public Defensive(Team team, BagPack bagPack) {
-        this.bagPack = bagPack;
-        this.team = team;
+    public Defensive(Team team, BagPack bagPack) throws POOBkemonException {
+        super(team,bagPack);
     }
     @Override
     public String takeDescicion() {

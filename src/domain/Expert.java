@@ -3,12 +3,9 @@ package domain;
 public class Expert extends Machine {
 
 	private POOBkemon poobkemon;
-	private BagPack bagPack;
-	private Team team;
 
-	public Expert(Team team, BagPack bagPack, POOBkemon poobkemon) {
-		this.bagPack = bagPack;
-		this.team = team;
+	public Expert(Team team, BagPack bagPack, POOBkemon poobkemon) throws POOBkemonException {
+        super(team,bagPack);
 		this.poobkemon = poobkemon;
 	}
 	@Override

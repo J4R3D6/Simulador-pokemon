@@ -1071,7 +1071,7 @@ public class POOBkemonGUI extends JFrame {
     
     
     private String chooseMachine(String tittle, String mensaje) {
-        String[] opciones = {"Defensive", "Ofensive", "Random", "Expert"};
+        String[] opciones = {"Defensive", "Offensive", "Random", "Expert"};
         
         int respuesta = JOptionPane.showOptionDialog(
                 null,                         
