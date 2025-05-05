@@ -55,7 +55,6 @@ public class MovesRepository {
         }
     }
 
-    // ✅ Esta función divide la línea CSV correctamente, incluso con comas dentro de comillas
     private static String[] splitCSVLine(String line) {
         List<String> values = new ArrayList<>();
         boolean inQuotes = false;
@@ -74,7 +73,6 @@ public class MovesRepository {
             }
         }
 
-        // Agrega la última columna
         values.add(current.toString().trim().replaceAll("^\"|\"$", ""));
 
         return values.toArray(new String[0]);
@@ -82,8 +80,8 @@ public class MovesRepository {
     public String[] getAttackDamageAndType(int id) {
          if (!movimientos.containsKey(id)) return null;
          String[] ataque = movimientos.get(id);
-         String tipo = ataque[4];
-         String poder = ataque[7];
+         String tipo = ataque[3];
+         String poder = ataque[5];
          if (poder == null || poder.isEmpty()) {
              poder = "0";
          }

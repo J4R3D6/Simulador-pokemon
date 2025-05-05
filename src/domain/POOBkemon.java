@@ -163,8 +163,9 @@ public class POOBkemon {
 
 			for (int j = 0; j < pokemons.size(); j++) {
 				Pokemon p = pokemons.get(j);
-				info[i][j] = String.format("%d. %s (Nivel: %d, HP: %d/%d)", //esto es para los test, pero se edita para conectar con la GUI
-						p.getId(), p.getName(), p.level, p. currentHealth, p.maxHealth);
+				info[i][j] = String.format("%d. %s (Nivel: %d, HP: %.1f/%d)",
+						p.getId(), p.getName(), p.level, p.currentHealth, p.maxHealth);
+
 			}
 		}
 
