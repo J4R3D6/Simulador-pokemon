@@ -1119,6 +1119,49 @@ public class POOBkemonGUI extends JFrame {
         timer2.start();
         timer3.start();
     }
+    private void showBattleStart() {
+        JPanel BattleStartPanel = new ImagePanel(new BorderLayout(), MENU + "battleStart.png");
+        BattleStartPanel.setLayout(new BorderLayout());
+
+        // Panel para contener los GIFs (sin layout para posicionamiento manual)
+        JPanel gifContainer = new JPanel(null);
+        gifContainer.setOpaque(false);
+
+        // Cargar el GIF original
+        ImageIcon originalGif = new ImageIcon(MENU + "brillo.gif");
+        JLabel gifLabel1 = new JLabel();
+        JLabel gifLabel2 = new JLabel();
+
+        // Ajustar el tamaño de los GIFs al cambiar el tamaño del contenedor
+        gifContainer.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                int containerHeight = gifContainer.getHeight();
+                // Escalar el GIF proporcionalmente para que coincida con la altura del contenedor
+                int newWidth = (int) (containerHeight * ((double) originalGif.getIconWidth() / originalGif.getIconHeight()));
+                Image scaledImg = originalGif.getImage().getScaledInstance(newWidth, containerHeight, Image.SCALE_DEFAULT);
+                ImageIcon scaledGif = new ImageIcon(scaledImg);
+
+                gifLabel1.setIcon(scaledGif);
+                gifLabel2.setIcon(scaledGif);
+                gifLabel1.setSize(newWidth, containerHeight);
+                gifLabel2.setSize(newWidth, containerHeight);
+
+                // Posición inicial: dos GIFs uno al lado del otro
+                gifLabel1.setLocation(0, 0);
+                gifLabel2.setLocation(newWidth, 0);
+            }
+        });
+
+        // Añadir los GIFs al contenedor
+        gifContainer.add(gifLabel1);
+        gifContainer.add(gifLabel2);
+
+        // Temporizador para la animación de movimiento continuo
+        Timer animationTimer = new Timer(16, e -> { // ~60 FPS (1000ms/60 ≈ 16ms)
+            // Mover ambos GIFs hacia la izquierda
+            gifLabel1.setLocation(gifLabel1.getX() - 2, 0); // Velocidad ajustable
+            gifLabel2.setLocation(gifLabel2.getX() - 2, 0);
 
     // ========== Métodos auxiliares para diferentes botones ========== //
     private JButton createImageButton(String imagePath, int x, int y, int width, int height) {
