@@ -1163,6 +1163,38 @@ public class POOBkemonGUI extends JFrame {
             gifLabel1.setLocation(gifLabel1.getX() - 2, 0); // Velocidad ajustable
             gifLabel2.setLocation(gifLabel2.getX() - 2, 0);
 
+            // Si un GIF sale completamente por la izquierda, lo reposicionamos a la derecha del otro
+            if (gifLabel1.getX() + gifLabel1.getWidth() <= 0) {
+                gifLabel1.setLocation(gifLabel2.getX() + gifLabel2.getWidth(), 0);
+            }
+            if (gifLabel2.getX() + gifLabel2.getWidth() <= 0) {
+                gifLabel2.setLocation(gifLabel1.getX() + gifLabel1.getWidth(), 0);
+            }
+        });
+
+        // Iniciar/detener animación cuando el panel se muestra/oculta
+        BattleStartPanel.addHierarchyListener(e -> {
+            if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
+                if (BattleStartPanel.isShowing()) {
+                    animationTimer.start();
+                    reproducirSonido("1-14.ReceivedBattlePoints_.wav");
+                } else {
+                    animationTimer.stop();
+                    detenerSonido();
+                }
+            }
+        });
+        Timer timer1 = new Timer(4300, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showTimer();
+            }
+        });
+        timer1.setRepeats(false);
+        timer1.start();
+        BattleStartPanel.add(gifContainer, BorderLayout.CENTER);
+        refresh(BattleStartPanel);
+    }
     // ========== Métodos auxiliares para diferentes botones ========== //
     private JButton createImageButton(String imagePath, int x, int y, int width, int height) {
         JButton button = new JButton();
