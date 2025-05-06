@@ -1334,6 +1334,23 @@ public class POOBkemonGUI extends JFrame {
         Image img = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(img);
     }
+    private void reproducirSonido(String sonido) {
+        try {
+            AudioInputStream audioInput = AudioSystem.getAudioInputStream(new File(songs+sonido));
+            clip = AudioSystem.getClip();
+            clip.open(audioInput);
+            clip.loop(Clip.LOOP_CONTINUOUSLY); // Repetir mientras el panel esté visible
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void detenerSonido() {
+        if (clip != null && clip.isRunning()) {
+            clip.stop();
+            clip.close();
+        }
+    }
     //Metodos de los botones.
     private void actualizarTextoDificultad() {
     	
