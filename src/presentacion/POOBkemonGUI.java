@@ -31,8 +31,9 @@ public class POOBkemonGUI extends JFrame {
 	private HashMap<String,ArrayList<Integer>> pokemones = new HashMap<>(); //<trainer, pokemones(int)>
 	private HashMap<String,ArrayList<Integer>> moves = new HashMap<>(); //trianer, moves (en el orden de los pokemones)>
     private HashMap<String,ArrayList<int[]>> items = new HashMap<>();
-	//private POOBkemon poobkemon;
+	private POOBkemon poobkemon;
 	//
+    private Clip clip;
 	private JPanel IntroductionPanel;
 	private JPanel menuPanel;
 	private JPanel gameMode;
@@ -63,12 +64,12 @@ public class POOBkemonGUI extends JFrame {
     private JButton machine4;
     private JButton backButtonMenu;
     //
+    private static final String songs =  "resources/songs/";
     private static final String selectionPanel = "resources/menu/selectionPanel.png";
     private static final String CHARACTER = "resources/personaje/";
     private static final String ITEMS = "resources/Items/";
     private static final String BUTTONS = "resources/menu/buttons/";
     private static final String MENU = "resources/menu/";
-    private static final String INTRODUCTION = "resources/menu/start.png";
     private static final String POKEDEX = "resources/menu/pokedex.png";
     private static final String POKEMONES =  "resources/pokemones/Emerald/";
     private static final String TYPES =  "resources/pokemones/Emerald/types/";
@@ -142,7 +143,16 @@ public class POOBkemonGUI extends JFrame {
         itemSalir.addActionListener(e -> confirmExit());
     }
     private void prepareIntroductionPanel() {
-    	IntroductionPanel = new ImagePanel(null, INTRODUCTION);
+    	IntroductionPanel = new ImagePanel(null, MENU+"start.png");
+        IntroductionPanel.addHierarchyListener(e -> {
+            if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
+                if (IntroductionPanel.isShowing()) {
+                    reproducirSonido("1-03TitleTheme.wav");
+                } else {
+                    detenerSonido();
+                }
+            }
+        });
     }
     private void prepareIntroductionAction() {
         InputMap inputMap = IntroductionPanel.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW);
@@ -425,7 +435,6 @@ public class POOBkemonGUI extends JFrame {
             {150,180} // Item 6
         };
 
-        // Método para actualizar los items mostrados
         Runnable updateItemsDisplay = () -> {
             itemsDisplayPanel.removeAll();
             
@@ -529,7 +538,7 @@ public class POOBkemonGUI extends JFrame {
     			choosePokemon();
     		}else {
     			createDataForGame();
-                showTimer("survival");
+                showTimer();
     		}});
     	machines.addActionListener(e -> {
     		String machine1 = chooseMachine("Escoge maquina1","Por escoger una maquina \n(En caso de ser cancelado se tomara Defensive)");
@@ -1084,7 +1093,7 @@ public class POOBkemonGUI extends JFrame {
                 turnLabel.setForeground(new Color(255, 100, 100));
                 contador[0]++;
             }else{
-                showTimer("POOBkemon");
+                showTimer();
             }
         });
         chooseItemsPanel.add(leftPanel, BorderLayout.WEST);
@@ -1095,7 +1104,7 @@ public class POOBkemonGUI extends JFrame {
         revalidate();
         repaint();
     }
-    private void showTimer(String mode) {
+    private void showTimer() {
         JPanel timerPanel = new ImagePanel(null, MENU + "3.png");
         refresh(timerPanel);
 
@@ -1117,9 +1126,7 @@ public class POOBkemonGUI extends JFrame {
         Timer timer3 = new Timer(3000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("battle");
-                // Aquí podrías llamar a tu método que inicia la batalla
-                // e.g., startBattle();
+                showBattleStart();
             }
         });
 

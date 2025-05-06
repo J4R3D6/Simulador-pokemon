@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 class ImagePanel extends JPanel{
-	private BufferedImage fondo;
+    private BufferedImage fondo;
 
     public ImagePanel(LayoutManager layout, String rutaImagen) {
         super(layout);
