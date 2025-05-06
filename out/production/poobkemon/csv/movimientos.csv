@@ -47,7 +47,7 @@
 46,Roar,The target is scared off and a different Pokémon is dragged out. In the wild this ends a battle against a single Pokémon.,Normal,status,0,100,20
 47,Sing,A soothing lullaby is sung in a calming voice that puts the target into a deep slumber.,Normal,status,0,55,15
 48,Supersonic,The user generates odd sound waves from its body that confuse the target.,Normal,status,0,55,20
-49,Sonic Boom,The target is hit with a destructive shock wave that always inflicts 20 HP damage.,Normal,special,80,90,20
+49,Sonic Boom,The target is hit with a destructive shock wave that always inflicts 20 HP damage.,Normal,special,60,90,20
 50,Disable,For four turns this move prevents the target from using the move it last used.,Normal,status,0,100,20
 51,Acid,The opposing Pokémon are attacked with a spray of harsh acid. This may also lower their Sp. Def stats.,Poison,special,40,100,30
 52,Ember,The target is attacked with small flames. This may also leave the target with a burn.,Fire,special,40,100,25
@@ -80,7 +80,7 @@
 79,Sleep Powder,The user scatters a big cloud of sleep-inducing dust around the target.,Grass,status,0,75,15
 80,Petal Dance,The user attacks the target by scattering petals for two to three turns. The user then becomes confused.,Grass,special,120,100,10
 81,String Shot,The opposing Pokémon are bound with silk blown from the user’s mouth that harshly lowers the Speed stat.,Bug,status,0,95,40
-82,Dragon Rage,This attack hits the target with a shock wave of pure rage. This attack always inflicts 40 HP damage.,Dragon,special,60,100,10
+82,Dragon Rage,This attack hits the target with a shock wave of pure rage. This attack always inflicts 40 HP damage.,Dragon,special,50,100,10
 83,Fire Spin,The target becomes trapped within a fierce vortex of fire that rages for four to five turns.,Fire,special,35,85,15
 84,Thunder Shock,A jolt of electricity crashes down on the target to inflict damage. This may also leave the target with paralysis.,Electric,special,40,100,30
 85,Thunderbolt,A strong electric blast crashes down on the target. This may also leave the target with paralysis.,Electric,special,90,100,15
@@ -99,7 +99,7 @@
 98,Quick Attack,The user lunges at the target at a speed that makes it almost invisible. This move always goes first.,Normal,physical,40,100,30
 99,Rage,As long as this move is in use the power of rage raises the Attack stat each time the user is hit in battle.,Normal,physical,20,100,20
 100,Teleport,Use it to flee from any wild Pokémon. It can also warp to the last Pokémon Center visited.,Psychic,status,0,100,20
-101,Night Shade,The user makes the target see a frightening mirage. It inflicts damage equal to the user’s level.,Ghost,special,60,100,15
+101,Night Shade,The user makes the target see a frightening mirage. It inflicts damage equal to the user’s level.,Ghost,special,50,100,15
 102,Mimic,The user copies the target’s last move. The move can be used during battle until the Pokémon is switched out.,Normal,status,0,100,10
 103,Screech,An earsplitting screech harshly lowers the target’s Defense stat.,Normal,status,0,85,40
 104,Double Team,By moving rapidly the user makes illusory copies of itself to raise its evasiveness.,Normal,status,0,100,15
@@ -115,7 +115,7 @@
 114,Haze,The user creates a haze that eliminates every stat change among all the Pokémon engaged in battle.,Ice,status,0,100,30
 115,Reflect,A wondrous wall of light is put up to reduce damage from physical attacks for five turns.,Psychic,status,0,100,20
 116,Focus Energy,The user takes a deep breath and focuses so that critical hits land more easily.,Normal,status,0,100,30
-117,Bide,The user endures attacks for two turns then strikes back to cause double the damage taken.,Normal,physical,30,100,10
+117,Bide,The user endures attacks for two turns then strikes back to cause double the damage taken.,Normal,physical,40,100,10
 118,Metronome,The user waggles a finger and stimulates its brain into randomly using nearly any move.,Normal,status,0,100,10
 119,Mirror Move,The user counters the target by mimicking the target’s last move.,Flying,status,0,100,20
 120,Self-Destruct,The user attacks everything around it by causing an explosion. The user faints upon using this move.,Normal,physical,200,100,5
@@ -147,7 +147,7 @@
 146,Dizzy Punch,The target is hit with rhythmically launched punches. This may also leave the target confused.,Normal,physical,70,100,10
 147,Spore,The user scatters bursts of spores that induce sleep.,Grass,status,0,100,15
 148,Flash,The user flashes a bright light that cuts the target’s accuracy.,Normal,status,0,100,20
-149,Psywave,The target is attacked with an odd psychic wave. The attack varies in intensity.,Psychic,special,60,100,15
+149,Psywave,The target is attacked with an odd psychic wave. The attack varies in intensity.,Psychic,special,50,100,15
 150,Splash,The user just flops and splashes around to no effect at all...,Normal,status,0,100,40
 151,Acid Armor,The user alters its cellular structure to liquefy itself sharply raising its Defense stat.,Poison,status,0,100,20
 152,Crabhammer,The target is hammered with a large pincer. Critical hits land more easily.,Water,physical,100,90,10
@@ -160,7 +160,7 @@
 159,Sharpen,The user lowers its polygon count to make itself more jagged raising the Attack stat.,Normal,status,0,100,30
 160,Conversion,The user changes its type to become the same type as the move at the top of the list of moves it knows.,Normal,status,0,100,30
 161,Tri Attack,The user strikes with a simultaneous three-beam attack. May also burn freeze or leave the target with paralysis.,Normal,special,80,100,10
-162,Super Fang,The user chomps hard on the target with its sharp front fangs. This cuts the target’s HP in half.,Normal,physical,40,100,10
+162,Super Fang,The user chomps hard on the target with its sharp front fangs. This cuts the target’s HP in half.,Normal,physical,30,90,,10
 163,Slash,The target is attacked with a slash of claws or blades. Critical hits land more easily.,Normal,physical,70,100,20
 164,Substitute,The user makes a copy of itself using some of its HP. The copy serves as the user’s decoy.,Normal,status,0,100,10
 165,Struggle,An attack that is used in desperation only if the user has no PP. This also damages the user a little.,Normal,physical,50,100,20
@@ -215,7 +215,7 @@
 214,Sleep Talk,While it is asleep the user randomly uses one of the moves it knows.,Normal,status,0,100,10
 215,Heal Bell,The user makes a soothing bell chime to heal the status conditions of all the party Pokémon.,Normal,status,0,100,5
 216,Return,A full-power attack that grows more powerful the more the user likes its Trainer.,Normal,physical,30,100,20
-217,Present,The user attacks by giving the target a gift with a hidden trap. It restores HP sometimes however.,Normal,physical,40,100,15
+217,Present,The user attacks by giving the target a gift with a hidden trap. It restores HP sometimes however.,Normal,physical,30,90,15
 218,Frustration,A full-power attack that grows more powerful the less the user likes its Trainer.,Normal,physical,30,100,20
 219,Safeguard,The user creates a protective field that prevents status conditions for five turns.,Normal,status,0,100,25
 220,Pain Split,The user adds its HP to the target’s HP then equally shares the combined HP with the target.,Normal,status,0,100,20
@@ -241,7 +241,7 @@
 240,Rain Dance,The user summons a heavy rain that falls for five turns powering up Water-type moves.,Water,status,0,100,5
 241,Sunny Day,The user intensifies the sun for five turns powering up Fire-type moves.,Fire,status,0,100,5
 242,Crunch,The user crunches up the target with sharp fangs. This may also lower the target’s Defense stat.,Dark,physical,80,100,15
-243,Mirror Coat,A retaliation move that counters any special attack inflicting double the damage taken.,Psychic,special,60,100,20
+243,Mirror Coat,A retaliation move that counters any special attack inflicting double the damage taken.,Psychic,special,50,100,20
 244,Psych Up,The user hypnotizes itself into copying any stat change made by the target.,Normal,status,0,100,10
 245,Extreme Speed,The user charges the target at blinding speed. This move always goes first.,Normal,physical,80,100,5
 246,Ancient Power,The user attacks with a prehistoric power. This may also raise all the user’s stats at once.,Rock,special,60,100,5
@@ -253,7 +253,7 @@
 252,Fake Out,An attack that hits first and makes the target flinch. It only works the first turn the user is in battle.,Normal,physical,40,100,10
 253,Uproar,The user attacks in an uproar for three turns. During that time no one can fall asleep.,Normal,special,90,100,10
 254,Stockpile,The user charges up power and raises both its Defense and Sp. Def stats. The move can be used three times.,Normal,status,0,100,20
-255,Spit Up,The power stored using the move Stockpile is released at once in an attack. The more power is stored the greater the move’s power.,Normal,special,60,100,10
+255,Spit Up,The power stored using the move Stockpile is released at once in an attack. The more power is stored the greater the move’s power.,Normal,special,50,100,10
 256,Swallow,The power stored using the move Stockpile is absorbed by the user to heal its HP. Storing more power heals more HP.,Normal,status,0,100,10
 257,Heat Wave,The user attacks by exhaling hot breath on the opposing Pokémon. This may also leave those Pokémon with a burn.,Fire,special,95,90,10
 258,Hail,The user summons a hailstorm lasting five turns. It damages all Pokémon except the Ice type.,Ice,status,0,100,10

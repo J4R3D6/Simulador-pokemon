@@ -21,30 +21,30 @@ public class AttackTest {
     @Test
     public void testConstructorInitialization() {
         assertEquals(52, testAttack.getId());
-        assertEquals("Ascuas", testAttack.getInfo()[0]);
-        assertEquals("Fuego", testAttack.getInfo()[1]);
+        assertEquals("Ember", testAttack.getInfo()[0]);
+        assertEquals("Fire", testAttack.getInfo()[1]);
         assertEquals("40", testAttack.getInfo()[2]);
         assertEquals("100", testAttack.getInfo()[3]);
         assertEquals("25", testAttack.getInfo()[4]);
-        assertEquals("Ataca con llamas pequeñas que pueden causar quemaduras.", testAttack.getInfo()[6]);
+        assertEquals("The target is attacked with small flames. This may also leave the target with a burn.", testAttack.getInfo()[6]);
     }
 
     @Test
     public void testGetInfo() {
         String[] info = testAttack.getInfo();
         assertEquals(7, info.length);
-        assertEquals("Ascuas", info[0]);
-        assertEquals("Fuego", info[1]);
+        assertEquals("Ember", info[0]);
+        assertEquals("Fire", info[1]);
         assertEquals("40", info[2]);
         assertEquals("100", info[3]);
         assertEquals("25", info[4]);
         assertEquals("52", info[5]);
-        assertEquals("Ataca con llamas pequeñas que pueden causar quemaduras.", info[6]);
+        assertEquals("The target is attacked with small flames. This may also leave the target with a burn.", info[6]);
     }
 
     @Test
     public void testToString() {
-        String expected = "Ascuas (Type: Fuego, Power: 40, Accuracy: 100%, PP: 25/25)";
+        String expected = "Ember (Type: Fire, Power: 40, Accuracy: 100%, PP: 25/25)";
         assertEquals(expected, testAttack.toString());
     }
 

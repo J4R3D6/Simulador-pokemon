@@ -8,21 +8,20 @@ import java.util.List;
 import java.util.TreeMap;
 
 public class MovesRepository {
-    private static final String ATTACKS_ARCHIVE = "resources/csv/movimientos.csv";
+    private static final String ATACKS_ARCHIVE = "resources/csv/movimientos.csv";
     private static TreeMap<Integer, String[]> movimientos = new TreeMap<>();
 
-    public MovesRepository(){
+    public MovesRepository() {
         List<String> pokemonsIput = null;
         try {
-            pokemonsIput = Files.readAllLines(Paths.get(ATTACKS_ARCHIVE));
+            pokemonsIput = Files.readAllLines(Paths.get(ATACKS_ARCHIVE));
         } catch (IOException e) {
             Log.record(e);
         }
 
         for (int i = 1; i < pokemonsIput.size(); i++) {
-            //ID_0,"Name"_1,"Type1"_3,"Type2"_4,"HP"_6,"Attack"_7,"Defense"_8,"Sp. Atk"_9,"Sp. Def"_10,"Speed"_11,
-            String[] valores = pokemonsIput.get(i).split(",");
-            this.movimientos.put(Integer.parseInt(valores[0]),valores);
+            String[] valores = splitCSVLine(pokemonsIput.get(i));
+            this.movimientos.put(Integer.parseInt(valores[0]), valores);
         }
     }
 
@@ -55,27 +54,34 @@ public class MovesRepository {
             return null;
         }
     }
-    public String getAttackToChoose(int id) {
-        if (movimientos.containsKey(id)) {
-            String[] attack = getAttacksId(id);
-            return attack[1] +"\n"+"T."+ attack[3] + " | C." + attack[4] +"\n"+"PD "+ attack[5] +" | PP "+ attack[7];
-        } else {
-            return null;
+
+    private static String[] splitCSVLine(String line) {
+        List<String> values = new ArrayList<>();
+        boolean inQuotes = false;
+        StringBuilder current = new StringBuilder();
+
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+
+            if (c == '\"') {
+                inQuotes = !inQuotes;
+            } else if (c == ',' && !inQuotes) {
+                values.add(current.toString().trim().replaceAll("^\"|\"$", ""));
+                current.setLength(0);
+            } else {
+                current.append(c);
+            }
         }
-    }
-    public String getAttackType(int id) {
-        if (movimientos.containsKey(id)) {
-            String[] attack = getAttacksId(id);
-            return attack[3];
-        } else {
-            return null;
-        }
+
+        values.add(current.toString().trim().replaceAll("^\"|\"$", ""));
+
+        return values.toArray(new String[0]);
     }
     public String[] getAttackDamageAndType(int id) {
          if (!movimientos.containsKey(id)) return null;
          String[] ataque = movimientos.get(id);
-         String tipo = ataque[4];
-         String poder = ataque[7];
+         String tipo = ataque[3];
+         String poder = ataque[5];
          if (poder == null || poder.isEmpty()) {
              poder = "0";
          }

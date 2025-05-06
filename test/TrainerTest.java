@@ -36,7 +36,7 @@ public class TrainerTest {
 
         // Debilita el pokémon
         //(Fundiona bien el test pero lo uso para comprobar el csv) solo da el multiplicador por default, no coinciden idiomas en los ataques y pokemones.
-        faintedPokemon.getDamage(2, 2);
+        faintedPokemon.getDamage(19, 19);
 
         ArrayList<Pokemon> pokemons = new ArrayList<>();
         pokemons.add(healthyPokemon);
@@ -84,8 +84,7 @@ public class TrainerTest {
     public void testConstructorWithFaintedFirstPokemon() throws POOBkemonException {
         List<Pokemon> pokemons = new ArrayList<>();
         pokemons.add(faintedPokemon);
-        System.out.println(faintedPokemon.currentHealth);
-        System.out.println(faintedPokemon.maxHealth);
+        StatsRepository info = new StatsRepository();
         new Trainer(1,new Team((ArrayList<Pokemon>) pokemons), validBagPack);
     }
 
