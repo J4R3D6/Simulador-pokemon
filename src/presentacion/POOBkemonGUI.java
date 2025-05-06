@@ -193,6 +193,15 @@ public class POOBkemonGUI extends JFrame {
     	itemsButton.addActionListener(e -> showItemsGalery());
     	stastRandomButton.addActionListener(e -> actualizarTextoDificultad());
         exitButton.addActionListener(e -> confirmExit());
+        menuPanel.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    refresh(IntroductionPanel);
+                }
+            }
+        });
+        menuPanel.setFocusable(true);
     }
     private void showPokedex() {
     	
