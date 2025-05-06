@@ -2,6 +2,7 @@ package domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletionException;
 import java.util.function.Function;
@@ -201,14 +202,33 @@ public class POOBkemon {
 	/**
 	 * crear los Pokemons
 	 */
-	private ArrayList<Pokemon> createPokemons(ArrayList<Integer> pokemons,ArrayList<Integer> atacksIds) {
-		ArrayList<Pokemon> poks = new ArrayList<Pokemon>();
-		for(Integer id:pokemons){
-			Pokemon pokemon = this.createPokemon(id, atacksIds.get(id));
-			poks.add(pokemon);
-		}
-		return poks;
+	private ArrayList<Pokemon> createPokemons(ArrayList<Integer> pokemonIds, ArrayList<Integer> attackIds) {
+		ArrayList<Pokemon> pokemons = new ArrayList<>();
+		final int ATTACKS_PER_POKEMON = 4;
+		int totalAttacksNeeded = pokemonIds.size() * ATTACKS_PER_POKEMON;
 
+		// Verificar si hay suficientes ataques
+		if (attackIds.size() < totalAttacksNeeded) {
+			throw new IllegalArgumentException(
+					"No hay suficientes ataques. Se necesitan " + totalAttacksNeeded +
+							", pero solo hay " + attackIds.size()
+			);
+		} // hacer la exception en la clase correspondiente.
+		int attackIndex = 0;
+		for (Integer pokemonId : pokemonIds) {
+			// Obtener 4 ataques consecutivos para este Pokémon
+			List<Integer> attacksForPokemon = attackIds.subList(
+					attackIndex,
+					attackIndex + ATTACKS_PER_POKEMON
+			);
+
+			// Crear el Pokémon con sus ataques (asumo que createPokemon acepta una lista)
+			Pokemon pokemon = this.createPokemon(pokemonId, new ArrayList<>(attacksForPokemon));
+			pokemons.add(pokemon);
+			// Avanzar al siguiente bloque de 4 ataques
+			attackIndex += ATTACKS_PER_POKEMON;
+		}
+		return pokemons;
 	}
 
 	/**

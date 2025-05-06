@@ -1031,10 +1031,10 @@ public class POOBkemonGUI extends JFrame {
         centerPanel.add(scrollContainer, BorderLayout.CENTER);
         //botones item
         final int[] contador = {0};
-        JButton itemButton1 = createImageButton("x2", ITEMS+"potion.png",100,100);
-        JButton itemButton2= createImageButton("x2", ITEMS+"superPotion.png",100,100);
-        JButton itemButton3 = createImageButton("x2", ITEMS+"hyperPotion.png",100,100);
-        JButton itemButton4 = createImageButton("x1", ITEMS+"revive.png",100,100);
+        JButton itemButton1 = createImageButton("x2", ITEMS+"potion.png",1,1,100,100,20,false,false);
+        JButton itemButton2= createImageButton("x2", ITEMS+"superPotion.png",1,1,100,100,20,false,false);
+        JButton itemButton3 = createImageButton("x2", ITEMS+"hyperPotion.png",1,1,100,100,20,false,false);
+        JButton itemButton4 = createImageButton("x1", ITEMS+"revive.png",1,1,100,100,20,false,false);
         itemButton1.addActionListener(ev -> {
             String currentPlayer = players.get(contador[0]);
             if(this.items.get(currentPlayer)[0][1] < 2){
@@ -1127,7 +1127,7 @@ public class POOBkemonGUI extends JFrame {
         Timer timer3 = new Timer(3000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showBattleStart();
+                showBattleStart(mode);
             }
         });
 
@@ -1138,9 +1138,8 @@ public class POOBkemonGUI extends JFrame {
         timer1.start();
         timer2.start();
         timer3.start();
-        initMode(mode);
     }
-    private void showBattleStart() {
+    private void showBattleStart(String mode) {
         JPanel BattleStartPanel = new ImagePanel(new BorderLayout(), MENU + "battleStart.png");
         BattleStartPanel.setLayout(new BorderLayout());
 
@@ -1208,7 +1207,7 @@ public class POOBkemonGUI extends JFrame {
         Timer timer1 = new Timer(4300, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showTimer("p");
+                initMode(mode);
             }
         });
         timer1.setRepeats(false);
@@ -1220,12 +1219,26 @@ public class POOBkemonGUI extends JFrame {
     private void initMode(String mode){
         try {
             if (mode.equals("s")) {
-                int a;
-                //this.poobkemon = new POOBkemon();
+                this.poobkemon = new POOBkemon(this.players, this.pokemones, this.items, this.moves, this.random);
+                String[][] pru = this.poobkemon.pokemonPerTrainer();
+                for(String[] a : pru){
+                    for(String b : a){
+                        System.out.println(b);
+                    }
+                }
             } else if (mode.equals("p")) {
                 this.poobkemon = new POOBkemon(this.players, this.pokemones, this.items, this.moves, this.random);
+                String[][] pru = this.poobkemon.pokemonPerTrainer();
+                for(String[] a : pru){
+                    for(String b : a){
+                        System.out.println(b);
+                    }
+                }
+                //battlePanel();
             }
         }catch (POOBkemonException e){
+            Log.record(e);
+            refresh(IntroductionPanel);
             this.mostrarError("POOBkemon Error",e.getMessage());
         }
     }
@@ -1239,6 +1252,7 @@ public class POOBkemonGUI extends JFrame {
             Image scaledImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
             button.setIcon(new ImageIcon(scaledImage));
         } catch (IOException e) {
+            Log.record(e);
             button.setText("No image");
         }
         
@@ -1250,25 +1264,119 @@ public class POOBkemonGUI extends JFrame {
         
         return button;
     }
-    private JButton createImageButton(String text, String imagePath, int width, int height) {
-        JButton button = new JButton(text);
+    private JButton createImageButton(String text, String imagePath, int x, int y, int width, int height, int fontSize, boolean alineado, boolean cubrirBoton) {
+        JButton button = new JButton();
+
+        // Soporte para saltos de línea usando HTML
+        String formattedText = "<html>" + text.replace("\n", "<br>") + "</html>";
+        button.setText(formattedText);
+
+        // Si cubrirBoton es true, la imagen será del tamaño completo del botón
+        int iconWidth = cubrirBoton ? width : 50;
+        int iconHeight = cubrirBoton ? height : 50;
 
         ImageIcon icon = new ImageIcon(imagePath);
-        Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        Image scaledImage = icon.getImage().getScaledInstance(iconWidth, iconHeight, Image.SCALE_SMOOTH);
         button.setIcon(new ImageIcon(scaledImage));
 
-        button.setHorizontalTextPosition(SwingConstants.CENTER);
-        button.setVerticalTextPosition(SwingConstants.CENTER);
-        button.setFont(cargarFuentePixel(20));
-        button.setForeground(Color.BLACK);
+        if (cubrirBoton) {
+            // Imagen como fondo completo, texto encima
+            button.setHorizontalTextPosition(SwingConstants.CENTER);
+            button.setVerticalTextPosition(SwingConstants.CENTER);
+        } else {
+            // Imagen pequeña con texto al costado
+            button.setHorizontalTextPosition(SwingConstants.RIGHT);
+            button.setVerticalTextPosition(SwingConstants.CENTER);
+        }
 
+        button.setFont(cargarFuentePixel(fontSize));
+        button.setForeground(Color.BLACK);
         button.setContentAreaFilled(false);
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.setOpaque(false);
+        button.setBounds(x, y, width, height);
 
-        button.setPreferredSize(new Dimension(width, height));
-        button.setMaximumSize(new Dimension(width, height));
+        if (alineado) {
+            button.setHorizontalAlignment(SwingConstants.LEFT);
+            button.setMargin(new Insets(0, 20, 0, 0));
+        }
+
+        // Efecto hover para cambiar el color del texto
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setForeground(Color.BLACK);
+            }
+        });
+
+        return button;
+    }
+    private JButton createfillImageButton(String text, String imagePath, int x, int y, int width, int height, int fontSize, boolean alineado, boolean cubrirBoton) {
+        String formattedText = "<html>" + text.replace("\n", "<br>") + "</html>";
+
+        JButton button = new JButton(formattedText) {
+            Image image = new ImageIcon(imagePath).getImage();
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                // 1. Fondo transparente
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setComposite(AlphaComposite.SrcOver.derive(0.0f)); // Fondo 100% transparente
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+                g2d.dispose();
+
+                // 2. Dibujar imagen de fondo (solo si cubrirBoton = true)
+                if (cubrirBoton && image != null) {
+                    g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+                }
+                super.paintComponent(g); // Dibuja el texto
+            }
+        };
+
+        // 3. Configuración base del botón
+        button.setFont(cargarFuentePixel(fontSize));
+        button.setForeground(Color.BLACK);
+        button.setBounds(x, y, width, height);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setOpaque(false); // Importante para transparencia
+
+        // 4. Margen interno (para evitar texto pegado)
+        int marginLeft = alineado ? 15 : 5; // 15px si está alineado, 5px si no
+        button.setMargin(new Insets(5, marginLeft, 5, 5)); // Arriba, Izq, Abajo, Der
+
+        // 5. Comportamiento según cubrirBoton
+        if (!cubrirBoton) {
+            ImageIcon icon = new ImageIcon(
+                    new ImageIcon(imagePath).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)
+            );
+            button.setIcon(icon);
+            button.setHorizontalTextPosition(SwingConstants.RIGHT);
+            button.setVerticalTextPosition(SwingConstants.CENTER);
+            button.setIconTextGap(10); // Espacio entre ícono y texto
+        } else {
+            button.setHorizontalTextPosition(SwingConstants.CENTER);
+            button.setVerticalTextPosition(SwingConstants.CENTER);
+        }
+
+        // 6. Efecto hover (opcional)
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setForeground(Color.BLACK);
+            }
+        });
 
         return button;
     }
@@ -1486,15 +1594,7 @@ public class POOBkemonGUI extends JFrame {
     }
     private void prepareItem(){
         for(int i =0 ; i<2; i++) {
-            int[][] items = new int[1][4];
-            int[] item1 ={20, 0};
-            items[0]= item1;
-            int[] item2 ={50, 0};
-            items[1]= item2;
-            int[] item3 ={100, 0};
-            items[2]= item3;
-            int[] item4 ={0, 0};
-            items[3]= item3;
+            int[][] items ={{20, 0},{50, 0},{100, 0},{0, 0}};
             this.items.put(this.players.get(i), items);
         }
     }

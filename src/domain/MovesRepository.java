@@ -55,6 +55,23 @@ public class MovesRepository {
         }
     }
 
+    public String getAttackToChoose(int id) {
+        if (movimientos.containsKey(id)) {
+            String[] attack = getAttacksId(id);
+            return attack[0] + " | " + attack[1] + "\n" +"T."+ attack[3] + " | C." + attack[4]+ "\n" +"PD "+attack[5]+" | PP "+attack[7];
+        } else {
+            return null;
+        }
+    }
+    public String getAttackType(int id) {
+        if (movimientos.containsKey(id)) {
+            String[] attack = getAttacksId(id);
+            return attack[3];
+        } else {
+            return null;
+        }
+    }
+
     private static String[] splitCSVLine(String line) {
         List<String> values = new ArrayList<>();
         boolean inQuotes = false;
