@@ -42,7 +42,7 @@ public class Pokemon {
 	private static boolean random;
 
 	private ArrayList<Attack> attacks;
-
+	private boolean shiny;
 	private ArrayList<State> states;
 
 	public Pokemon() {
@@ -57,6 +57,7 @@ public class Pokemon {
 			initDefault();
 			System.err.println("Error al crear Pokémon: " + e.getMessage());
 		}
+		this.probShiny();
 	}
 
 	private void initDefault() {
@@ -164,6 +165,9 @@ public class Pokemon {
 	}
 	public ArrayList<Attack> getAttacks() {
 		return this.attacks;
+	}
+	private void probShiny(){
+		this.shiny = Math.random() < 0.2;
 	}
 	public String[] getInfo() {
 		return new String[] {

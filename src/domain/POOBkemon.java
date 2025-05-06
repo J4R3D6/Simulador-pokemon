@@ -25,8 +25,8 @@ public class POOBkemon {
 	 */
 	public POOBkemon(ArrayList<String> trainers,
 					 HashMap<String, ArrayList<Integer>> pokemons,
-					 HashMap<String, String[][]> items,
-					 HashMap<String, HashMap<Integer, ArrayList<Integer>>> attacks,
+					 HashMap<String, int[][]> items,
+					 HashMap<String,ArrayList<Integer>> attacks,
 					 boolean random) throws POOBkemonException {
 
 		// Validar datos básicos
@@ -54,8 +54,8 @@ public class POOBkemon {
 				}
 
 				ArrayList<Integer> pokemonIds = pokemons.get(trainer);
-				String[][] trainerItems = items.get(trainer);
-				HashMap<Integer, ArrayList<Integer>> trainerAttacks = attacks.get(trainer);
+				int[][] trainerItems = items.get(trainer);
+				ArrayList<Integer> trainerAttacks = attacks.get(trainer);
 
 				// Validar formatos
 				if (pokemonIds == null || trainerItems == null || trainerAttacks == null) {
@@ -187,11 +187,11 @@ public class POOBkemon {
 		return bagPack;
 	}
 
-	private ArrayList<Item> createItems(String[][] item) {
+	private ArrayList<Item> createItems(int[][] item) {
 		int id = 0;
 		ArrayList<Item> items = new ArrayList<Item>();
-		for(String[] i: item){
-			Item ite = new Item(Integer.parseInt(i[0]), Integer.parseInt(i[1]));
+		for(int[] i: item){
+			Item ite = new Item(i[0], i[1]);
 			items.add(ite);
 			id++;
 		}
@@ -201,7 +201,7 @@ public class POOBkemon {
 	/**
 	 * crear los Pokemons
 	 */
-	private ArrayList<Pokemon> createPokemons(ArrayList<Integer> pokemons, HashMap<Integer,ArrayList<Integer>> atacksIds) {
+	private ArrayList<Pokemon> createPokemons(ArrayList<Integer> pokemons,ArrayList<Integer> atacksIds) {
 		ArrayList<Pokemon> poks = new ArrayList<Pokemon>();
 		for(Integer id:pokemons){
 			Pokemon pokemon = this.createPokemon(id, atacksIds.get(id));
