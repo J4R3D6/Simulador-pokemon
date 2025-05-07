@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletionException;
-import java.util.function.Function;
+import java.util.random.*;
 
 public class POOBkemon {
 
 	protected ArrayList<String> moves;
-	protected ArrayList<Trainer> order;
+	protected ArrayList<Integer> order;
 	protected boolean finishBattle;
 	private ArrayList<Team> teams;
 	private ArrayList<Trainer> trainers;
@@ -19,17 +18,25 @@ public class POOBkemon {
 	private int trainerId = 0;
 	private boolean random;
 	private boolean ok;
+	private static POOBkemon game;
 
 
 	/**
 	 * Constructor del Juego
 	 */
-	public POOBkemon(ArrayList<String> trainers,
-					 HashMap<String, ArrayList<Integer>> pokemons,
-					 HashMap<String, int[][]> items,
-					 HashMap<String,ArrayList<Integer>> attacks,
-					 boolean random) throws POOBkemonException {
+	private POOBkemon() {}
 
+	public static POOBkemon getInstance() {
+		if (game == null) {
+			game = new POOBkemon();
+		}
+		return game;
+	}
+	public void initGame(ArrayList<String> trainers,
+						 HashMap<String, ArrayList<Integer>> pokemons,
+						 HashMap<String, int[][]> items,
+						 HashMap<String,ArrayList<Integer>> attacks,
+						 boolean random) throws POOBkemonException{
 		// Validar datos básicos
 		if (trainers == null || trainers.isEmpty()) {
 			throw new POOBkemonException(POOBkemonException.MISSING_TRAINER_DATA);
@@ -85,6 +92,8 @@ public class POOBkemon {
 			this.moves.add("Start Game");
 			this.ok = true;
 
+
+
 		} catch (NullPointerException | NumberFormatException e) {
 			throw new POOBkemonException(POOBkemonException.INVALID_FORMAT + ": " + e.getMessage());
 		}
@@ -97,6 +106,7 @@ public class POOBkemon {
 
 		// 1. Pre-crear las funciones sin lógica de excepciones
 		Map<String, CheckedFunction<Team, Trainer>> trainerFactories = new HashMap<>();
+		trainerFactories.put("Player", t -> createTrainer(t,bagPack));
 		trainerFactories.put("Offensive", t -> createOffensive(t, bagPack));
 		trainerFactories.put("Defensive", t -> createDefensive(t, bagPack));
 		trainerFactories.put("Expert", t -> createExpert(t, bagPack, this));
@@ -137,6 +147,7 @@ public class POOBkemon {
 
 	private Trainer createRandom(Team team,  BagPack bagPack) throws POOBkemonException {
 		Trainer trainer = new Random(trainerId,team,bagPack);
+		trainerId++;
 		return trainer;
 
 	}
@@ -262,8 +273,20 @@ public class POOBkemon {
 	/**
 	 * metodo que decide quien inicia
 	 */
-	private ArrayList<Trainer> coin() {
-		return null;
+	private ArrayList<Integer> coin() {
+		ArrayList<Integer> turnOrder = new ArrayList<>();
+		if (trainers.size() < 2) return turnOrder;
+
+		int t1 = trainers.get(0).getId();
+		int t2 = trainers.get(1).getId();
+		if (Math.random()<0.5) {
+			turnOrder.add(t1);
+			turnOrder.add(t2);
+		} else {
+			turnOrder.add(t2);
+			turnOrder.add(t1);
+		}
+		return turnOrder;
 	}
 
 	/**
@@ -282,7 +305,7 @@ public class POOBkemon {
 		Trainer trainer2 = trainers.get(1);
 
 		// Procesar decisiones en el orden establecido (order)
-		for (Trainer currentTrainer : order) {
+		for (Integer currentTrainer : order) {
 			String[] decision = currentTrainer.equals(trainer1) ? decisionTrainer1 : decisionTrainer2;
 
 			if (decision == null || decision.length == 0) {
@@ -311,7 +334,7 @@ public class POOBkemon {
 					case "ChangePokemon":
 						if (decision.length < 2) throw new POOBkemonException("Faltan parámetros para ChangePokemon");
 						int newPokemonId = Integer.parseInt(decision[1]);
-						this.changePokemon(currentTrainer.getId(), newPokemonId);
+						this.changePokemon(currentTrainer, newPokemonId);
 						moves.add(currentTrainer + " cambió a Pokémon " + newPokemonId);
 						break;
 
@@ -365,14 +388,14 @@ public class POOBkemon {
 	/**
 	 * metodo parasalir de la pelea
 	 */
-	private void run(Trainer trainer) {
+	private void run(Integer trainer) {
 
 	}
 
 	/**
 	 * metodo para usar un item
 	 */
-	private void useItem(Trainer trainer, int iditem, int idPokemon) {
+	private void useItem(Integer trainer, int iditem, int idPokemon) {
 
 	}
 
@@ -417,5 +440,29 @@ public class POOBkemon {
 	public ArrayList<Team> teams(){
 		return this.teams;
 	}
-
+	public ArrayList<Integer> getOrder(){
+		return order;
+	}
+	public HashMap<Integer,String[]> getCurrentPokemons(){
+		HashMap<Integer,String[]> pokemons = new HashMap<>();
+		for(Trainer t: this.trainers){
+			int trainerid = t.getId();
+			String[] currentPokemon = t.getCurrentPokemon().getInfo();
+			pokemons.put(trainerid,currentPokemon);
+		}
+		return pokemons;
+	}
+	//==================Informacion=======================
+	public ArrayList<String[]> getPokInfo(){
+		ArrayList<String[]> info = new PokemonRepository().getPokemons();
+		return info;
+	}
+	public ArrayList<ArrayList<String>> getItemInfo(){
+		ArrayList<ArrayList<String>> info = new ItemRepository().getItems();
+		return info;
+	}
+	public String getMoveInfo(int id){
+		String info = new MovesRepository().getAttackId(id);
+		return info;
+	}
 }

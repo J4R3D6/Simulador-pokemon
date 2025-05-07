@@ -18,10 +18,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import domain.*;
 
 public class POOBkemonGUI extends JFrame implements Auxiliar{
-	//
-	private MovesRepository moveRepository = new MovesRepository();
-    private PokemonRepository pokemonRepository = new PokemonRepository();
-    private ItemRepository itemRepository = new ItemRepository();
     //entradas del dominio
 	private boolean random = false; // si los stats son random
 	private ArrayList<String> players = new ArrayList<>(); //[trainer1, trainer2]
@@ -74,6 +70,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
 
     
     private POOBkemonGUI() {
+        this.poobkemon = POOBkemon.getInstance();
         setTitle("POOBkemon");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(750, 550);
@@ -213,7 +210,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     private void showPokedex() {
     	
         JPanel pokedexPanel = new ImagePanel(null, POKEDEX);
-        ArrayList<String[]> pokemones = pokemonRepository.getPokemons();
+        ArrayList<String[]> pokemones = this.poobkemon.getPokInfo();
         final int[] currentIndex = {0};
 
         // Panel para la imagen del Pokémon (IZQUIERDA)
@@ -393,7 +390,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     }
     private void showItemsGalery() {
     	JPanel itemsPanel = new ImagePanel(null, GALERIA_ITEMS);
-        ArrayList<ArrayList<String>> items = itemRepository.getItems();
+        ArrayList<ArrayList<String>> items = this.poobkemon.getItemInfo();
         final int[] currentIndex = {0}; // Para trackear el primer item visible
         
         // Panel para mostrar los items (4 máximo)
@@ -564,8 +561,8 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
 	    turnLabel.setForeground(Color.blue);
 	    choosePokemonPanel.add(turnLabel, BorderLayout.NORTH);
 	    //
-	    JButton backButtonGameMode = crearBotonEstilizado("Back",new Rectangle(275, 100, 20, 60),new Color(240, 240, 240, 200));
-	    JButton addButton = crearBotonEstilizado("Añadir", new Rectangle(275, 100, 200, 60), new Color(240, 240, 240, 200));
+	    JButton backButtonGameMode = Auxiliar.crearBotonEstilizado("Back",new Rectangle(275, 100, 20, 60),new Color(240, 240, 240, 200));
+	    JButton addButton = Auxiliar.crearBotonEstilizado("Añadir", new Rectangle(275, 100, 200, 60), new Color(240, 240, 240, 200));
 	    //addButton.setBackground(new Color(200, 200, 200, 150));
 	    addButton.setVisible(false);
 	    JPanel leftContent = new JPanel(new BorderLayout());
@@ -587,26 +584,26 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
 	    leftPanel.add(panelSur, BorderLayout.SOUTH);
 	    //
 	    ImageIcon Character = new ImageIcon(CHARACTER + "Bruno.png");
-        ImageIcon scaledCharacter = scaleIcon(Character, 192, 192);
+        ImageIcon scaledCharacter = Auxiliar.scaleIcon(Character, 192, 192);
         JLabel characterImage = new JLabel(scaledCharacter);
         characterImage.setHorizontalAlignment(JLabel.CENTER);
         
         ImageIcon originalball = new ImageIcon(MENU + "ball_display_" + selectedPokemons1.size() + ".png");
-        ImageIcon scaledoriginalball = scaleIcon(originalball, 141, 21);
+        ImageIcon scaledoriginalball = Auxiliar.scaleIcon(originalball, 141, 21);
         JLabel counterImage = new JLabel(scaledoriginalball);
         counterImage.setHorizontalAlignment(JLabel.CENTER);
         
         ImageIcon Character2 = new ImageIcon(CHARACTER + "Aura.png");
-        ImageIcon scaledCharacter2 = scaleIcon(Character2, 192, 192);
+        ImageIcon scaledCharacter2 = Auxiliar.scaleIcon(Character2, 192, 192);
         JLabel characterImage2 = new JLabel(scaledCharacter2);
         characterImage2.setHorizontalAlignment(JLabel.CENTER);
         
         ImageIcon originalball2 = new ImageIcon(MENU + "ball_display_" + selectedPokemons2.size() + ".png");
-        ImageIcon scaledoriginalball2 = scaleIcon(originalball2, 141, 21);
+        ImageIcon scaledoriginalball2 = Auxiliar.scaleIcon(originalball2, 141, 21);
         JLabel counterImage2 = new JLabel(scaledoriginalball2);
         counterImage2.setHorizontalAlignment(JLabel.CENTER);
 	  
-        JButton doneButton = crearBotonEstilizado("Listo", new Rectangle(275, 100, 100, 60), new Color(240, 240, 240, 200));
+        JButton doneButton = Auxiliar.crearBotonEstilizado("Listo", new Rectangle(275, 100, 100, 60), new Color(240, 240, 240, 200));
         doneButton.setBackground(new Color(200, 200, 200, 150));
         doneButton.setVisible(false);
         JPanel rightContent = new JPanel(new GridBagLayout());
@@ -857,7 +854,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
             Image scaled = original.getImage().getScaledInstance(138, 138, Image.SCALE_SMOOTH);
             pokemonImage.setIcon(new ImageIcon(scaled));
 
-            JButton pokemonButton = Auxiliar.crearBotonTransparente(moveRepository.getAttackId(i).toString(), new Rectangle(10, 10, 5, 5), false);
+            JButton pokemonButton = Auxiliar.crearBotonTransparente(this.poobkemon.getMoveInfo(i).toString(), new Rectangle(10, 10, 5, 5), false);
             pokemonButton.setOpaque(false);
             pokemonButton.setContentAreaFilled(false);
             pokemonButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
@@ -1223,13 +1220,12 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     // ========== Métodos auxiliares ========== //
     private void initMode(String mode){
         try {
-            POOBkemon game = null;
             if (mode.equals("s")) {
-                game = new POOBkemon(this.players, this.pokemones, this.items, this.moves, this.random);
+                poobkemon.initGame(this.players, this.pokemones, this.items, this.moves, this.random);
             } else if (mode.equals("p")) {
-                game = new POOBkemon(this.players, this.pokemones, this.items, this.moves, this.random);
+                poobkemon.initGame(this.players, this.pokemones, this.items, this.moves, this.random);
             }
-            startBattle(game);
+            startBattle(this.poobkemon);
         }catch (POOBkemonException e){
             Log.record(e);
             refresh(IntroductionPanel);
@@ -1505,6 +1501,8 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     		pokemones1.add(getNumerRandom(386));
     		pokemones2.add(getNumerRandom(386));
     	}
+        System.out.println(pokemones1.toString());
+        System.out.println(pokemones2.toString());
     	assingPokemon(pokemones1, pokemones2);
     }
     private void createMoves(){

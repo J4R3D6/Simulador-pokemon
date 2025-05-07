@@ -5,10 +5,13 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.*;
 
 import domain.Log;
 import domain.POOBkemon;
+import domain.Pokemon;
+import domain.Trainer;
 
 import static java.awt.SystemColor.text;
 
@@ -20,6 +23,9 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar{
     private JPanel mainPanel;
     private POOBkemon game;
     private BattleListener battleListener;
+    private ArrayList<Integer> order;
+
+    private int currentPlayer;
 
     public interface BattleListener {
         void onBattleEnd(boolean playerWon);
@@ -30,6 +36,8 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar{
             throw new IllegalArgumentException("Game cannot be null");
         }
         this.game = game;
+        this.order = game.getOrder();
+        this.currentPlayer = this.order.get(0);
         initializeUI();
     }
 
@@ -53,9 +61,12 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar{
     }
 
     private JPanel createBattleView(){
-        String playerPokemon = POKEMONES+"Back/"+4+ ".png";//game.getPlayerCurrentPokemonId()
-        String enemyPokemon = POKEMONES+"Normal/" +1+ ".png";
-        String currentPlayer = CHARACTER+0+ ".png";//game.getCurrentPlayer()
+        HashMap<Integer,String[]> currentPokemons = this.game.getCurrentPokemons();
+        String[] player = currentPokemons.get(this.order.get(0));
+        String[] enemy = currentPokemons.get(this.order.get(1));
+        String playerPokemon = POKEMONES+"Back/"+player[2]+ ".png";//game.getPlayerCurrentPokemonId()
+        String enemyPokemon = POKEMONES+"Normal/" +enemy[2]+ ".png";
+        String currentPlayer = CHARACTER+this.order.get(this.currentPlayer)+ ".png";//game.getCurrentPlayer()
         Image bg = new ImageIcon(MENU+"battle0.png").getImage();
         Image playerImg = new ImageIcon(playerPokemon).getImage();
         Image enemyImg = new ImageIcon(enemyPokemon).getImage();
@@ -71,7 +82,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar{
                 g.drawImage(currentPlayerImg, (int)(w * 0.88), (int)(h * 0.01), (int)(w * 0.12), (int)(h * 0.15), this);
             }
         };
-        JLabel battleText = new JLabel("¿Qué debería hacer " +" name" + "?");//game.getPlayerCurrentPokemonName()
+        JLabel battleText = new JLabel("¿Qué debería hacer " +currentPokemons.get(this.currentPlayer)[1] + "?");//game.getPlayerCurrentPokemonName()
         battleText.setFont(Auxiliar.cargarFuentePixel(5));
         battleText.setOpaque(false);
         panel.add(battleText);
@@ -122,20 +133,20 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar{
 
         buttonContainer.add(buttonPanel, BorderLayout.CENTER);
 
-        JLabel enemyNameLabel = new JLabel("name");//getEnemyCurrentPokemonName()
-        JLabel enemyLevelLabel = new JLabel("Nv. " + 5);//getEnemyCurrentPokemonLevel()
-        JLabel enemyHPLabel = new JLabel("32/122");//getEnemyCurrentPokemonHP()/getEnemyCurrentPokemonMaxHP()
+        JLabel enemyNameLabel = new JLabel(enemy[1]);//getEnemyCurrentPokemonName()
+        JLabel enemyLevelLabel = new JLabel("Nv. " + enemy[4]);//getEnemyCurrentPokemonLevel()
+        JLabel enemyHPLabel = new JLabel(enemy[6]+"/"+enemy[5]);//getEnemyCurrentPokemonHP()/getEnemyCurrentPokemonMaxHP()
         enemyHPLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-        JLabel playerNameLabel = new JLabel("name2");
-        JLabel playerLevelLabel = new JLabel("Nv. " + 6);
-        JLabel playerHPLabel = new JLabel("32/122");
+        JLabel playerNameLabel = new JLabel(player[1]);
+        JLabel playerLevelLabel = new JLabel("Nv. " + player[4]);
+        JLabel playerHPLabel = new JLabel(player[6]+"/"+player[5]);
         playerHPLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        BarraVidaConImagen enemyHPBar = new BarraVidaConImagen(100);//getEnemyCurrentPokemonMaxHP()
-        enemyHPBar.setValue(30);//getEnemyCurrentPokemonHP()
+        BarraVidaConImagen enemyHPBar = new BarraVidaConImagen(Integer.parseInt(enemy[5]));//getEnemyCurrentPokemonMaxHP()
+        enemyHPBar.setValue(Integer.parseInt("6"));//getEnemyCurrentPokemonHP()enemy[6]
 
-        BarraVidaConImagen playerHPBar = new BarraVidaConImagen(100);
-        playerHPBar.setValue(10);
+        BarraVidaConImagen playerHPBar = new BarraVidaConImagen(Integer.parseInt(player[5]));
+        playerHPBar.setValue(Integer.parseInt("6"));//player[6]
 
         panel.add(enemyNameLabel);
         panel.add(enemyLevelLabel);

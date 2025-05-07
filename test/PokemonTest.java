@@ -26,7 +26,7 @@ public class PokemonTest {
     public void testConstructorInitialization() {
         assertEquals(1, pokemon.getId());
         assertEquals("Bulbasaur", pokemon.getName());
-        assertEquals("001", pokemon.idPokedex);
+        assertEquals("1", pokemon.idPokedex);
         assertEquals("Grass", pokemon.type);
         assertEquals(45, pokemon.maxHealth);
         assertEquals(45, pokemon.currentHealth);

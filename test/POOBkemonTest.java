@@ -46,7 +46,8 @@ public class POOBkemonTest {
         attacks.put("Defensive1", enemyAttacks);
 
         try {
-            game = new POOBkemon(trainers, pokemons, items, attacks, false);
+            game = POOBkemon.getInstance();
+            game.initGame(trainers, pokemons, items, attacks, false);
         } catch(POOBkemonException e) {
             System.out.println(e);
             fail("No debería lanzar excepción: " + e.getMessage());
@@ -104,7 +105,8 @@ public class POOBkemonTest {
         HashMap<String, int[][]> items = new HashMap<>();
         HashMap<String, ArrayList<Integer>> attacks = new HashMap<>();
 
-        new POOBkemon(emptyTrainers, pokemons, items, attacks, false);
+        POOBkemon game1 = POOBkemon.getInstance();
+        game1.initGame(emptyTrainers, pokemons, items, attacks, false);
     }
 
     @Test(expected = POOBkemonException.class)
@@ -115,7 +117,8 @@ public class POOBkemonTest {
         HashMap<String, int[][]> items = new HashMap<>();
         HashMap<String, ArrayList<Integer>> attacks = new HashMap<>();
 
-        new POOBkemon(trainers, emptyPokemons, items, attacks, false);
+        POOBkemon game1 = POOBkemon.getInstance();
+        game1.initGame(trainers, emptyPokemons, items, attacks, false);
     }
 
     @Test(expected = POOBkemonException.class)
@@ -127,7 +130,8 @@ public class POOBkemonTest {
         HashMap<String, int[][]> emptyItems = new HashMap<>();
         HashMap<String, ArrayList<Integer>> attacks = new HashMap<>();
 
-        new POOBkemon(trainers, pokemons, emptyItems, attacks, false);
+        POOBkemon game1 = POOBkemon.getInstance();
+        game1.initGame(trainers, pokemons, emptyItems, attacks, false);
     }
 
     @Test(expected = POOBkemonException.class)
@@ -142,7 +146,8 @@ public class POOBkemonTest {
         HashMap<String, int[][]> items = new HashMap<>();
         HashMap<String, ArrayList<Integer>> attacks = new HashMap<>();
 
-        new POOBkemon(trainers, pokemons, items, attacks, false);
+        POOBkemon game1 = POOBkemon.getInstance();
+        game1.initGame(trainers, pokemons, items, attacks, false);
     }
 
     @Test

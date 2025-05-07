@@ -27,11 +27,6 @@ PokemonRepository {
         for (int i = 1; i < pokemonsIput.size(); i++) {
             //ID_0,"Name"_1,"Type1"_3,"Type2"_4,"HP"_6,"Attack"_7,"Defense"_8,"Sp. Atk"_9,"Sp. Def"_10,"Speed"_11,
             String[] valores = pokemonsIput.get(i).split(",");
-            if(valores[0].length()==1) {
-                valores[0]= "00"+valores[0];
-            }else if(valores[0].length()==2) {
-                valores[0]=  "0"+valores[0];
-            }
             this.pokemones.put(Integer.parseInt(valores[0]),valores);
         }
     	

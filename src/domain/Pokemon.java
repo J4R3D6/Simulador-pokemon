@@ -174,6 +174,7 @@ public class Pokemon {
 		this.shiny = Math.random() < 0.2;
 	}
 	public String[] getInfo() {
+
 		return new String[] {
 				String.valueOf(id),           // 0 - ID
 				name,                         // 1 - Nombre
@@ -190,7 +191,8 @@ public class Pokemon {
 				String.valueOf(xp),            // 12 - XP actual
 				String.valueOf(levelRequirement), // 13 - XP requerido
 				String.valueOf(active),        // 14 - Estado (activo)
-				String.valueOf(weak),          // 15 - Debilitado
+				String.valueOf(weak),        // 15 - Pokemon debilitad
+				String.valueOf(shiny),          // 16 - Pokemon shiny
 		};
 	}
 
@@ -199,7 +201,6 @@ public class Pokemon {
 		StatsRepository statsRepository = new StatsRepository();
 		String[]info = movesRepository.getAttackDamageAndType(idAttack);
 		double multiplicator = statsRepository.getMultiplier(info[0],this.type);
-		System.out.println("Multiplier: " + multiplicator);
 		this.currentHealth = this.currentHealth - damage*multiplicator;
 		if(this.currentHealth < 0){
 			this.currentHealth = 0;

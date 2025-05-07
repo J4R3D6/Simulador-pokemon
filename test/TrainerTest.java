@@ -35,7 +35,6 @@ public class TrainerTest {
                 attacksIds, false);
 
         // Debilita el pokémon
-        //(Fundiona bien el test pero lo uso para comprobar el csv) solo da el multiplicador por default, no coinciden idiomas en los ataques y pokemones.
         faintedPokemon.getDamage(19, 19);
 
         ArrayList<Pokemon> pokemons = new ArrayList<>();
