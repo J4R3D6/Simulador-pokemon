@@ -55,6 +55,10 @@ public class Pokemon {
 			initFromParameters(id, info, attacksIds, random);
 		} catch (POOBkemonException | NumberFormatException e) {
 			initDefault();
+			System.out.println(id+" "+info.toString()+" "+attacksIds.toString()+" "+random);
+			for(String s: info){
+				System.out.println(s);
+			}
 			System.err.println("Error al crear Pokémon: " + e.getMessage());
 		}
 		this.probShiny();

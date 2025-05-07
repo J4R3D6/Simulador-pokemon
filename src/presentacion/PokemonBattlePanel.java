@@ -65,7 +65,7 @@ public class PokemonBattlePanel extends JPanel {
                 super.paintComponent(g);
                 g.drawImage(bg, 0, 0, w, h, this);
                 g.drawImage(enemyImg, (int)(w * 0.6), (int)(h * 0.07), (int)(w * 0.27), (int)(h * 0.4), this);
-                g.drawImage(playerImg, (int)(w * 0.12), (int)(h * 0.43), (int)(w * 0.25), (int)(h * 0.3), this);
+                g.drawImage(playerImg, (int)(w * 0.12), (int)(h * 0.465), (int)(w * 0.25), (int)(h * 0.3), this);
                 g.drawImage(currentPlayerImg, (int)(w * 0.88), (int)(h * 0.01), (int)(w * 0.12), (int)(h * 0.15), this);
             }
         };
@@ -182,27 +182,93 @@ public class PokemonBattlePanel extends JPanel {
         JPanel panel = new ImagePanel(null,MENU+"p.png");
 
         JPanel currentPokemonPanel = new JPanel(null);
-        currentPokemonPanel.setOpaque(true);
-        currentPokemonPanel.setBackground(Color.WHITE);
-        JLabel selectedPokemonImage = new JLabel(new ImageIcon("resources/pokemones/Emerald/Normal/" +1+ ".png"));//getPlayerCurrentPokemonId()
+        currentPokemonPanel.setOpaque(false);
+        ImageIcon seledtedPOkemonIcon = scaleIcon(new ImageIcon("resources/pokemones/Emerald/Icon/" +1+ ".png"),100,100);//getPlayerCurrentPokemonId()
+        JLabel selectedPokemonImage = new JLabel(seledtedPOkemonIcon);
         JLabel selectedNameLabel = new JLabel("actual");//getPlayerCurrentPokemonName()
         JLabel selectedLevel = new JLabel("Nv. " + 2);//getPlayerCurrentPokemonLevel()
         JLabel selectedHPLabel = new JLabel("32/122");//getEnemyCurrentPokemonHP()/getEnemyCurrentPokemonMaxHP()
-        selectedLevel.setFont(cargarFuentePixel(25));
-        selectedNameLabel.setFont(cargarFuentePixel(25));
-        selectedHPLabel.setFont(cargarFuentePixel(25));
+        selectedLevel.setFont(cargarFuentePixel(20));
+        selectedNameLabel.setFont(cargarFuentePixel(20));
+        selectedHPLabel.setFont(cargarFuentePixel(20));
         selectedLevel.setForeground(Color.white);
         selectedNameLabel.setForeground(Color.white);
         selectedHPLabel.setForeground(Color.white);
+        selectedHPLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        selectedLevel.setHorizontalAlignment(SwingConstants.LEFT);
+        selectedNameLabel.setHorizontalAlignment(SwingConstants.LEFT);
         BarraVidaConImagen selectedHpBar = new BarraVidaConImagen( 30);//getPlayerCurrentPokemonMaxHP())
         selectedHpBar.setValue(2);//getPlayerCurrentPokemonHP() // game.getPlayerCurrentPokemonHP() <(game.getPlayerCurrentPokemonMaxHP()
         currentPokemonPanel.add(selectedPokemonImage);
         currentPokemonPanel.add(selectedNameLabel);
         currentPokemonPanel.add(selectedLevel);
         currentPokemonPanel.add(selectedHPLabel);
-        currentPokemonPanel.setVisible(true);
+        currentPokemonPanel.add(selectedHpBar);
+        currentPokemonPanel.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                selectedPokemonImage.setBounds(3, -35,  (int)(panel.getWidth() * 0.1), (int)(panel.getHeight() * 0.25));
+                selectedNameLabel.setBounds((int)(currentPokemonPanel.getWidth() *0.3), (int)(currentPokemonPanel.getHeight() *0.20),  (int)(panel.getWidth() * 0.3), 20);
+                selectedLevel.setBounds((int)(currentPokemonPanel.getWidth() *0.3), (int)(currentPokemonPanel.getHeight() *0.40),  (int)(panel.getWidth() * 0.3), 20);
+                selectedHPLabel.setBounds((int)(currentPokemonPanel.getWidth() *0.04), (int)(currentPokemonPanel.getHeight() *0.76),  (int)(panel.getWidth() * 0.3), 20);
+                selectedHpBar.setBounds((int)(currentPokemonPanel.getWidth() *0.04), (int)(currentPokemonPanel.getHeight() *0.63),  (int)(panel.getWidth() * 0.3), 15);
+            }
+        });
+        int[] pokeTeam= {1,1,1,1,1}; //(equipo desacttivado)
+        String[] pokemonNames = new String[pokeTeam.length];
+        int[] pokemonLevels = new int[pokeTeam.length];
+        int[] pokemonHPs = new int[pokeTeam.length];
+        int[] pokemonMaxHPs = new int[pokeTeam.length];
+        int[] pokemonIcons = new int[pokeTeam.length];
+        ArrayList<JPanel> inactivePokemons = new ArrayList<>();
+        for (int i = 0; i < pokeTeam.length; i++) {
+            pokemonNames[i] = "na";//game.getPokemonName(team[i]);
+            pokemonLevels[i] = 2;//game.getPokemonLevel(team[i]);
+            pokemonHPs[i] = 10;//game.getPokemonHP(team[i]);
+            pokemonMaxHPs[i] = 8;//game.getPokemonMaxHP(team[i]);
+            pokemonIcons[i] = 1;
+        }
+        for(int i= 0 ;i < pokeTeam.length; i++  ){
+            JPanel pokemonPanel = new JPanel(null);
+            pokemonPanel.setFont(cargarFuentePixel(20));
+            pokemonPanel.setForeground(Color.WHITE);
+            pokemonPanel.setOpaque(false);
+            ImageIcon POkemonIcon = scaleIcon(new ImageIcon("resources/pokemones/Emerald/Icon/" +pokemonIcons[i]+ ".png"),80,80);//getPlayerCurrentPokemonId()
+            JLabel PokemonImage = new JLabel(POkemonIcon);
+            JLabel NameLabel = new JLabel(pokemonNames[i]);//getPlayerCurrentPokemonName()
+            JLabel Level = new JLabel("Nv. " + pokemonLevels[i]);//getPlayerCurrentPokemonLevel()
+            JLabel HPLabel = new JLabel(pokemonHPs[i]+"/"+pokemonMaxHPs[i]);//getEnemyCurrentPokemonHP()/getEnemyCurrentPokemonMaxHP()
+            Level.setFont(cargarFuentePixel(20));
+            NameLabel.setFont(cargarFuentePixel(20));
+            HPLabel.setFont(cargarFuentePixel(20));
+            Level.setForeground(Color.white);
+            NameLabel.setForeground(Color.white);
+            HPLabel.setForeground(Color.white);
+            HPLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+            Level.setHorizontalAlignment(SwingConstants.CENTER);
+            NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            BarraVidaConImagen HpBar = new BarraVidaConImagen( pokemonMaxHPs[i]);//getPlayerCurrentPokemonMaxHP())
+            HpBar.setValue(pokemonHPs[i]);//getPlayerCurrentPokemonHP() // game.getPlayerCurrentPokemonHP() <(game.getPlayerCurrentPokemonMaxHP()
+            pokemonPanel.add(PokemonImage);
+            pokemonPanel.add(NameLabel);
+            pokemonPanel.add(Level);
+            pokemonPanel.add(HPLabel);
+            pokemonPanel.add(HpBar);
+            pokemonPanel.addComponentListener(new ComponentAdapter() {
+                public void componentResized(ComponentEvent e) {
+                    PokemonImage.setBounds(-10, -25,  (int)(panel.getWidth() * 0.1), (int)(panel.getHeight() * 0.15));
+                    NameLabel.setBounds((int)(pokemonPanel.getWidth() *0.12), (int)(pokemonPanel.getHeight() *0.10),  (int)(panel.getWidth() * 0.2), 20);
+                    Level.setBounds((int)(pokemonPanel.getWidth() *0.12), (int)(pokemonPanel.getHeight() *0.42),  (int)(panel.getWidth() * 0.2), 20);
+                    HPLabel.setBounds((int)(pokemonPanel.getWidth() *0.45), (int)(pokemonPanel.getHeight() *0.40),  (int)(panel.getWidth() * 0.3), 20);
+                    HpBar.setBounds((int)(pokemonPanel.getWidth() *0.48), (int)(pokemonPanel.getHeight() *0.10),  (int)(panel.getWidth() * 0.285), 15);
+                }
+            });
+            inactivePokemons.add(pokemonPanel);
+        }
 
         panel.add(currentPokemonPanel);
+        for (int i = 0; i < pokeTeam.length; i++) {
+            panel.add(inactivePokemons.get(i));
+        }
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 int w = getWidth();
@@ -211,8 +277,12 @@ public class PokemonBattlePanel extends JPanel {
 
                 currentPokemonPanel.setFont(cargarFuentePixel(20));
                 currentPokemonPanel.setForeground(Color.WHITE);
-                currentPokemonPanel.setBounds(30, 30, (int) (panel.getWidth()*0.30), (int) (panel.getHeight()*0.3));
-            }
+                currentPokemonPanel.setBounds((int) (panel.getWidth() * 0.05), (int) (panel.getHeight() * 0.16), (int) (panel.getWidth() * 0.315), (int) (panel.getHeight() * 0.28));
+                inactivePokemons.get(0).setBounds((int) (panel.getWidth() * 0.43), (int) (panel.getHeight() * 0.065), (int) (panel.getWidth() * 0.55), (int) (panel.getHeight() * 0.115));
+                inactivePokemons.get(1).setBounds((int) (panel.getWidth() * 0.43), (int) (panel.getHeight() * 0.215), (int) (panel.getWidth() * 0.55), (int) (panel.getHeight() * 0.115));
+                inactivePokemons.get(2).setBounds((int) (panel.getWidth() * 0.43), (int) (panel.getHeight() * 0.365), (int) (panel.getWidth() * 0.55), (int) (panel.getHeight() * 0.115));
+                inactivePokemons.get(3).setBounds((int) (panel.getWidth() * 0.43), (int) (panel.getHeight() * 0.515), (int) (panel.getWidth() * 0.55), (int) (panel.getHeight() * 0.115));
+                inactivePokemons.get(4).setBounds((int) (panel.getWidth() * 0.43), (int) (panel.getHeight() * 0.665), (int) (panel.getWidth() * 0.55), (int) (panel.getHeight() * 0.115));}
         });
         return panel;
     }
@@ -413,6 +483,10 @@ public class PokemonBattlePanel extends JPanel {
                 //battleListener.onBattleEnd(game.playerWon());
             }
         }
+    }
+    private ImageIcon scaleIcon(ImageIcon icon, int width, int height) {
+        Image img = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(img);
     }
     private static Font cargarFuentePixel(int tamaño) {
         try {
