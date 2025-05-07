@@ -10,17 +10,14 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
 
 import domain.*;
 
-public class POOBkemonGUI extends JFrame {
+public class POOBkemonGUI extends JFrame implements Auxiliar{
 	//
 	private MovesRepository moveRepository = new MovesRepository();
     private PokemonRepository pokemonRepository = new PokemonRepository();
@@ -179,11 +176,11 @@ public class POOBkemonGUI extends JFrame {
         //
         JPanel buttonPanel = new JPanel(new GridLayout(5, 1));
         buttonPanel.setOpaque(false);
-    	playButton = crearBotonEstilizado("Jugar",new Rectangle(275, 100, 200, 60),new Color(240, 240, 240, 200));
-    	pokedexButton = crearBotonEstilizado("Pokedex",new Rectangle(275, 170, 200, 60),new Color(240, 240, 240, 200));
-    	itemsButton = crearBotonEstilizado("Items",new Rectangle(275, 240, 200, 60),new Color(240, 240, 240, 200));
-    	stastRandomButton = crearBotonEstilizado(this.random ? "Stat Aleatorios" : "Stat Base",new Rectangle(275, 310, 200, 60),new Color(240, 240, 240, 200));
-    	exitButton = crearBotonEstilizado("Salir",new Rectangle(275, 380, 200, 60),new Color(240, 240, 240, 200));
+    	playButton = Auxiliar.crearBotonEstilizado("Jugar",new Rectangle(275, 100, 200, 60),new Color(240, 240, 240, 200));
+    	pokedexButton = Auxiliar.crearBotonEstilizado("Pokedex",new Rectangle(275, 170, 200, 60),new Color(240, 240, 240, 200));
+    	itemsButton = Auxiliar.crearBotonEstilizado("Items",new Rectangle(275, 240, 200, 60),new Color(240, 240, 240, 200));
+    	stastRandomButton = Auxiliar.crearBotonEstilizado(this.random ? "Stat Aleatorios" : "Stat Base",new Rectangle(275, 310, 200, 60),new Color(240, 240, 240, 200));
+    	exitButton = Auxiliar.crearBotonEstilizado("Salir",new Rectangle(275, 380, 200, 60),new Color(240, 240, 240, 200));
     	playButton.setPreferredSize(new Dimension(200, 60));
     	pokedexButton.setPreferredSize(new Dimension(200, 60));
     	itemsButton.setPreferredSize(new Dimension(200, 60));
@@ -256,9 +253,9 @@ public class POOBkemonGUI extends JFrame {
         listaPanel.setLayout(new BoxLayout(listaPanel, BoxLayout.Y_AXIS));
         listaPanel.setOpaque(false);
 
-        JButton upButton = crearBotonEstilizado("▲", new Rectangle(350, 25, 50, 20),new Color(240, 240, 240, 200));
-        JButton downButton = crearBotonEstilizado("▼", new Rectangle(350, 418, 50, 20),new Color(240, 240, 240, 200));
-        JButton backButton = crearBotonTransparente("BACK", new Rectangle(30, 395, 130, 40),true);
+        JButton upButton = Auxiliar.crearBotonEstilizado("▲", new Rectangle(350, 25, 50, 20),new Color(240, 240, 240, 200));
+        JButton downButton = Auxiliar.crearBotonEstilizado("▼", new Rectangle(350, 418, 50, 20),new Color(240, 240, 240, 200));
+        JButton backButton = Auxiliar.crearBotonTransparente("BACK", new Rectangle(30, 395, 130, 40),true);
 
         pokedexPanel.add(upButton);
         pokedexPanel.add(downButton);
@@ -415,9 +412,9 @@ public class POOBkemonGUI extends JFrame {
         itemsPanel.add(infoPanel);
         
         //Botones con diseño mejorado
-        JButton upButton = crearBotonEstilizado("▲", new Rectangle(490, 15, 50, 20),new Color(240, 240, 240, 200));
-        JButton downButton = crearBotonEstilizado("▼", new Rectangle(490, 450, 50, 20),new Color(240, 240, 240, 200));
-        JButton backButton = crearBotonTransparente("BACK", new Rectangle(30, 395, 130, 40),true);
+        JButton upButton = Auxiliar.crearBotonEstilizado("▲", new Rectangle(490, 15, 50, 20),new Color(240, 240, 240, 200));
+        JButton downButton = Auxiliar.crearBotonEstilizado("▼", new Rectangle(490, 450, 50, 20),new Color(240, 240, 240, 200));
+        JButton backButton = Auxiliar.crearBotonTransparente("BACK", new Rectangle(30, 395, 130, 40),true);
         
         itemsPanel.add(upButton);
         itemsPanel.add(downButton);
@@ -504,7 +501,7 @@ public class POOBkemonGUI extends JFrame {
     	twoPlayers = createImageButton(BUTTONS+"vs.png",275, 170, 128, 128);
     	machines = createImageButton(BUTTONS+"1Player.png",275, 240, 128, 128);
     	machines = createImageButton(BUTTONS+"1Player.png",275, 240, 128, 128);
-    	backButtonMenu = crearBotonEstilizado("Back",new Rectangle(275, 100, 20, 60),new Color(240, 240, 240, 200));
+    	backButtonMenu = Auxiliar.crearBotonEstilizado("Back",new Rectangle(275, 100, 20, 60),new Color(240, 240, 240, 200));
     	
     	JPanel izqPrincipal = new JPanel(new BorderLayout());
     	izqPrincipal.setOpaque(false);
@@ -567,8 +564,8 @@ public class POOBkemonGUI extends JFrame {
 	    turnLabel.setForeground(Color.blue);
 	    choosePokemonPanel.add(turnLabel, BorderLayout.NORTH);
 	    //
-	    JButton backButtonGameMode = crearBotonEstilizado("Back",new Rectangle(275, 100, 20, 60),new Color(240, 240, 240, 200));
-	    JButton addButton = crearBotonEstilizado("Añadir", new Rectangle(275, 100, 200, 60), new Color(240, 240, 240, 200));
+	    JButton backButtonGameMode = Auxiliar.crearBotonEstilizado("Back",new Rectangle(275, 100, 20, 60),new Color(240, 240, 240, 200));
+	    JButton addButton = Auxiliar.crearBotonEstilizado("Añadir", new Rectangle(275, 100, 200, 60), new Color(240, 240, 240, 200));
 	    //addButton.setBackground(new Color(200, 200, 200, 150));
 	    addButton.setVisible(false);
 	    JPanel leftContent = new JPanel(new BorderLayout());
@@ -590,28 +587,28 @@ public class POOBkemonGUI extends JFrame {
 	    leftPanel.add(panelSur, BorderLayout.SOUTH);
 	    //
 	    ImageIcon Character = new ImageIcon(CHARACTER + "Bruno.png");
-        ImageIcon scaledCharacter = scaleIcon(Character, 192, 192);
+        ImageIcon scaledCharacter = Auxiliar.scaleIcon(Character, 192, 192);
         JLabel characterImage = new JLabel(scaledCharacter);
         characterImage.setHorizontalAlignment(JLabel.CENTER);
         
         ImageIcon originalball = new ImageIcon(MENU + "ball_display_" + selectedPokemons1.size() + ".png");
-        ImageIcon scaledoriginalball = scaleIcon(originalball, 141, 21);
+        ImageIcon scaledoriginalball = Auxiliar.scaleIcon(originalball, 141, 21);
         JLabel counterImage = new JLabel(scaledoriginalball);
         counterImage.setHorizontalAlignment(JLabel.CENTER);
         
         ImageIcon Character2 = new ImageIcon(CHARACTER + "Aura.png");
-        ImageIcon scaledCharacter2 = scaleIcon(Character2, 192, 192);
+        ImageIcon scaledCharacter2 = Auxiliar.scaleIcon(Character2, 192, 192);
         JLabel characterImage2 = new JLabel(scaledCharacter2);
         characterImage2.setHorizontalAlignment(JLabel.CENTER);
         
         ImageIcon originalball2 = new ImageIcon(MENU + "ball_display_" + selectedPokemons2.size() + ".png");
-        ImageIcon scaledoriginalball2 = scaleIcon(originalball2, 141, 21);
+        ImageIcon scaledoriginalball2 = Auxiliar.scaleIcon(originalball2, 141, 21);
         JLabel counterImage2 = new JLabel(scaledoriginalball2);
         counterImage2.setHorizontalAlignment(JLabel.CENTER);
 	  
-        JButton doneButton = crearBotonEstilizado("Listo", new Rectangle(275, 100, 100, 60), new Color(240, 240, 240, 200));
+        JButton doneButton = Auxiliar.crearBotonEstilizado("Listo", new Rectangle(275, 100, 100, 60), new Color(240, 240, 240, 200));
         doneButton.setBackground(new Color(200, 200, 200, 150));
-        doneButton.setVisible(false);
+        //doneButton.setVisible(false);
         JPanel rightContent = new JPanel(new GridBagLayout());
         rightContent.setOpaque(false);
         JPanel rightContentPanel = new JPanel(new BorderLayout());
@@ -664,7 +661,8 @@ public class POOBkemonGUI extends JFrame {
 	    scrollContainer.add(scrollPane);
 	    scrollContainer.add(Box.createVerticalGlue());
 	    centerPanel.add(scrollContainer, BorderLayout.CENTER);
-	
+        final int[] contador = {0};
+        AtomicReference<Boolean> player2 = new AtomicReference<>(false);
 	    for (int i = 1; i <= 386; i++) {
 	        final int pokemonId = i;
 	        JButton pokemonButton = createImageButton(POKEMONES + "Icon/" + i + ".png", 1, 1, 50, 50);
@@ -684,42 +682,50 @@ public class POOBkemonGUI extends JFrame {
 	            }
 	
 	            addButton.addActionListener(ev -> {
-	                if (selectedPokemons1.size() < 6) {
-	                    selectedPokemons1.add(pokemonId);
-	                    ImageIcon originalMoreball = new ImageIcon(MENU + "ball_display_" + selectedPokemons1.size() + ".png");
-	                    Image scaledMoreball = originalMoreball.getImage().getScaledInstance(141, 21, Image.SCALE_SMOOTH);
-	                    counterImage.setIcon(new ImageIcon(scaledMoreball));
-	                    
-	                    if (selectedPokemons1.size() == 6) {
-	                    	rightContentPanel.removeAll();
-	                        rightContentPanel.add(characterImage2, BorderLayout.NORTH);
-	                        rightContentPanel.add(counterImage2, BorderLayout.CENTER);
-	                        rightContentPanel.add(doneButton, BorderLayout.SOUTH);
-	                        rightContentPanel.revalidate();
-	                        rightContentPanel.repaint();
-	                        gridPanel.setBackgroundImage(MENU + "red.png");
-	                        turnLabel.setText("Jugador 2 elige");
-	                        turnLabel.setForeground(new Color(255, 100, 100));
-	                    }
-	                } else if (selectedPokemons1.size() == 6 && selectedPokemons2.size() < 6) {
-	                    selectedPokemons2.add(pokemonId);
-	                    ImageIcon originalMoreball = new ImageIcon(MENU + "ball_display_" + selectedPokemons2.size() + ".png");
-	                    Image scaledMoreball = originalMoreball.getImage().getScaledInstance(141, 21, Image.SCALE_SMOOTH);
-	                    counterImage2.setIcon(new ImageIcon(scaledMoreball));
-	                    
-	                    if (selectedPokemons2.size() == 6 && !doneButton.isVisible()) {
-	                    	gridPanel.setBackgroundImage(MENU + "white.png");
-	                        turnLabel.setText("Presione Listo");
-	                        turnLabel.setForeground(Color.white);
-	                        doneButton.setVisible(true);
-	                    }
-	                    
-	                }
-	                else if (selectedPokemons1.size() == 6 && selectedPokemons2.size() == 6 && doneButton.isVisible()) {
-                    	mostrarError("Pokemones completos","Porfavor Dar en Listo");
+                    if (!player2.get()) {
+                        selectedPokemons1.add(pokemonId);
+                        ImageIcon originalMoreball = new ImageIcon(MENU + "ball_display_" + selectedPokemons1.size() + ".png");
+                        Image scaledMoreball = originalMoreball.getImage().getScaledInstance(141, 21, Image.SCALE_SMOOTH);
+                        counterImage.setIcon(new ImageIcon(scaledMoreball));
+
+                        if (selectedPokemons1.size() == 6) {
+                            rightContentPanel.removeAll();
+                            rightContentPanel.add(characterImage2, BorderLayout.NORTH);
+                            rightContentPanel.add(counterImage2, BorderLayout.CENTER);
+                            rightContentPanel.add(doneButton, BorderLayout.SOUTH);
+                            rightContentPanel.revalidate();
+                            rightContentPanel.repaint();
+                            gridPanel.setBackgroundImage(MENU + "red.png");
+                            turnLabel.setText("Jugador 2 elige");
+                            turnLabel.setForeground(new Color(255, 100, 100));
+                            contador[0]++;
+                            player2.set(!player2.get());
+                        }
+                    } else {
+                        if (player2.get()) {
+                            selectedPokemons2.add(pokemonId);
+                            ImageIcon originalMoreball = new ImageIcon(MENU + "ball_display_" + selectedPokemons2.size() + ".png");
+                            Image scaledMoreball = originalMoreball.getImage().getScaledInstance(141, 21, Image.SCALE_SMOOTH);
+                            counterImage2.setIcon(new ImageIcon(scaledMoreball));
+
+                            if (selectedPokemons2.size() == 6) {
+                                rightContentPanel.removeAll();
+                                rightContentPanel.add(doneButton, BorderLayout.SOUTH);
+                                rightContentPanel.revalidate();
+                                rightContentPanel.repaint();
+                                gridPanel.setBackgroundImage(MENU + "white.png");
+                                turnLabel.setText("Presione Listo");
+                                turnLabel.setForeground(Color.white);
+                                contador[0]++;
+                            }
+
+                        }
+                        else if (contador[0]==2) {
+                            mostrarError("Pokemones completos","Porfavor Dar en Listo");
+}
                     }
-	                
-	                // Aquí es donde ocultamos la imagen y el botón
+
+                    // Aquí es donde ocultamos la imagen y el botón
 	                pokemonImage.setIcon(null);  // Elimina la imagen mostrada
 	                addButton.setVisible(false); // Oculta el botón Añadir
 	            });
@@ -727,12 +733,44 @@ public class POOBkemonGUI extends JFrame {
 	
 	        gridPanel.add(pokemonButton);
 	    }
-	    
+
 	    backButtonGameMode.addActionListener(e -> refresh(gameMode));
-	    doneButton.addActionListener(ev -> {
-	    	assingPokemon(selectedPokemons1, selectedPokemons2);
-	    	chooseMoves();
-	    	});
+        doneButton.addActionListener(ev -> {
+            if(contador[0]==0){
+                if (selectedPokemons1.size()<=0){
+                    mostrarError("Pokemones invalidos","Porfavor selecione almenos un pokemon");
+                }else{
+                    player2.set(true);
+                    rightContentPanel.removeAll();
+                    rightContentPanel.add(characterImage2, BorderLayout.NORTH);
+                    rightContentPanel.add(counterImage2, BorderLayout.CENTER);
+                    rightContentPanel.add(doneButton, BorderLayout.SOUTH);
+                    rightContentPanel.revalidate();
+                    rightContentPanel.repaint();
+                    gridPanel.setBackgroundImage(MENU + "red.png");
+                    turnLabel.setText("Jugador 2 elige");
+                    turnLabel.setForeground(new Color(255, 100, 100));
+                    contador[0]++;
+                }
+
+            }else if(contador[0]==1){
+                if (selectedPokemons2.size()<=0){
+                    mostrarError("Pokemones invalidos","Porfavor selecione almenos un pokemon");
+                }else{
+                    rightContentPanel.removeAll();
+                    rightContentPanel.add(doneButton, BorderLayout.SOUTH);
+                    rightContentPanel.revalidate();
+                    rightContentPanel.repaint();
+                    gridPanel.setBackgroundImage(MENU + "white.png");
+                    turnLabel.setText("Presione Listo");
+                    turnLabel.setForeground(Color.white);
+                    contador[0]++;
+                }
+            }else if(contador[0]==2){
+                assingPokemon(selectedPokemons1, selectedPokemons2);
+                chooseMoves();
+            }
+        });
 	    choosePokemonPanel.add(leftPanel, BorderLayout.WEST);
 	    choosePokemonPanel.add(centerPanel, BorderLayout.CENTER);
 	    choosePokemonPanel.add(rightPanel, BorderLayout.EAST);
@@ -761,8 +799,8 @@ public class POOBkemonGUI extends JFrame {
         turnLabel.setForeground(Color.blue);
         chooseMovesPanel.add(turnLabel, BorderLayout.NORTH);
 
-        JButton backButtonGameMode = crearBotonEstilizado("Back", new Rectangle(275, 100, 20, 60), new Color(240, 240, 240, 200));
-        JButton addButton = crearBotonEstilizado("Añadir", new Rectangle(275, 100, 200, 60), new Color(240, 240, 240, 200));
+        JButton backButtonGameMode = Auxiliar.crearBotonEstilizado("Back", new Rectangle(275, 100, 20, 60), new Color(240, 240, 240, 200));
+        JButton addButton = Auxiliar.crearBotonEstilizado("Añadir", new Rectangle(275, 100, 200, 60), new Color(240, 240, 240, 200));
         addButton.setVisible(false);
 
         JPanel leftContent = new JPanel(new BorderLayout());
@@ -786,16 +824,16 @@ public class POOBkemonGUI extends JFrame {
         leftPanel.add(panelSur, BorderLayout.SOUTH);
 
         ImageIcon Character = new ImageIcon(CHARACTER + "Bruno.png");
-        ImageIcon scaledCharacter = scaleIcon(Character, 192, 192);
+        ImageIcon scaledCharacter = Auxiliar.scaleIcon(Character, 192, 192);
         JLabel characterImage = new JLabel(scaledCharacter);
         characterImage.setHorizontalAlignment(JLabel.CENTER);
 
         ImageIcon Character2 = new ImageIcon(CHARACTER + "Aura.png");
-        ImageIcon scaledCharacter2 = scaleIcon(Character2, 192, 192);
+        ImageIcon scaledCharacter2 = Auxiliar.scaleIcon(Character2, 192, 192);
         JLabel characterImage2 = new JLabel(scaledCharacter2);
         characterImage2.setHorizontalAlignment(JLabel.CENTER);
 
-        JButton doneButton = crearBotonEstilizado("Listo", new Rectangle(275, 100, 200, 60), new Color(240, 240, 240, 200));
+        JButton doneButton = Auxiliar.crearBotonEstilizado("Listo", new Rectangle(275, 100, 200, 60), new Color(240, 240, 240, 200));
         doneButton.setBackground(new Color(200, 200, 200, 150));
         doneButton.setVisible(false);
 
@@ -860,7 +898,7 @@ public class POOBkemonGUI extends JFrame {
             Image scaled = original.getImage().getScaledInstance(138, 138, Image.SCALE_SMOOTH);
             pokemonImage.setIcon(new ImageIcon(scaled));
 
-            JButton pokemonButton = crearBotonTransparente(moveRepository.getAttackId(i).toString(), new Rectangle(10, 10, 5, 5), false);
+            JButton pokemonButton = Auxiliar.crearBotonTransparente(moveRepository.getAttackId(i).toString(), new Rectangle(10, 10, 5, 5), false);
             pokemonButton.setOpaque(false);
             pokemonButton.setContentAreaFilled(false);
             pokemonButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
@@ -953,7 +991,7 @@ public class POOBkemonGUI extends JFrame {
         turnLabel.setForeground(Color.blue);
         chooseItemsPanel.add(turnLabel, BorderLayout.NORTH);
         //
-        JButton backButtonGameMode = crearBotonEstilizado("Back",new Rectangle(275, 100, 20, 60),new Color(240, 240, 240, 200));
+        JButton backButtonGameMode = Auxiliar.crearBotonEstilizado("Back",new Rectangle(275, 100, 20, 60),new Color(240, 240, 240, 200));
         //
         JPanel panelSur = new JPanel(new BorderLayout());
         panelSur.setOpaque(false);
@@ -966,16 +1004,16 @@ public class POOBkemonGUI extends JFrame {
         leftPanel.add(panelSur, BorderLayout.SOUTH);
         //
         ImageIcon Character = new ImageIcon(CHARACTER + "Bruno.png");
-        ImageIcon scaledCharacter = scaleIcon(Character, 192, 192);
+        ImageIcon scaledCharacter = Auxiliar.scaleIcon(Character, 192, 192);
         JLabel characterImage = new JLabel(scaledCharacter);
         characterImage.setHorizontalAlignment(JLabel.CENTER);
 
         ImageIcon Character2 = new ImageIcon(CHARACTER + "Aura.png");
-        ImageIcon scaledCharacter2 = scaleIcon(Character2, 192, 192);
+        ImageIcon scaledCharacter2 = Auxiliar.scaleIcon(Character2, 192, 192);
         JLabel characterImage2 = new JLabel(scaledCharacter2);
         characterImage2.setHorizontalAlignment(JLabel.CENTER);
 
-        JButton doneButton = crearBotonEstilizado("Listo", new Rectangle(275, 100, 100, 60), new Color(240, 240, 240, 200));
+        JButton doneButton = Auxiliar.crearBotonEstilizado("Listo", new Rectangle(275, 100, 100, 60), new Color(240, 240, 240, 200));
         doneButton.setBackground(new Color(200, 200, 200, 150));
 
         JPanel rightContent = new JPanel(new GridBagLayout());
@@ -1387,73 +1425,8 @@ public class POOBkemonGUI extends JFrame {
     	boolean resultado = (respuesta == JOptionPane.YES_OPTION);
     	return resultado;
     }
-    public static JButton crearBotonTransparente(String texto, Rectangle bounds, boolean alineado) {
-        JButton boton = new JButton(texto);
-        
-        // Poner las coordenadas y tamaño
-        boton.setBounds(bounds);
 
-        // Hacer el botón transparente
-        boton.setContentAreaFilled(false);
-        boton.setBorderPainted(false);
-        boton.setFocusPainted(false);
-        boton.setOpaque(false);
-        
-        // Color inicial del texto
-        boton.setForeground(Color.BLACK);
-        
-        // Cambiar color al pasar el ratón
-        boton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                boton.setForeground(Color.WHITE);
-            }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                boton.setForeground(Color.BLACK);
-            }
-        });
-
-        boton.setFont(cargarFuentePixel(18));
-        if (!alineado) {
-        	boton.setHorizontalAlignment(SwingConstants.LEFT);
-        }
-        return boton;
-    }
-    private JButton crearBotonEstilizado(String texto, Rectangle bounds, Color color) {
-        JButton boton = new JButton(texto) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                
-                // Fondo opaco
-                g2d.setColor(color);
-                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
-                
-                // Borde negro
-                g2d.setColor(Color.BLACK);
-                g2d.setStroke(new BasicStroke(2f)); // Grosor del borde (2px)
-                g2d.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 15, 15);
-                
-                g2d.dispose();
-                super.paintComponent(g);
-            }
-        };
-        
-        boton.setBounds(bounds);
-        boton.setFont(cargarFuentePixel(18));
-        boton.setForeground(Color.BLACK);
-        boton.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // Margen interno
-        boton.setFocusable(false);
-        boton.setContentAreaFilled(false); // Importante mantenerlo para que funcione nuestro paintComponent
-        boton.setOpaque(false); // Permitimos que se vea nuestro fondo personalizado
-        
-        
-        
-        return boton;
-    }
     private static Font cargarFuentePixel(float tamaño) {
         try {
             Font fuenteBase = Font.createFont(Font.TRUETYPE_FONT, 
@@ -1467,10 +1440,6 @@ public class POOBkemonGUI extends JFrame {
 			Log.record(e);
             return new Font("Monospaced", Font.BOLD, (int)tamaño);
         }
-    }
-    private ImageIcon scaleIcon(ImageIcon icon, int width, int height) {
-        Image img = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(img);
     }
     private void reproducirSonido(String sonido) {
         try {
