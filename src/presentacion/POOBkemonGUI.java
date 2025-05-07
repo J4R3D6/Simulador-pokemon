@@ -1215,27 +1215,24 @@ public class POOBkemonGUI extends JFrame {
         BattleStartPanel.add(gifContainer, BorderLayout.CENTER);
         refresh(BattleStartPanel);
     }
+    private void startBattle(POOBkemon game) {
+        PokemonBattlePanel battlePanel = new PokemonBattlePanel(game);
+        battlePanel.setBattleListener(playerWon -> {
+            //showBattleResult(playerWon);
+            refresh(menuPanel);
+        });
+        refresh(battlePanel);
+    }
     // ========== Métodos auxiliares ========== //
     private void initMode(String mode){
         try {
+            POOBkemon game = null;
             if (mode.equals("s")) {
-                this.poobkemon = new POOBkemon(this.players, this.pokemones, this.items, this.moves, this.random);
-                String[][] pru = this.poobkemon.pokemonPerTrainer();
-                for(String[] a : pru){
-                    for(String b : a){
-                        System.out.println(b);
-                    }
-                }
+                game = new POOBkemon(this.players, this.pokemones, this.items, this.moves, this.random);
             } else if (mode.equals("p")) {
-                this.poobkemon = new POOBkemon(this.players, this.pokemones, this.items, this.moves, this.random);
-                String[][] pru = this.poobkemon.pokemonPerTrainer();
-                for(String[] a : pru){
-                    for(String b : a){
-                        System.out.println(b);
-                    }
-                }
-                //battlePanel();
+                game = new POOBkemon(this.players, this.pokemones, this.items, this.moves, this.random);
             }
+            startBattle(game);
         }catch (POOBkemonException e){
             Log.record(e);
             refresh(IntroductionPanel);
@@ -1303,14 +1300,14 @@ public class POOBkemonGUI extends JFrame {
         }
 
         // Efecto hover para cambiar el color del texto
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
+        button.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
+            public void mouseEntered(MouseEvent evt) {
                 button.setForeground(Color.WHITE);
             }
 
             @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
+            public void mouseExited(MouseEvent evt) {
                 button.setForeground(Color.BLACK);
             }
         });
@@ -1366,14 +1363,14 @@ public class POOBkemonGUI extends JFrame {
         }
 
         // 6. Efecto hover (opcional)
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
+        button.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
+            public void mouseEntered(MouseEvent evt) {
                 button.setForeground(Color.WHITE);
             }
 
             @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
+            public void mouseExited(MouseEvent evt) {
                 button.setForeground(Color.BLACK);
             }
         });
