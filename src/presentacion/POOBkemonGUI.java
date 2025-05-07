@@ -564,8 +564,8 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
 	    turnLabel.setForeground(Color.blue);
 	    choosePokemonPanel.add(turnLabel, BorderLayout.NORTH);
 	    //
-	    JButton backButtonGameMode = Auxiliar.crearBotonEstilizado("Back",new Rectangle(275, 100, 20, 60),new Color(240, 240, 240, 200));
-	    JButton addButton = Auxiliar.crearBotonEstilizado("Añadir", new Rectangle(275, 100, 200, 60), new Color(240, 240, 240, 200));
+	    JButton backButtonGameMode = crearBotonEstilizado("Back",new Rectangle(275, 100, 20, 60),new Color(240, 240, 240, 200));
+	    JButton addButton = crearBotonEstilizado("Añadir", new Rectangle(275, 100, 200, 60), new Color(240, 240, 240, 200));
 	    //addButton.setBackground(new Color(200, 200, 200, 150));
 	    addButton.setVisible(false);
 	    JPanel leftContent = new JPanel(new BorderLayout());
@@ -587,28 +587,28 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
 	    leftPanel.add(panelSur, BorderLayout.SOUTH);
 	    //
 	    ImageIcon Character = new ImageIcon(CHARACTER + "Bruno.png");
-        ImageIcon scaledCharacter = Auxiliar.scaleIcon(Character, 192, 192);
+        ImageIcon scaledCharacter = scaleIcon(Character, 192, 192);
         JLabel characterImage = new JLabel(scaledCharacter);
         characterImage.setHorizontalAlignment(JLabel.CENTER);
         
         ImageIcon originalball = new ImageIcon(MENU + "ball_display_" + selectedPokemons1.size() + ".png");
-        ImageIcon scaledoriginalball = Auxiliar.scaleIcon(originalball, 141, 21);
+        ImageIcon scaledoriginalball = scaleIcon(originalball, 141, 21);
         JLabel counterImage = new JLabel(scaledoriginalball);
         counterImage.setHorizontalAlignment(JLabel.CENTER);
         
         ImageIcon Character2 = new ImageIcon(CHARACTER + "Aura.png");
-        ImageIcon scaledCharacter2 = Auxiliar.scaleIcon(Character2, 192, 192);
+        ImageIcon scaledCharacter2 = scaleIcon(Character2, 192, 192);
         JLabel characterImage2 = new JLabel(scaledCharacter2);
         characterImage2.setHorizontalAlignment(JLabel.CENTER);
         
         ImageIcon originalball2 = new ImageIcon(MENU + "ball_display_" + selectedPokemons2.size() + ".png");
-        ImageIcon scaledoriginalball2 = Auxiliar.scaleIcon(originalball2, 141, 21);
+        ImageIcon scaledoriginalball2 = scaleIcon(originalball2, 141, 21);
         JLabel counterImage2 = new JLabel(scaledoriginalball2);
         counterImage2.setHorizontalAlignment(JLabel.CENTER);
 	  
-        JButton doneButton = Auxiliar.crearBotonEstilizado("Listo", new Rectangle(275, 100, 100, 60), new Color(240, 240, 240, 200));
+        JButton doneButton = crearBotonEstilizado("Listo", new Rectangle(275, 100, 100, 60), new Color(240, 240, 240, 200));
         doneButton.setBackground(new Color(200, 200, 200, 150));
-        //doneButton.setVisible(false);
+        doneButton.setVisible(false);
         JPanel rightContent = new JPanel(new GridBagLayout());
         rightContent.setOpaque(false);
         JPanel rightContentPanel = new JPanel(new BorderLayout());
@@ -661,8 +661,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
 	    scrollContainer.add(scrollPane);
 	    scrollContainer.add(Box.createVerticalGlue());
 	    centerPanel.add(scrollContainer, BorderLayout.CENTER);
-        final int[] contador = {0};
-        AtomicReference<Boolean> player2 = new AtomicReference<>(false);
+	
 	    for (int i = 1; i <= 386; i++) {
 	        final int pokemonId = i;
 	        JButton pokemonButton = createImageButton(POKEMONES + "Icon/" + i + ".png", 1, 1, 50, 50);
@@ -682,50 +681,42 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
 	            }
 	
 	            addButton.addActionListener(ev -> {
-                    if (!player2.get()) {
-                        selectedPokemons1.add(pokemonId);
-                        ImageIcon originalMoreball = new ImageIcon(MENU + "ball_display_" + selectedPokemons1.size() + ".png");
-                        Image scaledMoreball = originalMoreball.getImage().getScaledInstance(141, 21, Image.SCALE_SMOOTH);
-                        counterImage.setIcon(new ImageIcon(scaledMoreball));
-
-                        if (selectedPokemons1.size() == 6) {
-                            rightContentPanel.removeAll();
-                            rightContentPanel.add(characterImage2, BorderLayout.NORTH);
-                            rightContentPanel.add(counterImage2, BorderLayout.CENTER);
-                            rightContentPanel.add(doneButton, BorderLayout.SOUTH);
-                            rightContentPanel.revalidate();
-                            rightContentPanel.repaint();
-                            gridPanel.setBackgroundImage(MENU + "red.png");
-                            turnLabel.setText("Jugador 2 elige");
-                            turnLabel.setForeground(new Color(255, 100, 100));
-                            contador[0]++;
-                            player2.set(!player2.get());
-                        }
-                    } else {
-                        if (player2.get()) {
-                            selectedPokemons2.add(pokemonId);
-                            ImageIcon originalMoreball = new ImageIcon(MENU + "ball_display_" + selectedPokemons2.size() + ".png");
-                            Image scaledMoreball = originalMoreball.getImage().getScaledInstance(141, 21, Image.SCALE_SMOOTH);
-                            counterImage2.setIcon(new ImageIcon(scaledMoreball));
-
-                            if (selectedPokemons2.size() == 6) {
-                                rightContentPanel.removeAll();
-                                rightContentPanel.add(doneButton, BorderLayout.SOUTH);
-                                rightContentPanel.revalidate();
-                                rightContentPanel.repaint();
-                                gridPanel.setBackgroundImage(MENU + "white.png");
-                                turnLabel.setText("Presione Listo");
-                                turnLabel.setForeground(Color.white);
-                                contador[0]++;
-                            }
-
-                        }
-                        else if (contador[0]==2) {
-                            mostrarError("Pokemones completos","Porfavor Dar en Listo");
-}
+	                if (selectedPokemons1.size() < 6) {
+	                    selectedPokemons1.add(pokemonId);
+	                    ImageIcon originalMoreball = new ImageIcon(MENU + "ball_display_" + selectedPokemons1.size() + ".png");
+	                    Image scaledMoreball = originalMoreball.getImage().getScaledInstance(141, 21, Image.SCALE_SMOOTH);
+	                    counterImage.setIcon(new ImageIcon(scaledMoreball));
+	                    
+	                    if (selectedPokemons1.size() == 6) {
+	                    	rightContentPanel.removeAll();
+	                        rightContentPanel.add(characterImage2, BorderLayout.NORTH);
+	                        rightContentPanel.add(counterImage2, BorderLayout.CENTER);
+	                        rightContentPanel.add(doneButton, BorderLayout.SOUTH);
+	                        rightContentPanel.revalidate();
+	                        rightContentPanel.repaint();
+	                        gridPanel.setBackgroundImage(MENU + "red.png");
+	                        turnLabel.setText("Jugador 2 elige");
+	                        turnLabel.setForeground(new Color(255, 100, 100));
+	                    }
+	                } else if (selectedPokemons1.size() == 6 && selectedPokemons2.size() < 6) {
+	                    selectedPokemons2.add(pokemonId);
+	                    ImageIcon originalMoreball = new ImageIcon(MENU + "ball_display_" + selectedPokemons2.size() + ".png");
+	                    Image scaledMoreball = originalMoreball.getImage().getScaledInstance(141, 21, Image.SCALE_SMOOTH);
+	                    counterImage2.setIcon(new ImageIcon(scaledMoreball));
+	                    
+	                    if (selectedPokemons2.size() == 6 && !doneButton.isVisible()) {
+	                    	gridPanel.setBackgroundImage(MENU + "white.png");
+	                        turnLabel.setText("Presione Listo");
+	                        turnLabel.setForeground(Color.white);
+	                        doneButton.setVisible(true);
+	                    }
+	                    
+	                }
+	                else if (selectedPokemons1.size() == 6 && selectedPokemons2.size() == 6 && doneButton.isVisible()) {
+                    	mostrarError("Pokemones completos","Porfavor Dar en Listo");
                     }
-
-                    // Aquí es donde ocultamos la imagen y el botón
+	                
+	                // Aquí es donde ocultamos la imagen y el botón
 	                pokemonImage.setIcon(null);  // Elimina la imagen mostrada
 	                addButton.setVisible(false); // Oculta el botón Añadir
 	            });
@@ -733,44 +724,12 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
 	
 	        gridPanel.add(pokemonButton);
 	    }
-
+	    
 	    backButtonGameMode.addActionListener(e -> refresh(gameMode));
-        doneButton.addActionListener(ev -> {
-            if(contador[0]==0){
-                if (selectedPokemons1.size()<=0){
-                    mostrarError("Pokemones invalidos","Porfavor selecione almenos un pokemon");
-                }else{
-                    player2.set(true);
-                    rightContentPanel.removeAll();
-                    rightContentPanel.add(characterImage2, BorderLayout.NORTH);
-                    rightContentPanel.add(counterImage2, BorderLayout.CENTER);
-                    rightContentPanel.add(doneButton, BorderLayout.SOUTH);
-                    rightContentPanel.revalidate();
-                    rightContentPanel.repaint();
-                    gridPanel.setBackgroundImage(MENU + "red.png");
-                    turnLabel.setText("Jugador 2 elige");
-                    turnLabel.setForeground(new Color(255, 100, 100));
-                    contador[0]++;
-                }
-
-            }else if(contador[0]==1){
-                if (selectedPokemons2.size()<=0){
-                    mostrarError("Pokemones invalidos","Porfavor selecione almenos un pokemon");
-                }else{
-                    rightContentPanel.removeAll();
-                    rightContentPanel.add(doneButton, BorderLayout.SOUTH);
-                    rightContentPanel.revalidate();
-                    rightContentPanel.repaint();
-                    gridPanel.setBackgroundImage(MENU + "white.png");
-                    turnLabel.setText("Presione Listo");
-                    turnLabel.setForeground(Color.white);
-                    contador[0]++;
-                }
-            }else if(contador[0]==2){
-                assingPokemon(selectedPokemons1, selectedPokemons2);
-                chooseMoves();
-            }
-        });
+	    doneButton.addActionListener(ev -> {
+	    	assingPokemon(selectedPokemons1, selectedPokemons2);
+	    	chooseMoves();
+	    	});
 	    choosePokemonPanel.add(leftPanel, BorderLayout.WEST);
 	    choosePokemonPanel.add(centerPanel, BorderLayout.CENTER);
 	    choosePokemonPanel.add(rightPanel, BorderLayout.EAST);
