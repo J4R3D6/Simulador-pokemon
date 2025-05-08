@@ -278,7 +278,8 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar{
                 pokemonId[i] = Integer.parseInt(game.getPokemonInfo(this.currentPlayer, pokeTeam[i])[0]);
             }
         }catch (POOBkemonException e){
-            System.out.println("Error al obtener datos del equipo");//implementar bien
+            System.out.println(e);//implementar bien
+            System.out.println("Error al obtener datos del pokemon");
         }
         final int[] newindex = {0};
         ArrayList<JPanel> inactivePokemons = new ArrayList<>();

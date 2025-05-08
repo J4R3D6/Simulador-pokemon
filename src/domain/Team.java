@@ -63,25 +63,33 @@ public class Team {
 	 */
 	public int[] getPokemonsInactive(int currentPokemon) {
 		// Lista para almacenar los IDs de los Pokémon inactivos
-		ArrayList<Integer> inactivePokemons = new ArrayList<>();
+		ArrayList<Integer> inactiveList = new ArrayList<>();
 
 		// Filtrar Pokémon inactivos que no sean el actual
 		for (Pokemon pokemon : pokemons) {
-			if(!pokemon.getActive() && pokemon.getId() != currentPokemon) {
-				inactivePokemons.add(pokemon.getId());
+			if(!pokemon.getActive() && Integer.parseInt(pokemon.idPokedex) != currentPokemon) {
+				inactiveList.add(Integer.parseInt(pokemon.idPokedex));
 			}
 		}
-		// Convertir ArrayList<Integer> a int[]
-		int[] result = new int[inactivePokemons.size()];
-		for (int i = 0; i < inactivePokemons.size(); i++) {
-			result[i] = inactivePokemons.get(i);
+		// Convertir ArrayList a array primitivo
+		int[] inactivePokemons = new int[inactiveList.size()];
+		for (int i = 0; i < inactiveList.size(); i++) {
+			inactivePokemons[i] = inactiveList.get(i);
 		}
 
-		return result;
+		return inactivePokemons;
 	}
 	public Pokemon getPokemonById(int id) throws POOBkemonException {
 		for (Pokemon p : pokemons) {
 			if (p.getId() == id) {
+				return p;
+			}
+		}
+		throw new POOBkemonException("Pokémon con ID " + id + " no encontrado");
+	}
+	public Pokemon getPokemonByPOkedex(int id) throws POOBkemonException {
+		for (Pokemon p : pokemons) {
+			if (Integer.parseInt(p.idPokedex) == id) {
 				return p;
 			}
 		}

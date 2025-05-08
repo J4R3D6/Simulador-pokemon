@@ -517,15 +517,15 @@ public class POOBkemon {
 		return pokemons;
 	}
 
-	public int[] getPokemonsInactive(int idTrainer){
-		for(Trainer t: trainers) {
+	public int[] getPokemonsInactive(int idTrainer) {
+		for (Trainer t : trainers) {
 			if (t.getId() == idTrainer) {
+
 				return t.getPokemonsInactive();
 			}
 		}
-		return null;
+		throw new IllegalArgumentException("No se encontró el entrenador con ID: " + idTrainer);
 	}
-
 	/**
 	 * Obtiene la información de un Pokémon específico de un entrenador.
 	 *
@@ -541,7 +541,7 @@ public class POOBkemon {
 			if (trainer.getId() == idTrainer) {
 				try {
 					// Obtener el Pokémon del equipo del entrenador
-					Pokemon pokemon = trainer.getTeam().getPokemonById(idPokemon);
+					Pokemon pokemon = trainer.getTeam().getPokemonByPOkedex(idPokemon);
 					return pokemon.getInfo();
 				} catch (POOBkemonException e) {
 					throw new POOBkemonException("Error al obtener información del Pokémon: " + e.getMessage());

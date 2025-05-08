@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class POOBkemonTest {
@@ -59,6 +60,16 @@ public class POOBkemonTest {
         boolean isOK = game.isOk();
         Assert.assertEquals(true, isOK);
     }
+
+    @Test
+    public void testGetPokemonsInactive_WhenTrainerExists() {
+        int[] inactivePokemons = game.getPokemonsInactive(1);
+        System.out.println(Arrays.toString(inactivePokemons));
+        assertNotNull(inactivePokemons);
+        assertEquals(1, inactivePokemons.length);
+        assertArrayEquals(new int[]{2}, inactivePokemons);
+    }
+
 
     @Test
     public void ShouldShowMove() {
@@ -149,5 +160,10 @@ public class POOBkemonTest {
 
         // Defensive1 tiene 2 pokémones
         assertEquals(2, teams.get(1).getPokemons().size());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetPokemonsInactive_WhenTrainerDoesNotExist() {
+        game.getPokemonsInactive(999); // ID que no existe
     }
 }
