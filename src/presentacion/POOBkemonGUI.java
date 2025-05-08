@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -88,6 +90,20 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
         add(IntroductionPanel);
         IntroductionPanel.setFocusable(true);
         IntroductionPanel.requestFocusInWindow();
+        // Cargar y establecer el icono (Buscando Icono) (no lo carga)
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("resources/icon/pokemon_icon.png")) {
+            if (is != null) {
+                byte[] imageBytes = is.readAllBytes();
+                ImageIcon icon = new ImageIcon(imageBytes);
+                setIconImage(icon.getImage());
+            } else {
+                System.err.println("Icono no encontrado.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
     private void prepareActions(){
     	prepareActionsMenuBar();
