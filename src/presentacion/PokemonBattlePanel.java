@@ -2,10 +2,12 @@ package presentacion;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import domain.Log;
@@ -24,6 +26,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar{
     private POOBkemon game;
     private BattleListener battleListener;
     private ArrayList<Integer> order;
+    private int fondo = 1;
 
     private int currentPlayer;
 
@@ -64,22 +67,47 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar{
         HashMap<Integer,String[]> currentPokemons = this.game.getCurrentPokemons();
         String[] player = currentPokemons.get(this.order.get(0));
         String[] enemy = currentPokemons.get(this.order.get(1));
-        String playerPokemon = POKEMONES+"Back/"+player[2]+ ".png";//game.getPlayerCurrentPokemonId()
-        String enemyPokemon = POKEMONES+"Normal/" +enemy[2]+ ".png";
-        String currentPlayer = CHARACTER+this.order.get(this.currentPlayer)+ ".png";//game.getCurrentPlayer()
-        Image bg = new ImageIcon(MENU+"battle0.png").getImage();
-        Image playerImg = new ImageIcon(playerPokemon).getImage();
+        String playerPokemon;
+        String enemyPokemon;
+        if(player[16].equals("true")){
+            playerPokemon = POKEMONES+"BackShiny/"+player[2]+".png";
+        } else {
+            playerPokemon = POKEMONES + "Back/" + player[2] + ".png";
+        }
+        if(enemy[16].equals("true")){
+            enemyPokemon = POKEMONES+"Shiny/"+enemy[2]+".png";
+        } else {
+            enemyPokemon = POKEMONES + "Normal/" +enemy[2]+ ".png";
+        }
+        String currentPlayer = CHARACTER+this.currentPlayer+".png";
+        Image bg = new ImageIcon(MENU+"battle"+this.fondo+".png").getImage();
+        ImageIcon playerIcon = new ImageIcon(playerPokemon);
+        BufferedImage playerBufferedImg = toBufferedImage(playerIcon.getImage());
         Image enemyImg = new ImageIcon(enemyPokemon).getImage();
         Image currentPlayerImg = new ImageIcon(currentPlayer).getImage();
+        int lowestVisibleY = findAbsoluteLowestVisibleY(playerBufferedImg);
+        final double TARGET_HEIGHT_RATIO = 0.72; // 72% de la altura
+        final int DESIRED_MARGIN = 15; // Margen adicional
         JPanel panel = new JPanel(null) {
             @Override
             protected void paintComponent(Graphics g) {
-                final int w = getWidth(), h = getHeight();
+                final int w = getWidth();
+                final int h = getHeight();
+
                 super.paintComponent(g);
                 g.drawImage(bg, 0, 0, w, h, this);
-                g.drawImage(enemyImg, (int)(w * 0.6), (int)(h * 0.07), (int)(w * 0.27), (int)(h * 0.4), this);
-                g.drawImage(playerImg, (int)(w * 0.12), (int)(h * 0.465), (int)(w * 0.25), (int)(h * 0.3), this);
-                g.drawImage(currentPlayerImg, (int)(w * 0.88), (int)(h * 0.01), (int)(w * 0.12), (int)(h * 0.15), this);
+                g.drawImage(enemyImg, (int)(w*0.62), (int)(h*0.073), (int)(w*0.27), (int)(h*0.4), this);
+                int displayWidth = (int)(w*0.25);
+                int displayHeight = (int)(h*0.3);
+                double scaleY = (double)displayHeight / playerBufferedImg.getHeight();
+                int targetY = (int)(h * TARGET_HEIGHT_RATIO) - (int)(lowestVisibleY * scaleY) - DESIRED_MARGIN;
+                g.drawImage(playerBufferedImg,
+                        (int)(w*0.12),
+                        targetY,
+                        displayWidth,
+                        displayHeight,
+                        this);
+                g.drawImage(currentPlayerImg, (int)(w*0.88), (int)(h*0.01), (int)(w*0.12), (int)(h*0.15), this);
             }
         };
         JLabel battleText = new JLabel("¿Qué debería hacer " +currentPokemons.get(this.currentPlayer)[1] + "?");//game.getPlayerCurrentPokemonName()

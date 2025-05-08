@@ -1501,8 +1501,6 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     		pokemones1.add(getNumerRandom(386));
     		pokemones2.add(getNumerRandom(386));
     	}
-        System.out.println(pokemones1.toString());
-        System.out.println(pokemones2.toString());
     	assingPokemon(pokemones1, pokemones2);
     }
     private void createMoves(){

@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -95,5 +96,36 @@ public interface Auxiliar {
     public static ImageIcon scaleIcon(ImageIcon icon, int width, int height) {
         Image img = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(img);
+    }
+
+    default int findAbsoluteLowestVisibleY(BufferedImage img) {
+        int lowestY = 0;
+        // Usamos un enfoque por columnas para mejor precisión
+        for (int x = 0; x < img.getWidth(); x++) {
+            for (int y = img.getHeight()-1; y >= lowestY; y--) {
+                if ((img.getRGB(x, y) & 0xFF000000) != 0) {
+                    if (y > lowestY) {
+                        lowestY = y;
+                    }
+                    break; // Pasamos a la siguiente columna
+                }
+            }
+        }
+        return lowestY;
+    }
+
+    default BufferedImage toBufferedImage(Image img) {
+        if (img instanceof BufferedImage) {
+            return (BufferedImage) img;
+        }
+
+        BufferedImage bufferedImage = new BufferedImage(
+                img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D bGr = bufferedImage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        return bufferedImage;
     }
 }
