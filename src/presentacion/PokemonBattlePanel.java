@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -195,15 +196,15 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar{
 
                 enemyNameLabel.setBounds((int)(w * 0.09), (int)(h * 0.09), (int)(w * 0.25), 30);
                 enemyNameLabel.setFont(Auxiliar.cargarFuentePixel(18));
-                enemyLevelLabel.setBounds((int)(w * 0.31), (int)(h * 0.09), (int)(w * 0.1), 30);
+                enemyLevelLabel.setBounds((int)(w * 0.31), (int)(h * 0.09), (int)(w * 0.15), 30);
                 enemyLevelLabel.setFont(Auxiliar.cargarFuentePixel(18));
                 enemyHPBar.setBounds((int)(w * 0.12), (int)(h * 0.16), (int)(w * 0.3), 15);
                 enemyHPLabel.setBounds((int)(w * 0.12), (int)(h * 0.19), (int)(w * 0.3), 30);
                 enemyHPLabel.setFont(Auxiliar.cargarFuentePixel(18));
 
-                playerNameLabel.setBounds((int)(w * 0.6), (int)(h * 0.475), (int)(w * 0.25), 30);
+                playerNameLabel.setBounds((int)(w * 0.6), (int)(h * 0.478), (int)(w * 0.25), 30);
                 playerNameLabel.setFont(Auxiliar.cargarFuentePixel(18));
-                playerLevelLabel.setBounds((int)(w * 0.83), (int)(h * 0.475), (int)(w * 0.15), 30);
+                playerLevelLabel.setBounds((int)(w * 0.82), (int)(h * 0.478), (int)(w * 0.15), 30);
                 playerLevelLabel.setFont(Auxiliar.cargarFuentePixel(18));
                 playerHPBar.setBounds((int)(w * 0.63), (int)(h * 0.55), (int)(w * 0.3), 15);
                 playerHPLabel.setBounds((int)(w * 0.63), (int)(h * 0.58), (int)(w * 0.3), 30);
@@ -216,22 +217,18 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar{
 
     private JPanel createPokemonView() {
         HashMap<Integer,String[]> currentPokemons = this.game.getCurrentPokemons();
-        String[] player = currentPokemons.get(this.order.get(0));
-        String[] enemy = currentPokemons.get(this.order.get(1));
-        String playerPokemon;
-        String enemyPokemon;
+        String[] curentplayer = currentPokemons.get(this.currentPlayer);
         JPanel panel = new ImagePanel(null,MENU+"p.png");
         JButton confirmButton = Auxiliar.crearBotonEstilizado("Confirm", new Rectangle(1,1,1,1), new Color(4, 132, 25));
         JButton backButton = Auxiliar.crearBotonTransparente("Back",new Rectangle(1,1,1,1), false);
-        JLabel message = new JLabel("Elige un Pokemon");
+        JLabel message = new JLabel("Chose a Pokemon");
         confirmButton.setVisible(false);
         JPanel currentPokemonPanel = new JPanel(null);
         currentPokemonPanel.setOpaque(false);
-        ImageIcon seledtedPOkemonIcon = Auxiliar.scaleIcon(new ImageIcon("resources/pokemones/Emerald/Icon/" +1+ ".png"),100,100);//getPlayerCurrentPokemonId()
-        JLabel selectedPokemonImage = new JLabel(seledtedPOkemonIcon);
-        JLabel selectedNameLabel = new JLabel(player[1]);//getPlayerCurrentPokemonName()
-        JLabel selectedLevel = new JLabel("Nv. " + player[4]);//getPlayerCurrentPokemonLevel()
-        JLabel selectedHPLabel = new JLabel(enemy[6]+"/"+enemy[5]);//getEnemyCurrentPokemonHP()/getEnemyCurrentPokemonMaxHP()
+        JPanel selectedPokemonImage = new ImagePanel(null, "resources/pokemones/Emerald/Icon/" +curentplayer[2]+ ".png");
+        JLabel selectedNameLabel = new JLabel(curentplayer[1]);//getPlayerCurrentPokemonName()
+        JLabel selectedLevel = new JLabel("Nv. " + curentplayer[4]);//getPlayerCurrentPokemonLevel()
+        JLabel selectedHPLabel = new JLabel(curentplayer[6]+"/"+curentplayer[5]);//getEnemyCurrentPokemonHP()/getEnemyCurrentPokemonMaxHP()
         selectedLevel.setFont(Auxiliar.cargarFuentePixel(20));
         selectedNameLabel.setFont(Auxiliar.cargarFuentePixel(20));
         selectedHPLabel.setFont(Auxiliar.cargarFuentePixel(20));
@@ -241,8 +238,8 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar{
         selectedHPLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         selectedLevel.setHorizontalAlignment(SwingConstants.LEFT);
         selectedNameLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        BarraVidaConImagen selectedHpBar = new BarraVidaConImagen( 30);//getPlayerCurrentPokemonMaxHP())
-        selectedHpBar.setValue(Integer.parseInt(player[6]));//getPlayerCurrentPokemonHP() // game.getPlayerCurrentPokemonHP() <(game.getPlayerCurrentPokemonMaxHP()
+        BarraVidaConImagen selectedHpBar = new BarraVidaConImagen( Integer.parseInt(curentplayer[5]));//getPlayerCurrentPokemonMaxHP())
+        selectedHpBar.setValue(Integer.parseInt(curentplayer[6]));//getPlayerCurrentPokemonHP() // game.getPlayerCurrentPokemonHP() <(game.getPlayerCurrentPokemonMaxHP()
         currentPokemonPanel.add(selectedPokemonImage);
         currentPokemonPanel.add(selectedNameLabel);
         currentPokemonPanel.add(selectedLevel);
@@ -250,45 +247,49 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar{
         currentPokemonPanel.add(selectedHpBar);
         currentPokemonPanel.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
-                selectedPokemonImage.setBounds(3, -35,  (int)(panel.getWidth() * 0.1), (int)(panel.getHeight() * 0.25));
-                selectedNameLabel.setBounds((int)(currentPokemonPanel.getWidth() *0.3), (int)(currentPokemonPanel.getHeight() *0.20),  (int)(panel.getWidth() * 0.3), 20);
-                selectedLevel.setBounds((int)(currentPokemonPanel.getWidth() *0.3), (int)(currentPokemonPanel.getHeight() *0.40),  (int)(panel.getWidth() * 0.3), 20);
+                selectedPokemonImage.setBounds(0, 0,  (int)(panel.getWidth() * 0.12), (int)(panel.getHeight() * 0.17));
+                selectedNameLabel.setBounds((int)(currentPokemonPanel.getWidth() *0.38), (int)(currentPokemonPanel.getHeight() *0.20),  (int)(panel.getWidth() * 0.3), 20);
+                selectedLevel.setBounds((int)(currentPokemonPanel.getWidth() *0.38), (int)(currentPokemonPanel.getHeight() *0.40),  (int)(panel.getWidth() * 0.3), 20);
                 selectedHPLabel.setBounds((int)(currentPokemonPanel.getWidth() *0.04), (int)(currentPokemonPanel.getHeight() *0.76),  (int)(panel.getWidth() * 0.3), 20);
                 selectedHpBar.setBounds((int)(currentPokemonPanel.getWidth() *0.04), (int)(currentPokemonPanel.getHeight() *0.63),  (int)(panel.getWidth() * 0.3), 15);
                 }
         });
-        int[] pokeTeam= game.getPokemonsInactive(0); //(equipo desacttivado) (metodo de equipo desactivado)
-        for (int p:pokeTeam){
-            System.out.println(p);
-        }
+        System.out.println(this.currentPlayer);
+        int[] pokeTeam= game.getPokemonsInactive(this.currentPlayer); //(equipo desacttivado) (metodo de equipo desactivado)
+        System.out.println(Arrays.toString(pokeTeam));
+
+        System.out.println(Arrays.toString(game.getPokemonsInactive(0)));
+
+        System.out.println(Arrays.toString(game.getPokemonsInactive(1)));
         String[] pokemonNames = new String[pokeTeam.length];
         int[] pokemonLevels = new int[pokeTeam.length];
         int[] pokemonHPs = new int[pokeTeam.length];
         int[] pokemonMaxHPs = new int[pokeTeam.length];
-        int[] pokemonIcons = new int[pokeTeam.length];
+        int[] pokemonIdPokedex = new int[pokeTeam.length];
         int[] pokemonId = new int[pokeTeam.length];
-        ArrayList<JPanel> inactivePokemons = new ArrayList<>();
+
         try {
             for (int i = 0; i < pokeTeam.length; i++) {
-                pokemonNames[i] = game.getPokemonInfo(0, pokeTeam[0])[1];//game.getPokemonName(pokeTeam[i]);
-                pokemonLevels[i] = Integer.parseInt(game.getPokemonInfo(0, pokeTeam[0])[4]);//game.getPokemonLevel(team[i]);
-                pokemonHPs[i] = Integer.parseInt(game.getPokemonInfo(0, pokeTeam[0])[6]);//game.getPokemonHP(team[i]);
-                pokemonMaxHPs[i] = Integer.parseInt(game.getPokemonInfo(0, pokeTeam[0])[5]);//game.getPokemonMaxHP(team[i]);
-                pokemonIcons[i] = Integer.parseInt(game.getPokemonInfo(0, pokeTeam[0])[2]);
-                pokemonId[i] = Integer.parseInt(game.getPokemonInfo(0, pokeTeam[0])[2]);
+                pokemonNames[i] = game.getPokemonInfo(this.currentPlayer, pokeTeam[i])[1];//game.getPokemonName(pokeTeam[i]);
+                pokemonLevels[i] = Integer.parseInt(game.getPokemonInfo(this.currentPlayer, pokeTeam[i])[4]);//game.getPokemonLevel(team[i]);
+                pokemonHPs[i] = Integer.parseInt(game.getPokemonInfo(this.currentPlayer, pokeTeam[i])[6]);//game.getPokemonHP(team[i]);
+                pokemonMaxHPs[i] = Integer.parseInt(game.getPokemonInfo(this.currentPlayer, pokeTeam[i])[5]);//game.getPokemonMaxHP(team[i]);
+                pokemonIdPokedex[i] = Integer.parseInt(game.getPokemonInfo(this.currentPlayer, pokeTeam[i])[2]);
+                pokemonId[i] = Integer.parseInt(game.getPokemonInfo(this.currentPlayer, pokeTeam[i])[0]);
             }
         }catch (POOBkemonException e){
             System.out.println("Error al obtener datos del equipo");//implementar bien
         }
         final int[] newindex = {0};
+        ArrayList<JPanel> inactivePokemons = new ArrayList<>();
         for(int i= 0 ;i < pokeTeam.length; i++  ){
             final int id = i;
             JPanel pokemonPanel = new JPanel(null);
             pokemonPanel.setFont(Auxiliar.cargarFuentePixel(20));
-            pokemonPanel.setForeground(Color.WHITE);
-            pokemonPanel.setOpaque(false);
-            ImageIcon POkemonIcon = Auxiliar.scaleIcon(new ImageIcon("resources/pokemones/Emerald/Icon/" +pokemonIcons[i]+ ".png"),80,80);//getPlayerCurrentPokemonId()
-            JLabel PokemonImage = new JLabel(POkemonIcon);
+            pokemonPanel.setOpaque(true);
+            JPanel PokemonImage = new ImagePanel(null, "resources/pokemones/Emerald/Icon/" +pokemonIdPokedex[i]+ ".png");
+            selectedPokemonImage.setBackground(Color.BLACK);/////////////
+            selectedPokemonImage.setOpaque(true);//////////////////
             JLabel NameLabel = new JLabel(pokemonNames[i]);//getPlayerCurrentPokemonName()
             JLabel Level = new JLabel("Nv. " + pokemonLevels[i]);//getPlayerCurrentPokemonLevel()
             JLabel HPLabel = new JLabel(pokemonHPs[i]+"/"+pokemonMaxHPs[i]);//getEnemyCurrentPokemonHP()/getEnemyCurrentPokemonMaxHP()
@@ -326,18 +327,15 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar{
                     //confirmButton.setActionLister();
                 }
             });
-
             pokemonPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             inactivePokemons.add(pokemonPanel);
+            panel.add(pokemonPanel);
         }
         backButton.addActionListener(e -> {cardLayout.show(mainPanel,"battle");});
         panel.add(backButton);
         panel.add(currentPokemonPanel);
         panel.add(confirmButton);
         panel.add(message);
-        for (int i = 0; i < pokeTeam.length; i++) {
-            panel.add(inactivePokemons.get(i));
-        }
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 int w = getWidth();

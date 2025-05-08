@@ -71,7 +71,6 @@ public class Team {
 				inactivePokemons.add(pokemon.getId());
 			}
 		}
-
 		// Convertir ArrayList<Integer> a int[]
 		int[] result = new int[inactivePokemons.size()];
 		for (int i = 0; i < inactivePokemons.size(); i++) {
