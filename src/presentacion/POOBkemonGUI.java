@@ -1221,6 +1221,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     private void initMode(String mode){
         try {
             if (mode.equals("s")) {
+                this.poobkemon = Survive.getInstance();
                 poobkemon.initGame(this.players, this.pokemones, this.items, this.moves, this.random);
             } else if (mode.equals("p")) {
                 poobkemon.initGame(this.players, this.pokemones, this.items, this.moves, this.random);

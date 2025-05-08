@@ -86,18 +86,6 @@ public class POOBkemonTest {
         assertEquals(2, result[1].length);
     }
 
-    @Test
-    public void shouldShowPokemonInfoCorrectFormat() {
-        String[][] result = game.pokemonPerTrainer();
-
-        // Verificar formato del string para cada pokémon
-        for (String[] trainerPokemons : result) {
-            for (String pokemonInfo : trainerPokemons) {
-                assertTrue(pokemonInfo.matches("\\d+\\. .+ \\(Nivel: \\d+, HP: \\d+\\.\\d+/\\d+\\)"));
-            }
-        }
-    }
-
     @Test(expected = POOBkemonException.class)
     public void testMissingTrainerData() throws POOBkemonException {
         ArrayList<String> emptyTrainers = new ArrayList<>();

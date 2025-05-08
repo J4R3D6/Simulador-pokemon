@@ -19,7 +19,7 @@ public class PokemonTest {
         PokemonRepository sampleInfo = new PokemonRepository();
         String[] sampleInfo1 = sampleInfo.getPokemonId(1);
         sampleAttacksIds = new ArrayList<>(Arrays.asList(1, 2));
-        pokemon = new Pokemon(1, sampleInfo1, sampleAttacksIds, false);
+        pokemon = new Pokemon(1, sampleInfo1, sampleAttacksIds, false,1);
     }
 
     @Test
@@ -112,7 +112,7 @@ public class PokemonTest {
         ArrayList<Integer> sampleAttacksIds = new ArrayList<>(Arrays.asList(1, 2));
 
         // Act
-        Pokemon pokemon = new Pokemon(1, incompleteInfo, sampleAttacksIds, false);
+        Pokemon pokemon = new Pokemon(1, incompleteInfo, sampleAttacksIds, false,1);
 
         // Assert - Verifica que se creó un Pokémon por defecto
         assertEquals(0, pokemon.getId()); // ID por defecto
@@ -133,7 +133,7 @@ public class PokemonTest {
         ArrayList<Integer> sampleAttacksIds = new ArrayList<>(Arrays.asList(1, 2));
 
         // Act
-        Pokemon pokemon = new Pokemon(1, invalidInfo, sampleAttacksIds, false);
+        Pokemon pokemon = new Pokemon(1, invalidInfo, sampleAttacksIds, false,1);
 
         // Assert - Verifica valores por defecto
         assertEquals("MissingNo", pokemon.getName());
@@ -147,7 +147,7 @@ public class PokemonTest {
         ArrayList<Integer> sampleAttacksIds = new ArrayList<>(Arrays.asList(1, 2));
 
         // Act
-        Pokemon pokemon = new Pokemon(1, incompleteInfo, sampleAttacksIds, false);
+        Pokemon pokemon = new Pokemon(1, incompleteInfo, sampleAttacksIds, false,1);
 
         // Assert - Verifica que se creó un Pokémon por defecto
         assertEquals(0, pokemon.getId()); // ID por defecto

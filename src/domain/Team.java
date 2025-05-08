@@ -56,8 +56,37 @@ public class Team {
 		}
 		return true;
 	}
-	public Pokemon getPokemon(int id) {
-		return null;
+	/**
+	 * Obtiene los IDs de los Pokémon inactivos en el equipo, excluyendo al Pokémon actual.
+	 * @param currentPokemon ID del Pokémon actualmente activo (que se excluirá de los resultados)
+	 * @return Arreglo de enteros con los IDs de los Pokémon inactivos
+	 */
+	public int[] getPokemonsInactive(int currentPokemon) {
+		// Lista para almacenar los IDs de los Pokémon inactivos
+		ArrayList<Integer> inactivePokemons = new ArrayList<>();
+
+		// Filtrar Pokémon inactivos que no sean el actual
+		for (Pokemon pokemon : pokemons) {
+			if(!pokemon.getActive() && pokemon.getId() != currentPokemon) {
+				inactivePokemons.add(pokemon.getId());
+			}
+		}
+
+		// Convertir ArrayList<Integer> a int[]
+		int[] result = new int[inactivePokemons.size()];
+		for (int i = 0; i < inactivePokemons.size(); i++) {
+			result[i] = inactivePokemons.get(i);
+		}
+
+		return result;
+	}
+	public Pokemon getPokemonById(int id) throws POOBkemonException {
+		for (Pokemon p : pokemons) {
+			if (p.getId() == id) {
+				return p;
+			}
+		}
+		throw new POOBkemonException("Pokémon con ID " + id + " no encontrado");
 	}
 
 }

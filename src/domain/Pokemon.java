@@ -15,7 +15,7 @@ public class Pokemon {
 
 	public int maxHealth;
 
-	public double currentHealth;
+	public int currentHealth;
 
 	public int attack;
 
@@ -49,10 +49,10 @@ public class Pokemon {
 		initDefault();
 	}
 
-	public Pokemon(int id, String[] info, ArrayList<Integer> attacksIds, boolean random) {
+	public Pokemon(int id, String[] info, ArrayList<Integer> attacksIds, boolean random, int pokemonLvl) {
 		try {
 			if (info.length < 11) throw new POOBkemonException(POOBkemonException.LESS_INFORMACION_POKEMON);
-			initFromParameters(id, info, attacksIds, random);
+			initFromParameters(id, info, attacksIds, random, pokemonLvl);
 		} catch (POOBkemonException | NumberFormatException e) {
 			initDefault();
 			System.out.println(id+" "+info.toString()+" "+attacksIds.toString()+" "+random);
@@ -86,7 +86,7 @@ public class Pokemon {
 		this.attacks = new ArrayList<>();
 	}
 
-	private void initFromParameters(int id, String[] info, ArrayList<Integer> attacksIds, boolean random) {
+	private void initFromParameters(int id, String[] info, ArrayList<Integer> attacksIds, boolean random, int pokemonLvl) {
 		this.id = id;
 		this.name = info[1];
 		this.idPokedex = info[0];
@@ -99,7 +99,7 @@ public class Pokemon {
 		this.specialDefense = Integer.parseInt(info[9]);
 		this.speed = Integer.parseInt(info[10]);
 		this.xp = 0;
-		this.level = 1;
+		this.level = pokemonLvl;
 		this.levelRequirement = 100;
 		this.states = new ArrayList<>();
 		this.active = false;
@@ -201,7 +201,7 @@ public class Pokemon {
 		StatsRepository statsRepository = new StatsRepository();
 		String[]info = movesRepository.getAttackDamageAndType(idAttack);
 		double multiplicator = statsRepository.getMultiplier(info[0],this.type);
-		this.currentHealth = this.currentHealth - damage*multiplicator;
+		this.currentHealth = (int)(this.currentHealth - damage*multiplicator);
 		if(this.currentHealth < 0){
 			this.currentHealth = 0;
 			this.weak = true;
