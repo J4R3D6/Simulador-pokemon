@@ -203,4 +203,29 @@ public class Pokemon {
 			this.weak = true;
 		}
 	}
+	public String[][] getAttacksInfo() {
+		int attacksSize = attacks.size();
+		String[][] attacksInfo = new String[attacksSize][7];
+
+		for (int i = 0; i < attacksSize; i++) {
+			Attack attack = attacks.get(i);
+			if (attack != null) {
+				attacksInfo[i] = attack.getInfo();
+			} else {
+				// Valores por defecto si el ataque es null (Por si alguna vez pasa xd)
+				attacksInfo[i] = new String[]{
+						"Desconocido",  // nombre
+						"Normal",       // tipo
+						"0",            // poder
+						"0",            // precisión
+						"0",            // pp
+						"0",            // id
+						""              // descripción
+				};
+			}
+		}
+		return attacksInfo;
+	}
+
+
 }

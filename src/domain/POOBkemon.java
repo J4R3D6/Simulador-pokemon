@@ -528,6 +528,21 @@ public class POOBkemon {
 		}
 		throw new POOBkemonException("Entrenador con ID " + idTrainer + " no encontrado");
 	}
+	public HashMap<Integer, String[][]> getActiveAttacks(){
+		HashMap<Integer, String[][]> pokemons = new HashMap<>();
+		for (Team t : this.teams) {
+			try {
+				int trainerid = t.getTrainer().getId();
+				Trainer currentTrainer = t.getTrainer();
+				Pokemon currentPokemon = t.getPokemonById(currentTrainer.getCurrentPokemonId());// Obtiene el objeto Pokemon
+				String[][] pokemonInfo = currentPokemon.getAttacksInfo();
+				pokemons.put(trainerid, pokemonInfo);
+			} catch (POOBkemonException e) {
+				pokemons.put(t.getTrainer().getId(), new String[][]{{"Sin ataques activos"}});
+			}
+		}
+		return pokemons;
+	}
 	//==================Informacion=======================
 	/**
 	 * Obtiene información de todos los Pokémon disponibles.

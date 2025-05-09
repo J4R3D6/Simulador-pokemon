@@ -1431,7 +1431,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
             AudioInputStream audioInput = AudioSystem.getAudioInputStream(new File(songs+sonido));
             clip = AudioSystem.getClip();
             clip.open(audioInput);
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
+            clip.loop(Clip.LOOP_CONTINUOUSLY); // Repetir mientras el panel esté visible
         } catch (Exception e) {
             e.printStackTrace();
         }

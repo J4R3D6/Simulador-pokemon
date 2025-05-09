@@ -59,13 +59,12 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         // Registrar creadores de paneles
         panelBuilders.put("battle", this::createBattleView);
         panelBuilders.put("pokemon", this::createPokemonView);
-        //panelBuilders.put("attack", this::createAtaquesView);
+        panelBuilders.put("attack", this::createAtaquesView);
         // panelBuilders.put("animation", this::createAnimationView);
         // Inicializar con un panel por defecto (opcional)
         JPanel initialPanel = panelBuilders.get("battle").get();
         initialPanel.setName("battle");
         mainPanel.add(initialPanel, "battle");
-        mainPanel.add(createAtaquesView(), "attack");
     }
     public void setBattleListener(BattleListener listener) {
         this.battleListener = listener;
@@ -139,6 +138,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
                         this);
 
                 // Posicionamiento del Pokémon jugador
+
                 int playerDisplayWidth = (int)(w * 0.25);
                 int playerDisplayHeight = (int)(h * 0.3);
                 double playerScaleY = (double)playerDisplayHeight / resources.playerImage.getHeight(this);
@@ -189,7 +189,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
             if (option.equals("POKÉMON")) {
                 btn.addActionListener(e -> showPanel("pokemon"));
             } else if (option.equals("ATACAR")) {
-                btn.addActionListener(e -> cardLayout.show(mainPanel, "attack"));//showPanel("attack"));
+                btn.addActionListener(e -> showPanel("attack"));//showPanel("attack"));
             } else if (option.equals("HUIR")) {
                 btn.addActionListener(e -> {
                     if (battleListener != null) {
@@ -326,7 +326,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
     }
     private void prepareMainComponents(JPanel parentPanel) {
         // Botones y mensaje principal
-        JButton confirmButton = Auxiliar.crearBotonEstilizado("Confirm", new Rectangle(1,1,1,1), new Color(4, 132, 25));
+        JButton confirmButton = Auxiliar.crearBotonEstilizado("Confirm", new Rectangle(1,1,1,1), new Color(122, 227, 0));
         JButton backButton = Auxiliar.crearBotonTransparente("Back", new Rectangle(1,1,1,1), false);
         JLabel message = new JLabel("Choose a Pokemon");
 
@@ -348,6 +348,15 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
     private void prepareCurrentPokemonPanel(JPanel parentPanel) {
         HashMap<Integer, String[]> currentPokemons = this.game.getCurrentPokemons();
         String[] currentPlayerData = currentPokemons.get(this.currentPlayer);
+        /** Está funcional
+        for(String[][] s: this.game.getActiveAttacks().values()){
+            for(String[] a: s){
+                for(String p: a){
+                    System.out.println(p);
+                }
+            }
+        }
+         **/
         JPanel currentPokemonPanel = new JPanel(null);
         currentPokemonPanel.setOpaque(false);
         // Imagen del Pokémon
@@ -477,7 +486,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
                 JLabel message = (JLabel) parentPanel.getClientProperty("message");
 
                 confirmButton.setVisible(true);
-                message.setText("Chose " + pokemonInfo[1]);
+                message.setText("Choose " + pokemonInfo[1]);
 
                 // Limpiar listeners previos
                 for (ActionListener al : confirmButton.getActionListeners()) {
@@ -533,54 +542,123 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
     }
     //
     private JPanel createAtaquesView() {
-        HashMap<Integer,String[]> currentPokemons = this.game.getCurrentPokemons();
-        final String[] player = this.game.getCurrentPokemons().get(this.order.get(0));
-        final String[] enemy = this.game.getCurrentPokemons().get(this.order.get(1));
-        final String playerPokemon = player[16].equals("true")
-                ? BACK_SHINY_PATH + player[2] + PNG_EXT
-                : BACK_PATH + player[2] + PNG_EXT;
-        final String enemyPokemon = enemy[16].equals("true")
-                ? SHINY_PATH + enemy[2] + PNG_EXT
-                : NORMAL_PATH + enemy[2] + PNG_EXT;
-        final Image bg = new ImageIcon(MENU + "battle_"+ this.fondo + PNG_EXT).getImage();
-        final Image currentPlayerImg = new ImageIcon(CHARACTER + this.currentPlayer + PNG_EXT).getImage();
-        final ImageIcon playerIcon = new ImageIcon(playerPokemon);
-        final BufferedImage playerBufferedImg = toBufferedImage(playerIcon.getImage());
-        final int playerLowestY = findAbsoluteLowestVisibleY(playerBufferedImg);
-        final ImageIcon enemyIcon = new ImageIcon(enemyPokemon);
-        final BufferedImage enemyBufferedImg = toBufferedImage(enemyIcon.getImage());
-        final int enemyLowestY = findAbsoluteLowestVisibleY(enemyBufferedImg);
-        final double PLAYER_TARGET_RATIO = 0.72;  // 72% para jugador
-        final double ENEMY_TARGET_RATIO = 0.44;   // 44% para enemigo
-        final int MARGIN = 15;                    // Margen para ambos
-        JPanel panel = new JPanel(null) {
+        // 1. Obtener datos de los Pokémon
+        BattleData battleData = prepareBattleData();
+
+        // 2. Crear panel principal con fondo personalizado
+        JPanel panel = createMainAttackPanel(battleData);
+
+        // 3. Añadir información de los Pokémon
+        addPokemonInfo(panel, battleData);
+
+        // 4. Configurar panel de botones de ataques
+        setupAttackButtons(panel, battleData);
+
+        // 5. Configurar panel de información de movimientos
+        setupMoveInfoPanel(panel);
+
+        // 6. Configurar teclas rápidas
+        setupKeyBindings(panel);
+
+        // 7. Configurar redimensionamiento
+        setupAttackViewLayout(panel);
+
+        return panel;
+    }
+
+    // Clase auxiliar para agrupar datos de batalla
+    private class BattleData {
+        String[] playerData;
+        String[] enemyData;
+        Image background;
+        Image playerImage;
+        Image enemyImage;
+        Image trainerImage;
+        String[][] moves;
+        String[] moveNames;
+        String[] movePP;
+        String[] moveTypes;
+        String[] moveIds;
+    }
+
+    private BattleData prepareBattleData() {
+        BattleData data = new BattleData();
+
+        // Obtener datos de los Pokémon
+        HashMap<Integer, String[]> currentPokemons = this.game.getCurrentPokemons();
+        data.playerData = currentPokemons.get(this.order.get(0));
+        data.enemyData = currentPokemons.get(this.order.get(1));
+
+        // Preparar imágenes
+        String playerImagePath = data.playerData[16].equals("true")
+                ? BACK_SHINY_PATH + data.playerData[2] + PNG_EXT
+                : BACK_PATH + data.playerData[2] + PNG_EXT;
+
+        String enemyImagePath = data.enemyData[16].equals("true")
+                ? SHINY_PATH + data.enemyData[2] + PNG_EXT
+                : NORMAL_PATH + data.enemyData[2] + PNG_EXT;
+
+        data.background = new ImageIcon(MENU + "battle_" + this.fondo + PNG_EXT).getImage();
+        data.trainerImage = new ImageIcon(CHARACTER + this.currentPlayer + PNG_EXT).getImage();
+
+        ImageIcon playerIcon = new ImageIcon(playerImagePath);
+        data.playerImage = toBufferedImage(playerIcon.getImage());
+
+        ImageIcon enemyIcon = new ImageIcon(enemyImagePath);
+        data.enemyImage = toBufferedImage(enemyIcon.getImage());
+
+        // Obtener movimientos
+        data.moves = game.getActiveAttacks().get(currentPlayer);
+        data.moveNames = new String[data.moves.length];
+        data.movePP = new String[data.moves.length];
+        data.moveTypes = new String[data.moves.length];
+        data.moveIds = new String[data.moves.length];
+
+        for (int i = 0; i < data.moves.length; i++) {
+            data.moveNames[i] = data.moves[i][0];
+            data.movePP[i] = data.moves[i][4];
+            data.moveTypes[i] = data.moves[i][1];
+            data.moveIds[i] = data.moves[i][5];
+        }
+
+        return data;
+    }
+
+    private JPanel createMainAttackPanel(BattleData data) {
+        return new JPanel(null) {
             @Override
             protected void paintComponent(Graphics g) {
                 final int w = getWidth();
                 final int h = getHeight();
                 super.paintComponent(g);
-                g.drawImage(bg, 0, 0, w, h, this);
+
+                // Dibujar fondo
+                g.drawImage(data.background, 0, 0, w, h, this);
+
+                // Dibujar Pokémon enemigo
                 int enemyDisplayWidth = (int)(w * 0.27);
                 int enemyDisplayHeight = (int)(h * 0.4);
-                double enemyScaleY = (double)enemyDisplayHeight / enemyBufferedImg.getHeight();
-                int enemyTargetY = (int)(h * ENEMY_TARGET_RATIO) - (int)(enemyLowestY * enemyScaleY) - MARGIN;
-                g.drawImage(enemyBufferedImg,
+                g.drawImage(data.enemyImage,
                         (int)(w * 0.62),
-                        enemyTargetY,
+                        (int)(h * 0.44) - (int)(findAbsoluteLowestVisibleY(data.enemyImage) *
+                                ((double)enemyDisplayHeight / data.enemyImage.getHeight(null))) - 15,
                         enemyDisplayWidth,
                         enemyDisplayHeight,
                         this);
+
+                // Dibujar Pokémon jugador
                 int playerDisplayWidth = (int)(w * 0.25);
                 int playerDisplayHeight = (int)(h * 0.3);
-                double playerScaleY = (double)playerDisplayHeight / playerBufferedImg.getHeight();
-                int playerTargetY = (int)(h * PLAYER_TARGET_RATIO) - (int)(playerLowestY * playerScaleY) - MARGIN;
-                g.drawImage(playerBufferedImg,
+                g.drawImage(data.playerImage,
                         (int)(w * 0.12),
-                        playerTargetY,
+                        (int)(h * 0.72) - (int)(findAbsoluteLowestVisibleY(data.playerImage) *
+                                ((double)playerDisplayHeight / data.playerImage.getHeight(null))) - 15,
                         playerDisplayWidth,
                         playerDisplayHeight,
                         this);
-                g.drawImage(currentPlayerImg,
+
+                // Dibujar entrenador
+                g.drawImage(data.trainerImage,
                         (int)(w * 0.88),
                         (int)(h * 0.01),
                         (int)(w * 0.12),
@@ -588,115 +666,158 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
                         this);
             }
         };
-        JLabel enemyNameLabel = new JLabel(enemy[1]);//getEnemyCurrentPokemonName()
-        JLabel enemyLevelLabel = new JLabel("Nv. " + enemy[4]);//getEnemyCurrentPokemonLevel()
-        JLabel enemyHPLabel = new JLabel(enemy[6]+"/"+enemy[5]);//getEnemyCurrentPokemonHP()/getEnemyCurrentPokemonMaxHP()
-        enemyHPLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-        JLabel playerNameLabel = new JLabel(player[1]);
-        JLabel playerLevelLabel = new JLabel("Nv. " + player[4]);
-        JLabel playerHPLabel = new JLabel(player[6]+"/"+player[5]);
-        playerHPLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-        BarraVidaConImagen enemyHPBar = new BarraVidaConImagen(Integer.parseInt(enemy[5]));//getEnemyCurrentPokemonMaxHP()
-        enemyHPBar.setValue(Integer.parseInt(enemy[6]));//getEnemyCurrentPokemonHP()enemy[6]
-        BarraVidaConImagen playerHPBar = new BarraVidaConImagen(Integer.parseInt(player[5]));
-        playerHPBar.setValue(Integer.parseInt(player[6]));//player[6]
-        panel.add(enemyNameLabel);
-        panel.add(enemyLevelLabel);
-        panel.add(enemyHPBar);
-        panel.add(enemyHPLabel);
-        panel.add(playerNameLabel);
-        panel.add(playerLevelLabel);
-        panel.add(playerHPBar);
-        panel.add(playerHPLabel);
+    }
 
+    private void addPokemonInfo(JPanel panel, BattleData data) {
+        // Información del enemigo
+        JLabel enemyName = new JLabel(data.enemyData[1]);
+        JLabel enemyLevel = new JLabel("Nv. " + data.enemyData[4]);
+        JLabel enemyHpLabel = new JLabel(data.enemyData[6] + "/" + data.enemyData[5]);
+        enemyHpLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+
+        BarraVidaConImagen enemyHpBar = new BarraVidaConImagen(Integer.parseInt(data.enemyData[5]));
+        enemyHpBar.setValue(Integer.parseInt(data.enemyData[6]));
+
+        // Información del jugador
+        JLabel playerName = new JLabel(data.playerData[1]);
+        JLabel playerLevel = new JLabel("Nv. " + data.playerData[4]);
+        JLabel playerHpLabel = new JLabel(data.playerData[6] + "/" + data.playerData[5]);
+        playerHpLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+
+        BarraVidaConImagen playerHpBar = new BarraVidaConImagen(Integer.parseInt(data.playerData[5]));
+        playerHpBar.setValue(Integer.parseInt(data.playerData[6]));
+
+        // Añadir componentes
+        panel.add(enemyName);
+        panel.add(enemyLevel);
+        panel.add(enemyHpBar);
+        panel.add(enemyHpLabel);
+        panel.add(playerName);
+        panel.add(playerLevel);
+        panel.add(playerHpBar);
+        panel.add(playerHpLabel);
+
+        // Guardar referencias
+        panel.putClientProperty("enemyName", enemyName);
+        panel.putClientProperty("enemyLevel", enemyLevel);
+        panel.putClientProperty("enemyHpBar", enemyHpBar);
+        panel.putClientProperty("enemyHpLabel", enemyHpLabel);
+        panel.putClientProperty("playerName", playerName);
+        panel.putClientProperty("playerLevel", playerLevel);
+        panel.putClientProperty("playerHpBar", playerHpBar);
+        panel.putClientProperty("playerHpLabel", playerHpLabel);
+    }
+
+    private void setupAttackButtons(JPanel panel, BattleData data) {
         JPanel buttonContainer = new JPanel(new BorderLayout());
         buttonContainer.setBackground(Color.GRAY);
         buttonContainer.setBorder(BorderFactory.createLineBorder(Color.GRAY, 6));
+
         JPanel buttonPanel = new JPanel(new GridLayout(2, 2, 5, 5));
         buttonPanel.setOpaque(false);
 
+        // Crear botones para cada movimiento
+        for (int i = 0; i < data.moveNames.length; i++) {
+            JButton attackButton = createAttackButton(data, i);
+            buttonPanel.add(attackButton);
+        }
+
+        buttonContainer.add(buttonPanel, BorderLayout.CENTER);
+        panel.add(buttonContainer);
+        panel.putClientProperty("buttonContainer", buttonContainer);
+    }
+
+    private JButton createAttackButton(BattleData data, int index) {
+        JButton btn = new JButton(data.moveNames[index]);
+        btn.setFont(Auxiliar.cargarFuentePixel(16));
+        btn.setFocusPainted(false);
+        btn.setContentAreaFilled(true);
+        btn.setBackground(Color.WHITE);
+        btn.setForeground(Color.DARK_GRAY);
+        btn.setBorder(BorderFactory.createLineBorder(new Color(211, 211, 211), 3));
+
+        // Configurar hover effects
+        btn.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                btn.setBackground(new Color(211, 211, 211));
+                updateMoveInfo(btn.getParent().getParent(), data, index);
+            }
+
+            public void mouseExited(MouseEvent evt) {
+                btn.setBackground(Color.WHITE);
+                clearMoveInfo(btn.getParent().getParent());
+            }
+        });
+
+        // Configurar acción del botón
+        btn.addActionListener(e -> {
+            String[] decision = {"Attack", ""+currentPlayer, data.moveIds[index]};
+            setDecision(decision);
+            showPanel("battle");
+        });
+
+        return btn;
+    }
+
+    private void updateMoveInfo(JPanel panel, BattleData data, int index) {
+        JLabel pp = (JLabel) panel.getClientProperty("ppLabel");
+        JLabel cantPp = (JLabel) panel.getClientProperty("ppValueLabel");
+        JLabel tipo = (JLabel) panel.getClientProperty("typeLabel");
+
+        pp.setText("PP");
+        cantPp.setText(data.movePP[index]);
+        tipo.setText("TYPE/" + data.moveTypes[index]);
+    }
+
+    private void clearMoveInfo(JPanel panel) {
+        JLabel pp = (JLabel) panel.getClientProperty("ppLabel");
+        JLabel cantPp = (JLabel) panel.getClientProperty("ppValueLabel");
+        JLabel tipo = (JLabel) panel.getClientProperty("typeLabel");
+
+        pp.setText("");
+        cantPp.setText("");
+        tipo.setText("");
+    }
+
+    private void setupMoveInfoPanel(JPanel panel) {
         JPanel textPanel = new JPanel(null);
         textPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 6));
         textPanel.setOpaque(true);
+
+        JLabel ppLabel = new JLabel("");
+        JLabel ppValueLabel = new JLabel("");
+        JLabel typeLabel = new JLabel("");
+
+        textPanel.add(ppLabel);
+        textPanel.add(ppValueLabel);
+        textPanel.add(typeLabel);
+
         panel.add(textPanel);
-        JLabel pp = new JLabel("P");
-        JLabel cantPp = new JLabel("C");
-        JLabel tipo = new JLabel("T");
-        pp.setHorizontalAlignment(SwingConstants.LEFT);
-        cantPp.setHorizontalAlignment(SwingConstants.RIGHT);
-        tipo.setHorizontalAlignment(SwingConstants.LEFT);
-        textPanel.add(pp);
-        textPanel.add(cantPp);
-        textPanel.add(tipo);
+
+        // Guardar referencias
+        panel.putClientProperty("textPanel", textPanel);
+        panel.putClientProperty("ppLabel", ppLabel);
+        panel.putClientProperty("ppValueLabel", ppValueLabel);
+        panel.putClientProperty("typeLabel", typeLabel);
+
+        // Configurar layout del panel de información
         textPanel.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
-                pp.setBounds((int)(textPanel.getWidth()*0.1), (int)(textPanel.getHeight()*0.06), (int)(textPanel.getWidth()*0.5), (int)(textPanel.getHeight()*0.38));
-                cantPp.setBounds((int)(textPanel.getWidth()*0.1), (int)(textPanel.getHeight()*0.06), (int)(textPanel.getWidth()*0.83), (int)(textPanel.getHeight()*0.38));
-                tipo.setBounds((int)(textPanel.getWidth()*0.1), (int)(textPanel.getHeight()*0.55),(int)(textPanel.getWidth()*0.9), (int)(textPanel.getHeight()*0.38));
-                pp.setFont(Auxiliar.cargarFuentePixel(25));
-                cantPp.setFont(Auxiliar.cargarFuentePixel(25));
-                tipo.setFont(Auxiliar.cargarFuentePixel(25));
+                ppLabel.setBounds((int)(textPanel.getWidth()*0.1), (int)(textPanel.getHeight()*0.06),
+                        (int)(textPanel.getWidth()*0.5), (int)(textPanel.getHeight()*0.38));
+                ppValueLabel.setBounds((int)(textPanel.getWidth()*0.1), (int)(textPanel.getHeight()*0.06),
+                        (int)(textPanel.getWidth()*0.83), (int)(textPanel.getHeight()*0.38));
+                typeLabel.setBounds((int)(textPanel.getWidth()*0.1), (int)(textPanel.getHeight()*0.55),
+                        (int)(textPanel.getWidth()*0.9), (int)(textPanel.getHeight()*0.38));
+
+                ppLabel.setFont(Auxiliar.cargarFuentePixel(25));
+                ppValueLabel.setFont(Auxiliar.cargarFuentePixel(25));
+                typeLabel.setFont(Auxiliar.cargarFuentePixel(25));
             }
         });
-        String[][] moves = {{"a","p","t"},{"a","p","t"},{"a","p","t"},{"a","p","t"}};
-        String[] moveNames = new String[moves.length];
-        String[] movePP = new String[moves.length];
-        String[] moveType = new String[moves.length];
-        for (int i = 0; i < moves.length; i++) {
-            moveNames[i] = moves[i][0];
-            movePP[i] = moves[i][1];
-            moveType[i] = moves[i][2];
-        }
+    }
 
-        for(int i=0; i<moves.length; i++) {
-            final int index = i;
-            JButton btn = new JButton(moveNames[i]);
-            btn.setFont(Auxiliar.cargarFuentePixel(16));
-            btn.setFocusPainted(false);
-            btn.setContentAreaFilled(true);
-            btn.setBackground(Color.WHITE);
-            btn.setForeground(Color.DARK_GRAY);
-            btn.setBorder(BorderFactory.createLineBorder(new Color(211, 211, 211), 3));
-            btn.addMouseListener(new MouseAdapter() {
-                public void mouseEntered(MouseEvent evt) {
-                    pp.setText("PP");
-                    cantPp.setText(movePP[index]);
-                    tipo.setText("TYPE/"+moveType[index]);
-                }
-                public void mouseExited(MouseEvent evt) {
-                    pp.setText("");
-                    cantPp.setText("");
-                    tipo.setText("");
-                }
-            });
-            buttonPanel.add(btn);
-        }
-        buttonContainer.add(buttonPanel, BorderLayout.CENTER);
-
-        panel.add(buttonContainer);
-        panel.add(textPanel);
-        addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                int w = getWidth();
-                int h = getHeight();
-                enemyNameLabel.setBounds((int)(w * 0.09), (int)(h * 0.09), (int)(w * 0.25), 30);
-                enemyNameLabel.setFont(Auxiliar.cargarFuentePixel(18));
-                enemyLevelLabel.setBounds((int)(w * 0.31), (int)(h * 0.09), (int)(w * 0.15), 30);
-                enemyLevelLabel.setFont(Auxiliar.cargarFuentePixel(18));
-                enemyHPBar.setBounds((int)(w * 0.12), (int)(h * 0.16), (int)(w * 0.3), 15);
-                enemyHPLabel.setBounds((int)(w * 0.12), (int)(h * 0.19), (int)(w * 0.3), 30);
-                enemyHPLabel.setFont(Auxiliar.cargarFuentePixel(18));
-                playerNameLabel.setBounds((int)(w * 0.6), (int)(h * 0.478), (int)(w * 0.25), 30);
-                playerNameLabel.setFont(Auxiliar.cargarFuentePixel(18));
-                playerLevelLabel.setBounds((int)(w * 0.82), (int)(h * 0.478), (int)(w * 0.15), 30);
-                playerLevelLabel.setFont(Auxiliar.cargarFuentePixel(18));
-                playerHPBar.setBounds((int)(w * 0.63), (int)(h * 0.55), (int)(w * 0.3), 15);
-                playerHPLabel.setBounds((int)(w * 0.63), (int)(h * 0.58), (int)(w * 0.3), 30);
-                playerHPLabel.setFont(Auxiliar.cargarFuentePixel(18));
-                textPanel.setBounds((int)(w * 0.69), (int)(h * 0.715), (int)(w * 0.31), (int)(h * 0.28));
-                buttonContainer.setBounds((int)(w * 0.01), (int)(h * 0.715), (int)(w * 0.69), (int)(h * 0.28));
-            }
-        });
+    private void setupKeyBindings(JPanel panel) {
         panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
                 .put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escPressed");
 
@@ -706,7 +827,51 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
                 showPanel("battle");
             }
         });
-        return panel;
+    }
+
+    private void setupAttackViewLayout(JPanel panel) {
+        panel.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                int w = panel.getWidth();
+                int h = panel.getHeight();
+
+                // Posicionar información de Pokémon
+                JLabel enemyName = (JLabel) panel.getClientProperty("enemyName");
+                JLabel enemyLevel = (JLabel) panel.getClientProperty("enemyLevel");
+                BarraVidaConImagen enemyHpBar = (BarraVidaConImagen) panel.getClientProperty("enemyHpBar");
+                JLabel enemyHpLabel = (JLabel) panel.getClientProperty("enemyHpLabel");
+
+                enemyName.setBounds((int)(w * 0.09), (int)(h * 0.09), (int)(w * 0.25), 30);
+                enemyLevel.setBounds((int)(w * 0.31), (int)(h * 0.09), (int)(w * 0.15), 30);
+                enemyHpBar.setBounds((int)(w * 0.12), (int)(h * 0.16), (int)(w * 0.3), 15);
+                enemyHpLabel.setBounds((int)(w * 0.12), (int)(h * 0.19), (int)(w * 0.3), 30);
+
+                JLabel playerName = (JLabel) panel.getClientProperty("playerName");
+                JLabel playerLevel = (JLabel) panel.getClientProperty("playerLevel");
+                BarraVidaConImagen playerHpBar = (BarraVidaConImagen) panel.getClientProperty("playerHpBar");
+                JLabel playerHpLabel = (JLabel) panel.getClientProperty("playerHpLabel");
+
+                playerName.setBounds((int)(w * 0.6), (int)(h * 0.478), (int)(w * 0.25), 30);
+                playerLevel.setBounds((int)(w * 0.82), (int)(h * 0.478), (int)(w * 0.15), 30);
+                playerHpBar.setBounds((int)(w * 0.63), (int)(h * 0.55), (int)(w * 0.3), 15);
+                playerHpLabel.setBounds((int)(w * 0.63), (int)(h * 0.58), (int)(w * 0.3), 30);
+
+                // Posicionar contenedores
+                JPanel textPanel = (JPanel) panel.getClientProperty("textPanel");
+                JPanel buttonContainer = (JPanel) panel.getClientProperty("buttonContainer");
+
+                textPanel.setBounds((int)(w * 0.69), (int)(h * 0.715), (int)(w * 0.31), (int)(h * 0.28));
+                buttonContainer.setBounds((int)(w * 0.01), (int)(h * 0.715), (int)(w * 0.69), (int)(h * 0.28));
+
+                // Actualizar fuentes
+                enemyName.setFont(Auxiliar.cargarFuentePixel(18));
+                enemyLevel.setFont(Auxiliar.cargarFuentePixel(18));
+                enemyHpLabel.setFont(Auxiliar.cargarFuentePixel(18));
+                playerName.setFont(Auxiliar.cargarFuentePixel(18));
+                playerLevel.setFont(Auxiliar.cargarFuentePixel(18));
+                playerHpLabel.setFont(Auxiliar.cargarFuentePixel(18));
+            }
+        });
     }
 
     //
@@ -898,12 +1063,4 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         mainPanel.revalidate();
         mainPanel.repaint();
     }
-
-
-
-
-
-
-
-
 }

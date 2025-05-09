@@ -14,13 +14,16 @@ public class Attack {
 
 	private int pp;
 
-	private int id;
+	private int idCSV;
+
+	private int idInside;
 
 	private String description;
 
-	public Attack(String[] info) {
+	public Attack(int idInside, String[] info) {
 		//id,nombre,descripcion,tipo,clase,potencia,precision,pp
-		this.id = Integer.parseInt(info[0]);
+		this.idInside = idInside;
+		this.idCSV = Integer.parseInt(info[0]);
 		this.name = info[1];
 		this.type = info[3];
 		this.power = Integer.parseInt(info[5]);
@@ -30,7 +33,7 @@ public class Attack {
 	}
 
 	public int getId() {
-		return id;
+		return idCSV;
 	}
 
 	public String[] getInfo() {
@@ -40,7 +43,7 @@ public class Attack {
 		info[2] = String.valueOf(this.power);      // Poder del ataque
 		info[3] = String.valueOf(this.presition);  // Precisión del ataque
 		info[4] = String.valueOf(this.pp);         // Puntos de poder (PP)
-		info[5] = String.valueOf(this.id);         // ID del ataque
+		info[5] = String.valueOf(this.idCSV);         // ID del ataque
 		info[6] = this.description;        // Descripción del ataque
 		return info;
 	}
