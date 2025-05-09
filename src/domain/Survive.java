@@ -18,10 +18,12 @@ public class Survive extends POOBkemon {
         return instance;
     }
     @Override
-    protected Pokemon createPokemon(int id, ArrayList<Integer> attackIds) {
+    public Pokemon createPokemon(int id, ArrayList<Integer> attackIds){
         PokemonRepository info = new PokemonRepository();
         String[] infoPokemon = info.getPokemonId(id);
-        return new Pokemon(nid, infoPokemon, attackIds, this.random, this.pokemonLvl);
+        Pokemon pokemon = new Pokemon(nid,infoPokemon,attackIds, this.random, this.pokemonLvl);
+        this.nextIdPokemon();
+        return pokemon;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class Survive extends POOBkemon {
                          HashMap<String, int[][]> items,
                          HashMap<String, ArrayList<Integer>> attacks,
                          boolean random) throws POOBkemonException {
-        this.pokemonLvl = 100; // Asegura que siempre sea nivel 100
+        this.pokemonLvl = 100;
         super.initGame(trainers, pokemons, items, attacks, random);
     }
 }

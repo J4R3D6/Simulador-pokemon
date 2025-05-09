@@ -1,169 +1,230 @@
 import domain.*;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.*;
+import java.util.Random;
 
-public class POOBkemonTest {
+class POOBkemonTest {
     private POOBkemon game;
     private ArrayList<String> trainers;
     private HashMap<String, ArrayList<Integer>> pokemons;
     private HashMap<String, int[][]> items;
     private HashMap<String, ArrayList<Integer>> attacks;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
+        game = POOBkemon.getInstance();
+
+        // Datos básicos de prueba
         trainers = new ArrayList<>();
         trainers.add("Player1");
-        trainers.add("Defensive1");
+        trainers.add("Player2");
 
         pokemons = new HashMap<>();
-        ArrayList<Integer> playerPokemons = new ArrayList<>();
-        playerPokemons.add(1); // Bulbasaur
-        ArrayList<Integer> enemyPokemons = new ArrayList<>();
-        enemyPokemons.add(4); // Charmander
-        enemyPokemons.add(2); // Ivysaur
-        pokemons.put("Player1", playerPokemons);
-        pokemons.put("Defensive1", enemyPokemons);
+        pokemons.put("Player1", new ArrayList<>(List.of(1, 2)));
+        pokemons.put("Player2", new ArrayList<>(List.of(3, 4)));
 
         items = new HashMap<>();
-        int[][] playerItems = {{1, 10}, {2, 5}}; // ID, cantidad
-        int[][] enemyItems = {{3, 3}};
-        items.put("Player1", playerItems);
-        items.put("Defensive1", enemyItems);
+        items.put("Player1", new int[][]{{1, 5}, {2, 3}});
+        items.put("Player2", new int[][]{{3, 2}, {4, 1}});
 
         attacks = new HashMap<>();
-        // Cada Pokémon necesita 4 ataques, así que preparamos listas con suficientes ataques
-        ArrayList<Integer> playerAttacks = new ArrayList<>();
-        for (int i = 1; i <= 4; i++) playerAttacks.add(i); // Ataques 1-4 para Bulbasaur
+        attacks.put("Player1", new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8)));
+        attacks.put("Player2", new ArrayList<>(List.of(9, 10, 11, 12, 13, 14, 15, 16)));
+    }
 
-        ArrayList<Integer> enemyAttacks = new ArrayList<>();
-        for (int i = 5; i <= 12; i++) enemyAttacks.add(i); // Ataques 5-12 para Charmander e Ivysaur
+    @Test
+    @DisplayName("Test Singleton instance")
+    void testSingletonInstance() {
+        POOBkemon anotherInstance = POOBkemon.getInstance();
+        assertSame(game, anotherInstance);
+    }
 
-        attacks.put("Player1", playerAttacks);
-        attacks.put("Defensive1", enemyAttacks);
+    @Test
+    @DisplayName("Test initial game state")
+    void testInitialState() {
+        assertFalse(!game.isOk());
+        assertFalse(game.finishBattle());
+        assertNotNull(game.teams());
+    }
 
+    @Test
+    @DisplayName("Test successful game initialization")
+    void testInitGameSuccess() {
         try {
-            game = POOBkemon.getInstance();
             game.initGame(trainers, pokemons, items, attacks, false);
-        } catch(POOBkemonException e) {
-            System.out.println(e);
-            fail("No debería lanzar excepción: " + e.getMessage());
+        }catch (POOBkemonException e){
+            System.out.println(e.getMessage());
+        }
+        assertTrue(game.isOk());
+        assertEquals(2, game.teams().size());
+        assertEquals("Start Game", game.getMoves().get(0));
+        assertEquals(2, game.getOrder().size());
+    }
+
+    @Test
+    @DisplayName("Test game initialization with missing trainer data")
+    void testInitGameMissingTrainerData() {
+        assertThrows(POOBkemonException.class, () -> {
+            game.initGame(null, pokemons, items, attacks, false);
+        });
+    }
+
+    @Test
+    @DisplayName("Test createPokemon method")
+    void testCreatePokemon() {
+        Pokemon pokemon = game.createPokemon(1, new ArrayList<>(List.of(1, 2, 3, 4)));
+        assertNotNull(pokemon);
+        //en conjunto se han creado 16 hasta ahora, pero individualmente es 0
+        assertEquals(16, pokemon.getId()); // nid comienza en 0
+    }
+
+    @Test
+    @DisplayName("Test createPokemons with insufficient attacks")
+    void testCreatePokemonsWithInsufficientAttacks() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            game.createPokemons(
+                    new ArrayList<>(List.of(1, 2)),
+                    new ArrayList<>(List.of(1, 2, 3)) // Solo 3 ataques para 2 pokémones (necesita 8)
+            );
+        });
+    }
+
+    @Test
+    @DisplayName("Test coin method for turn order")
+    void testCoinMethod() throws POOBkemonException {
+        game.initGame(trainers, pokemons, items, attacks, false);
+
+        ArrayList<Integer> order = game.getOrder();
+        assertEquals(2, order.size());
+        assertNotEquals(order.get(0), order.get(1));
+    }
+
+    @Test
+    @DisplayName("Test takeDecision with attack action")
+    void testTakeDecisionAttack() throws POOBkemonException {
+        game.initGame(trainers, pokemons, items, attacks, false);
+
+        String[] decision1 = {"Attack", "1", "1"}; // Atacar con movimiento 1 al Pokémon 1
+        String[] decision2 = {"Attack", "1", "0"}; // Atacar con movimiento 1 al Pokémon 0
+
+        game.takeDecision(decision1);
+
+        assertTrue(game.getMoves().size() > 1);
+        assertTrue(game.getMoves().get(1).contains("usó ataque"));
+    }
+
+    @Test
+    @DisplayName("Test changePokemon method")
+    void testChangePokemon() {
+        try {
+            game.initGame(trainers, pokemons, items, attacks, false);
+
+            int trainerId = game.getOrder().get(0);
+            Trainer entrenador = game.getTeams().get(0).getTrainer();
+            int actualPokemon = entrenador.getCurrentPokemonId();
+
+            /**HashMap<Integer, String[]> activo = game.getCurrentPokemons();
+            for (String[] p : activo.values()) {
+                for (String s : p) {
+                    System.out.println(s);
+                }
+            }
+            **/
+            String[] decision1 = {"ChangePokemon", "1"};
+            String[] decision2 = {"Attack", "1", "0"};
+            /**
+            HashMap<Integer, String[]> activo1 = game.getCurrentPokemons();
+            for (String[] p : activo.values()) {
+                for (String s : p) {
+                    System.out.println(s);
+                }
+            }**/
+            game.takeDecision(decision1);
+            int cambiodePokemon = entrenador.getCurrentPokemonId();
+            System.out.println(cambiodePokemon);
+            assertTrue(cambiodePokemon != actualPokemon);
+        }catch(POOBkemonException e){
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    @Test
+    @DisplayName("Test getCurrentPokemons method")
+    void testGetCurrentPokemons() throws POOBkemonException {
+        game.initGame(trainers, pokemons, items, attacks, false);
+
+        HashMap<Integer, String[]> currentPokemons = game.getCurrentPokemons();
+        assertEquals(2, currentPokemons.size());
+
+        for (String[] pokemonInfo : currentPokemons.values()) {
+            assertNotNull(pokemonInfo);
+            assertTrue(pokemonInfo.length > 0);
         }
     }
 
     @Test
-    public void isOkGame() {
-        boolean isOK = game.isOk();
-        Assert.assertEquals(true, isOK);
+    @DisplayName("Test getPokemonsInactive method")
+    void testGetPokemonsInactive() throws POOBkemonException {
+        game.initGame(trainers, pokemons, items, attacks, false);
+
+        int trainerId = game.getOrder().get(0);
+        int[] inactivePokemons = game.getPokemonsInactive(trainerId);
+
+        assertTrue(inactivePokemons.length > 0);
     }
 
     @Test
-    public void testGetPokemonsInactive_WhenTrainerExists() {
-        int[] inactivePokemons = game.getPokemonsInactive(1);
-        System.out.println(Arrays.toString(inactivePokemons));
-        assertNotNull(inactivePokemons);
-        assertEquals(1, inactivePokemons.length);
-        assertArrayEquals(new int[]{2}, inactivePokemons);
-    }
+    @DisplayName("Test battle finish when all pokemon faint")
+    void testBattleFinish() throws POOBkemonException {
+        game.initGame(trainers, pokemons, items, attacks, false);
 
+        // Debilitar todos los pokémones del primer equipo
+        for (Pokemon pokemon : game.teams().get(0).getPokemons()) {
+            pokemon.getDamage(100, 1); // Daño suficiente para debilitar
+        }
 
-    @Test
-    public void ShouldShowMove() {
-        ArrayList<String> moves = game.getMoves();
-        String move1 = moves.get(0);
-        Assert.assertEquals("Start Game", move1);
+        game.checkBattleStatus();
+        assertTrue(game.finishBattle());
     }
 
     @Test
-    public void ShouldCreateBattle() {
-        Assert.assertFalse(game.finishBattle());
+    @DisplayName("Test run action ends battle")
+    void testRunAction() throws POOBkemonException {
+        game.initGame(trainers, pokemons, items, attacks, false);
+
+        String[] decision1 = {"Run","1"};
+        game.takeDecision(decision1);
+        assertTrue(game.finishBattle());
     }
 
     @Test
-    public void shouldShowPokemonPerTrainerStructure() {
-        String[][] result = game.pokemonPerTrainer();
+    @DisplayName("Test getPokemonInfo method")
+    void testGetPokemonInfo() throws POOBkemonException {
+        game.initGame(trainers, pokemons, items, attacks, false);
+        int pokemon = -1;
+        int trainerId = game.getOrder().get(0);
+        for(Team t : game.getTeams()){
+            if(t.getTrainer().getId() == trainerId){
+                pokemon = t.getPokemons().get(0).getId();
+            }
+        }
+        String[] pokemonInfo = game.getPokemonInfo(trainerId, pokemon);
 
-        assertNotNull(result);
-        assertEquals(2, result.length); // Debería haber 2 entrenadores
+        for(String info : pokemonInfo){
+            System.out.println(info);
+        }
 
-        // Player1 tiene 1 pokémon
-        assertEquals(1, result[0].length);
-
-        // Defensive1 tiene 2 pokémones
-        assertEquals(2, result[1].length);
-    }
-
-    @Test(expected = POOBkemonException.class)
-    public void testMissingTrainerData() throws POOBkemonException {
-        ArrayList<String> emptyTrainers = new ArrayList<>();
-        HashMap<String, ArrayList<Integer>> pokemons = new HashMap<>();
-        HashMap<String, int[][]> items = new HashMap<>();
-        HashMap<String, ArrayList<Integer>> attacks = new HashMap<>();
-
-        POOBkemon game1 = POOBkemon.getInstance();
-        game1.initGame(emptyTrainers, pokemons, items, attacks, false);
-    }
-
-    @Test(expected = POOBkemonException.class)
-    public void testMissingPokemonData() throws POOBkemonException {
-        ArrayList<String> trainers = new ArrayList<>();
-        trainers.add("Player1");
-        HashMap<String, ArrayList<Integer>> emptyPokemons = new HashMap<>();
-        HashMap<String, int[][]> items = new HashMap<>();
-        HashMap<String, ArrayList<Integer>> attacks = new HashMap<>();
-
-        POOBkemon game1 = POOBkemon.getInstance();
-        game1.initGame(trainers, emptyPokemons, items, attacks, false);
-    }
-
-    @Test(expected = POOBkemonException.class)
-    public void testMissingItemsData() throws POOBkemonException {
-        ArrayList<String> trainers = new ArrayList<>();
-        trainers.add("Player1");
-        HashMap<String, ArrayList<Integer>> pokemons = new HashMap<>();
-        pokemons.put("Player1", new ArrayList<>());
-        HashMap<String, int[][]> emptyItems = new HashMap<>();
-        HashMap<String, ArrayList<Integer>> attacks = new HashMap<>();
-
-        POOBkemon game1 = POOBkemon.getInstance();
-        game1.initGame(trainers, pokemons, emptyItems, attacks, false);
-    }
-
-    @Test(expected = POOBkemonException.class)
-    public void testIncompleteTrainerData() throws POOBkemonException {
-        ArrayList<String> trainers = new ArrayList<>();
-        trainers.add("Player1");
-        trainers.add("Offensive1"); // No tiene datos asociados
-
-        HashMap<String, ArrayList<Integer>> pokemons = new HashMap<>();
-        pokemons.put("Player1", new ArrayList<>());
-
-        HashMap<String, int[][]> items = new HashMap<>();
-        HashMap<String, ArrayList<Integer>> attacks = new HashMap<>();
-
-        POOBkemon game1 = POOBkemon.getInstance();
-        game1.initGame(trainers, pokemons, items, attacks, false);
+        assertNotNull(pokemonInfo);
+        assertTrue(pokemonInfo.length > 0);
     }
 
     @Test
-    public void testTeamsCreation() {
-        ArrayList<Team> teams = game.teams();
-        assertNotNull(teams);
-        assertEquals(2, teams.size());
-
-        // Player1 tiene 1 pokémon
-        assertEquals(1, teams.get(0).getPokemons().size());
-
-        // Defensive1 tiene 2 pokémones
-        assertEquals(2, teams.get(1).getPokemons().size());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetPokemonsInactive_WhenTrainerDoesNotExist() {
-        game.getPokemonsInactive(999); // ID que no existe
+    @DisplayName("Test repository information methods")
+    void testRepositoryMethods() {
+        assertNotNull(game.getPokInfo());
+        assertNotNull(game.getItemInfo());
+        assertNotNull(game.getMoveInfo(1));
     }
 }

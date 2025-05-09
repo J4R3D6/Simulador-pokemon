@@ -26,7 +26,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
 	private HashMap<String,ArrayList<Integer>> pokemones = new HashMap<>(); //<trainer, pokemones(int)>
 	private HashMap<String,ArrayList<Integer>> moves = new HashMap<>(); //trianer, moves (en el orden de los pokemones)>
     private HashMap<String,int[][]> items = new HashMap<>();
-	private POOBkemon poobkemon;
+	private POOBkemon game;
 	//
     private Clip clip;
 	private JPanel IntroductionPanel;
@@ -45,6 +45,11 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     private JMenuItem itemSalvar;
     private JMenuItem itemSalir;
     //
+    private int currentPlayer;
+    private String[] decisionTrainer1 = null;
+    private String[] decisionTrainer2 = null;
+    private boolean turnInProgress = false;
+    private ArrayList<Integer> order;
     private JButton playButton;
     private JButton pokedexButton;
     private JButton itemsButton;
@@ -59,20 +64,25 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     private JButton machine4;
     private JButton backButtonMenu;
     //
+    private static final String CHARACTER = "resources/personaje/";
+    private static final String MENU = "resources/menu/";
+    private static final String POKEMONES = "resources/pokemones/Emerald/";
+    private static final String BACK_PATH = POKEMONES + "Back/";
+    private static final String BACK_SHINY_PATH = POKEMONES + "BackShiny/";
+    private static final String NORMAL_PATH = POKEMONES + "Normal/";
+    private static final String SHINY_PATH = POKEMONES + "Shiny/";
+    private static final String PNG_EXT = ".png";
     private static final String songs =  "resources/songs/";
     private static final String selectionPanel = "resources/menu/selectionPanel.png";
-    private static final String CHARACTER = "resources/personaje/";
     private static final String ITEMS = "resources/Items/";
     private static final String BUTTONS = "resources/menu/buttons/";
-    private static final String MENU = "resources/menu/";
     private static final String POKEDEX = "resources/menu/pokedex.png";
-    private static final String POKEMONES =  "resources/pokemones/Emerald/";
     private static final String TYPES =  "resources/pokemones/Emerald/types/";
     private static final String GALERIA_ITEMS =  "resources/menu/galeria_items.png"; 
 
     
     private POOBkemonGUI() {
-        this.poobkemon = POOBkemon.getInstance();
+        this.game = POOBkemon.getInstance();
         setTitle("POOBkemon");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(750, 550);
@@ -97,7 +107,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
                 ImageIcon icon = new ImageIcon(imageBytes);
                 setIconImage(icon.getImage());
             } else {
-                System.err.println("Icono no encontrado.");
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -226,7 +236,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     private void showPokedex() {
     	
         JPanel pokedexPanel = new ImagePanel(null, POKEDEX);
-        ArrayList<String[]> pokemones = this.poobkemon.getPokInfo();
+        ArrayList<String[]> pokemones = this.game.getPokInfo();
         final int[] currentIndex = {0};
 
         // Panel para la imagen del Pokémon (IZQUIERDA)
@@ -406,7 +416,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     }
     private void showItemsGalery() {
     	JPanel itemsPanel = new ImagePanel(null, GALERIA_ITEMS);
-        ArrayList<ArrayList<String>> items = this.poobkemon.getItemInfo();
+        ArrayList<ArrayList<String>> items = this.game.getItemInfo();
         final int[] currentIndex = {0}; // Para trackear el primer item visible
         
         // Panel para mostrar los items (4 máximo)
@@ -870,7 +880,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
             Image scaled = original.getImage().getScaledInstance(138, 138, Image.SCALE_SMOOTH);
             pokemonImage.setIcon(new ImageIcon(scaled));
 
-            JButton pokemonButton = Auxiliar.crearBotonTransparente(this.poobkemon.getMoveInfo(i).toString(), new Rectangle(10, 10, 5, 5), false);
+            JButton pokemonButton = Auxiliar.crearBotonTransparente(this.game.getMoveInfo(i).toString(), new Rectangle(10, 10, 5, 5), false);
             pokemonButton.setOpaque(false);
             pokemonButton.setContentAreaFilled(false);
             pokemonButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
@@ -1237,12 +1247,15 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     private void initMode(String mode){
         try {
             if (mode.equals("s")) {
-                this.poobkemon = Survive.getInstance();
-                poobkemon.initGame(this.players, this.pokemones, this.items, this.moves, this.random);
+                this.game.deleteGame();
+                this.game = Survive.getInstance();
+                game.initGame(this.players, this.pokemones, this.items, this.moves, this.random);
             } else if (mode.equals("p")) {
-                poobkemon.initGame(this.players, this.pokemones, this.items, this.moves, this.random);
+                this.game.deleteGame();
+                this.game = POOBkemon.getInstance();
+                game.initGame(this.players, this.pokemones, this.items, this.moves, this.random);
             }
-            startBattle(this.poobkemon);
+            startBattle(game);
         }catch (POOBkemonException e){
             Log.record(e);
             refresh(IntroductionPanel);
@@ -1418,7 +1431,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
             AudioInputStream audioInput = AudioSystem.getAudioInputStream(new File(songs+sonido));
             clip = AudioSystem.getClip();
             clip.open(audioInput);
-            clip.loop(Clip.LOOP_CONTINUOUSLY); // Repetir mientras el panel esté visible
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (Exception e) {
             e.printStackTrace();
         }

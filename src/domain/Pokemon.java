@@ -112,10 +112,6 @@ public class Pokemon {
 		return 0;
 	}
 
-	private void setAtacks(String[] Attacks) {
-
-	}
-
 	public String[] pokemonInfo() {
 		return null;
 	}

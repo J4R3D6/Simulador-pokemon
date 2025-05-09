@@ -5,9 +5,13 @@ import java.util.ArrayList;
 public class Team {
 
 	private ArrayList<Pokemon> pokemons;
+	private Trainer trainer;
 
-	public Team(ArrayList<Pokemon> pokemons) {
+	public Team(ArrayList<Pokemon> pokemons, Trainer trainer) {
 		this.pokemons = pokemons;
+		this.trainer = trainer;
+		this.pokemons.get(0).setActive(true);
+		this.trainer.setCurrentPokemonId(this.pokemons.get(0).getId());
 	}
 	public ArrayList<Pokemon> getPokemons() {
 		return pokemons;
@@ -31,7 +35,6 @@ public class Team {
 				pokemonToActivate = pokemon;
 			}
 		}
-
 		// Validaciones
 		if (pokemonToActivate == null) {
 			throw new POOBkemonException( POOBkemonException.POKEMON_ID_NOT_FOUND + id);
@@ -39,13 +42,12 @@ public class Team {
 		if (pokemonToActivate.currentHealth <= 0) {
 			throw new POOBkemonException(POOBkemonException.POKEMON_WEAK_CHANGE);
 		}
-
 		// Cambiar estados
 		if (currentActive != null) {
 			currentActive.setActive(false);
 		}
 		pokemonToActivate.setActive(true);
-
+		this.trainer.setCurrentPokemonId(pokemonToActivate.getId());
 		return pokemonToActivate;
 	}
 	public boolean allFainted(){
@@ -67,7 +69,7 @@ public class Team {
 
 		// Filtrar Pokémon inactivos que no sean el actual
 		for (Pokemon pokemon : pokemons) {
-			if(!pokemon.getActive() && Integer.parseInt(pokemon.idPokedex) != currentPokemon) {
+			if(!pokemon.getActive()) {
 				inactiveList.add(Integer.parseInt(pokemon.idPokedex));
 			}
 		}
@@ -94,6 +96,9 @@ public class Team {
 			}
 		}
 		throw new POOBkemonException("Pokémon con ID " + id + " no encontrado");
+	}
+	public Trainer getTrainer() {
+		return trainer;
 	}
 
 }

@@ -1,155 +1,102 @@
-import domain.*;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import domain.BagPack;
+import domain.Item;
+import domain.POOBkemonException;
+import domain.Trainer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 
-public class TrainerTest {
+import static org.junit.jupiter.api.Assertions.*;
 
-    private Team validTeam;
-    private BagPack validBagPack;
-    private Pokemon healthyPokemon;
-    private Pokemon faintedPokemon;
-    private HashMap<String, String[][]> items;
+class TrainerTest {
+    private Trainer trainer;
+    private BagPack bagPack;
 
-    @Before
-    public void setUp() throws POOBkemonException {
-        // Configuración de ataques para los pokémones
-        MovesRepository movesRepository = new MovesRepository();
-        String[] attackInfo1 = movesRepository.getAttacksId(1); // Ataque básico 1
-        String[] attackInfo2 = movesRepository.getAttacksId(2); // Ataque básico 2
-        Attack ataque1 = new Attack(attackInfo1);
-        Attack ataque2 = new Attack(attackInfo2);
-
-        // Configuración común para los tests
-        ArrayList<Integer> attacksIds = new ArrayList<>(Arrays.asList(1, 2));
-        healthyPokemon = new Pokemon(1,
-                new String[]{"1", "Bulbasaur", "Grass", "", "", "45", "49", "49", "65", "65", "45"},
-                attacksIds, false,1);
-
-        faintedPokemon = new Pokemon(2,
-                new String[]{"2", "Pikachu", "Electric", "", "", "35", "55", "40", "50", "50", "90"},
-                attacksIds, false,1);
-
-        // Debilita el pokémon
-        faintedPokemon.getDamage(19, 19);
-
-        ArrayList<Pokemon> pokemons = new ArrayList<>();
-        pokemons.add(healthyPokemon);
-        pokemons.add(new Pokemon(3,
-                new String[]{"3", "Charizard", "Fire", "", "", "78", "84", "78", "109", "85", "100"},
-                attacksIds, false,1));
-
-        validTeam = new Team(pokemons);
-        String[][] playerItems = {{"1", "10"}, {"2", "5"}};
-        int id = 0;
-        ArrayList<Item> items = new ArrayList<Item>();
-        for(String[] i: playerItems){
-            Item ite = new Item(Integer.parseInt(i[0]), Integer.parseInt(i[1]));
-            items.add(ite);
-            id++;
-        }
-
-        validBagPack = new BagPack(items);
-    }
-
-    // Tests de Constructor
-    @Test(expected = POOBkemonException.class)
-    public void testConstructorWithNullTeam() throws POOBkemonException {
-        new Trainer(1,null, validBagPack);
-    }
-
-    @Test(expected = POOBkemonException.class)
-    public void testConstructorWithNullBagPack() throws POOBkemonException {
-        new Trainer(1,validTeam, null);
-    }
-
-    @Test(expected = POOBkemonException.class)
-    public void testConstructorWithEmptyTeam() throws POOBkemonException {
-        new Trainer(1,new Team(new ArrayList<>()), validBagPack);
-    }
-
-    @Test(expected = POOBkemonException.class)
-    public void testConstructorWithNullPokemon() throws POOBkemonException {
-        List<Pokemon> pokemons = new ArrayList<>();
-        pokemons.add(null);
-        new Trainer(1,new Team((ArrayList<Pokemon>) pokemons), validBagPack);
-    }
-
-    @Test(expected = POOBkemonException.class)
-    public void testConstructorWithFaintedFirstPokemon() throws POOBkemonException {
-        List<Pokemon> pokemons = new ArrayList<>();
-        pokemons.add(faintedPokemon);
-        StatsRepository info = new StatsRepository();
-        new Trainer(1,new Team((ArrayList<Pokemon>) pokemons), validBagPack);
+    @BeforeEach
+    void setUp() throws POOBkemonException {
+        // Crear una mochila con algunos ítems para las pruebas
+        bagPack = new BagPack((java.util.ArrayList<Item>) List.of(
+                new Item(1, 3), // Item ID 1, cantidad 3
+                new Item(2, 1)  // Item ID 2, cantidad 1
+        ));
+        trainer = new Trainer(1, bagPack);
     }
 
     @Test
-    public void testValidConstructor() throws POOBkemonException {
-        Trainer trainer = new Trainer(1,validTeam, validBagPack);
-
+    @DisplayName("Constructor con mochila válida")
+    void constructorWithValidBagPack() throws POOBkemonException {
         assertNotNull(trainer);
-        assertEquals(healthyPokemon, trainer.getCurrentPokemon());
-        assertEquals(validTeam, trainer.getTeam());
-        assertEquals(validBagPack, trainer.getBagPack());
-    }
-
-    // Tests de changePokemon
-    @Test
-    public void testChangePokemonToValidId() throws POOBkemonException {
-        Trainer trainer = new Trainer(1,validTeam, validBagPack);
-        Pokemon originalPokemon = trainer.getCurrentPokemon();
-        Pokemon newPokemon = validTeam.getPokemons().get(1); // Cambiar al segundo pokémon
-
-        trainer.changePokemon(newPokemon.getId());
-
-        // Verificaciones
-        assertEquals(newPokemon.getId(), trainer.getCurrentPokemon().getId());
-        assertFalse(originalPokemon.getActive());  // El anterior debe estar inactivo
-        assertTrue(newPokemon.getActive());        // El nuevo debe estar activo
-        assertTrue(validTeam.getPokemons().stream()
-                .filter(p -> p.getId() == newPokemon.getId())
-                .findFirst()
-                .get()
-                .getActive()); // Verificar en el equipo también
+        assertEquals(1, trainer.getId());
+        assertSame(bagPack, trainer.getBagPack());
+        assertEquals(-1, trainer.getCurrentPokemonId()); // Valor por defecto
     }
 
     @Test
-    public void testChangePokemonToSameId() throws POOBkemonException {
-        Trainer trainer = new Trainer(1,validTeam, validBagPack);
-        trainer.changePokemon(1); // Mismo ID
-
-        assertEquals(healthyPokemon, trainer.getCurrentPokemon());
-        assertTrue(healthyPokemon.getActive());
-    }
-
-    // Método auxiliar para contar pokémones activos
-    private int countActivePokemons(Team team) {
-        return (int) team.getPokemons().stream()
-                .filter(Pokemon::getActive)
-                .count();
-    }
-
-    // Tests de activePokemon
-    @Test
-    public void testActivePokemonInfo() throws POOBkemonException {
-        Trainer trainer = new Trainer(1,validTeam, validBagPack);
-        String[] info = trainer.activePokemon();
-
-        assertNotNull(info);
-        assertEquals("1", info[0]); // ID
-        assertEquals("Bulbasaur", info[1]); // Nombre
-        assertEquals("45", info[5]); // HP máximo
-        assertEquals("45", info[6]); // HP actual
+    @DisplayName("Constructor con mochila nula lanza excepción")
+    void constructorWithNullBagPack() {
+        assertThrows(POOBkemonException.class, () -> {
+            new Trainer(1, null);
+        });
     }
 
     @Test
-    public void testInitialActiveState() throws POOBkemonException {
-        Trainer trainer = new Trainer(1,validTeam, validBagPack);
-        assertTrue(trainer.getCurrentPokemon().getActive());
-        assertEquals(1, trainer.getCurrentPokemon().getId());
+    @DisplayName("Getter y Setter de currentPokemonId")
+    void testCurrentPokemonId() {
+        assertEquals(-1, trainer.getCurrentPokemonId());
+
+        trainer.setCurrentPokemonId(5);
+        assertEquals(5, trainer.getCurrentPokemonId());
+
+        trainer.setCurrentPokemonId(-2);
+        assertEquals(-2, trainer.getCurrentPokemonId()); // Acepta cualquier valor
+    }
+
+    @Test
+    @DisplayName("Getter de ID")
+    void testGetId() {
+        assertEquals(1, trainer.getId());
+    }
+
+    @Test
+    @DisplayName("Getter de BagPack")
+    void testGetBagPack() {
+        assertNotNull(trainer.getBagPack());
+        assertSame(bagPack, trainer.getBagPack());
+    }
+
+    @Test
+    @DisplayName("Método getItem retorna null (implementación actual)")
+    void testGetItem() {
+        assertNull(trainer.getItem(1)); // Implementación actual siempre retorna null
+    }
+
+    @Test
+    @DisplayName("Cambio de Pokémon activo")
+    void testPokemonChange() {
+        trainer.setCurrentPokemonId(3);
+        assertEquals(3, trainer.getCurrentPokemonId());
+
+        trainer.setCurrentPokemonId(0);
+        assertEquals(0, trainer.getCurrentPokemonId());
+    }
+
+    @Test
+    @DisplayName("Estado inicial correcto")
+    void testInitialState() {
+        assertEquals(1, trainer.getId());
+        assertNotNull(trainer.getBagPack());
+        assertEquals(-1, trainer.getCurrentPokemonId());
+    }
+
+    @Test
+    @DisplayName("Múltiples instancias con diferentes IDs")
+    void testMultipleInstances() throws POOBkemonException {
+        Trainer trainer2 = new Trainer(2, bagPack);
+        Trainer trainer3 = new Trainer(3, bagPack);
+
+        assertNotEquals(trainer.getId(), trainer2.getId());
+        assertNotEquals(trainer2.getId(), trainer3.getId());
     }
 }
