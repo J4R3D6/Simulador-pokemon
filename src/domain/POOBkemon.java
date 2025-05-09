@@ -307,7 +307,6 @@ public class POOBkemon {
 					if (decision.length < 3) throw new POOBkemonException("Faltan parámetros para Attack");
 					int attackId = Integer.parseInt(decision[1]);
 					int targetId = Integer.parseInt(decision[2]);
-					int trainerId = Integer.parseInt(decision[3]);
 					this.attack(attackId, targetId);
 					moves.add("Player"+decision[1] + " usó ataque " + attackId + " contra " + targetId);
 					break;
@@ -430,7 +429,7 @@ public class POOBkemon {
 		Pokemon attacker = null;
 		for (Team team : teams) {
 			for(Pokemon pokemon: team.getPokemons()) {
-				if (pokemon.getId() == idThrower && pokemon.currentHealth > 0) {
+				if (pokemon.getId() == idThrower) {
 						damage = pokemon.getAttack(idAttack);
 						attacker = pokemon;
 						break;
@@ -438,19 +437,19 @@ public class POOBkemon {
 			}
 			for(Pokemon pokemon : team.getPokemons()) {
 				if(pokemon.getActive() && pokemon.getId() != idThrower){
-					damage.usePP();
-					pokemon.getDamage(damage,idAttack,attacker);
+					pokemon.getDamage(damage,attacker);
 				}
 			}
 		}
 		//por implementar
-		//this.autoChangePokemon();
+		this.autoChangePokemon();
 	}
 	//Para cuando est debilitado el pokemon activo haga un cambio automatico
 	private void autoChangePokemon(){
 		try {
 			for (Team team : teams) {
 				for (Pokemon pokemon : team.getPokemons()) {
+					System.out.println("Pokemon: "+ " AAAAaaaaaaaaa " + pokemon.getWeak());
 					if (pokemon.getWeak() && pokemon.getActive()) {
 						int savePokemon = this.getAlivePokemon(team.getTrainer().getId());
 						this.changePokemon(team.getTrainer().getId(), savePokemon);
