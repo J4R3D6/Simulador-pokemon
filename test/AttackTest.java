@@ -15,7 +15,7 @@ public class AttackTest {
     public void setUp() {
         MovesRepository sampleAttackData = new MovesRepository();
         String[] sampleAttackData1 = sampleAttackData.getAttacksId(52);
-        testAttack = new Attack(sampleAttackData1);
+        testAttack = new Attack(1,sampleAttackData1);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class AttackTest {
         String[] invalidData = {"invalid", "name", "desc", "type", "class", "not-number", "100", "25"};
 
         assertThrows(NumberFormatException.class, () -> {
-            new Attack(invalidData);
+            new Attack(1,invalidData);
         });
     }
 
@@ -62,7 +62,7 @@ public class AttackTest {
         String[] shortData = {"52", "Water Gun", "Shoots water"};
 
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
-            new Attack(shortData);
+            new Attack(1,shortData);
         });
     }
 

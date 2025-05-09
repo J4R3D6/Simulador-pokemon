@@ -571,8 +571,8 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         String[] playerData;
         String[] enemyData;
         Image background;
-        Image playerImage;
-        Image enemyImage;
+        BufferedImage playerImage;
+        BufferedImage enemyImage;
         Image trainerImage;
         String[][] moves;
         String[] moveNames;
@@ -686,6 +686,12 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
 
         BarraVidaConImagen playerHpBar = new BarraVidaConImagen(Integer.parseInt(data.playerData[5]));
         playerHpBar.setValue(Integer.parseInt(data.playerData[6]));
+        //Prueba de ids diferentes
+        for(String[][] dat:game.getActiveAttacks().values()){
+            for(String[] d:dat){
+                System.out.println(d[8]);
+            }
+        }
 
         // Añadir componentes
         panel.add(enemyName);
@@ -759,26 +765,43 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         return btn;
     }
 
-    private void updateMoveInfo(JPanel panel, BattleData data, int index) {
+    private void updateMoveInfo(Container container, BattleData data, int index) {
+        // Buscar el panel principal de forma segura
+        JPanel panel = findParentPanel(container);
+        if (panel == null) return;
+
         JLabel pp = (JLabel) panel.getClientProperty("ppLabel");
         JLabel cantPp = (JLabel) panel.getClientProperty("ppValueLabel");
         JLabel tipo = (JLabel) panel.getClientProperty("typeLabel");
 
-        pp.setText("PP");
-        cantPp.setText(data.movePP[index]);
-        tipo.setText("TYPE/" + data.moveTypes[index]);
+        if (pp != null) pp.setText("PP");
+        if (cantPp != null) cantPp.setText(data.movePP[index]);
+        if (tipo != null) tipo.setText("TYPE/" + data.moveTypes[index]);
     }
 
-    private void clearMoveInfo(JPanel panel) {
+    private void clearMoveInfo(Container container) {
+        // Buscar el panel principal de forma segura
+        JPanel panel = findParentPanel(container);
+        if (panel == null) return;
+
         JLabel pp = (JLabel) panel.getClientProperty("ppLabel");
         JLabel cantPp = (JLabel) panel.getClientProperty("ppValueLabel");
         JLabel tipo = (JLabel) panel.getClientProperty("typeLabel");
 
-        pp.setText("");
-        cantPp.setText("");
-        tipo.setText("");
+        if (pp != null) pp.setText("");
+        if (cantPp != null) cantPp.setText("");
+        if (tipo != null) tipo.setText("");
     }
-
+    // Método auxiliar para encontrar el panel principal de forma segura
+    private JPanel findParentPanel(Container container) {
+        while (container != null) {
+            if (container instanceof JPanel && "attack".equals(container.getName())) {
+                return (JPanel) container;
+            }
+            container = container.getParent();
+        }
+        return null;
+    }
     private void setupMoveInfoPanel(JPanel panel) {
         JPanel textPanel = new JPanel(null);
         textPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 6));

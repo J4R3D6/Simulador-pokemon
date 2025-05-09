@@ -307,6 +307,7 @@ public class POOBkemon {
 					if (decision.length < 3) throw new POOBkemonException("Faltan parámetros para Attack");
 					int attackId = Integer.parseInt(decision[1]);
 					int targetId = Integer.parseInt(decision[2]);
+					int trainerId = Integer.parseInt(decision[3]);
 					this.attack(attackId, targetId);
 					moves.add("Player"+decision[1] + " usó ataque " + attackId + " contra " + targetId);
 					break;
@@ -424,22 +425,56 @@ public class POOBkemon {
 	 * @param idAttack ID del ataque a utilizar
 	 * @param idThrower ID del Pokémon que realiza el ataque
 	 */
-	private void attack(int idAttack, int idThrower){
-		int damage = 0;
+	private void attack( int idAttack, int idThrower){
+		Attack damage = null;
+		Pokemon attacker = null;
 		for (Team team : teams) {
-			for(Pokemon pokemon: team.getPokemons()){
-				if(pokemon.getId() == idThrower && pokemon.currentHealth > 0){
-					damage = pokemon.attack;
+			for(Pokemon pokemon: team.getPokemons()) {
+				if (pokemon.getId() == idThrower && pokemon.currentHealth > 0) {
+						damage = pokemon.getAttack(idAttack);
+						attacker = pokemon;
+						break;
 				}
 			}
 			for(Pokemon pokemon : team.getPokemons()) {
 				if(pokemon.getActive() && pokemon.getId() != idThrower){
-					pokemon.getDamage(damage,idAttack);
+					damage.usePP();
+					pokemon.getDamage(damage,idAttack,attacker);
 				}
 			}
 		}
+		//por implementar
+		//this.autoChangePokemon();
 	}
-
+	//Para cuando est debilitado el pokemon activo haga un cambio automatico
+	private void autoChangePokemon(){
+		try {
+			for (Team team : teams) {
+				for (Pokemon pokemon : team.getPokemons()) {
+					if (pokemon.getWeak() && pokemon.getActive()) {
+						int savePokemon = this.getAlivePokemon(team.getTrainer().getId());
+						this.changePokemon(team.getTrainer().getId(), savePokemon);
+					}
+				}
+			}
+		}catch (POOBkemonException e){
+			System.out.println("Error al cambiar autocambio del Pokemon: " + e.getMessage());
+		}
+	}
+	//para el cambio automatico que encuentre un pokemon Valido
+	private int getAlivePokemon(int trainerId){
+		int id = 0;
+		for (Team team : teams) {
+			if(team.getTrainer().getId() == trainerId){
+				for(Pokemon p: team.getPokemons()){
+					if(!p.getWeak()){
+						id = p.getId();
+					}
+				}
+			}
+		}
+		return id;
+	}
 
 	public boolean isOk (){
 		return this.ok;

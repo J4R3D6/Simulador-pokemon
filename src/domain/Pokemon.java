@@ -1,6 +1,5 @@
 package domain;
 
-import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
 
 public class Pokemon {
@@ -27,8 +26,6 @@ public class Pokemon {
 
 	public int speed;
 
-	private int ivs;
-
 	public int level;
 
 	private boolean active;
@@ -41,9 +38,11 @@ public class Pokemon {
 
 	private static boolean random;
 
+	private static int attackId = 0;
+
 	private ArrayList<Attack> attacks;
 	private boolean shiny;
-	private ArrayList<State> states;
+	private ArrayList<Attack> states;
 
 	public Pokemon() {
 		initDefault();
@@ -79,7 +78,7 @@ public class Pokemon {
 		this.xp = 0;
 		this.level = 1;
 		this.levelRequirement = 100;
-		this.states = new ArrayList<>();
+		this.states = new ArrayList<Attack>();
 		this.active = false;
 		this.weak = false;
 		this.random = false;
@@ -101,7 +100,7 @@ public class Pokemon {
 		this.xp = 0;
 		this.level = pokemonLvl;
 		this.levelRequirement = 100;
-		this.states = new ArrayList<>();
+		this.states = new ArrayList<Attack>();
 		this.active = false;
 		this.weak = false;
 		this.random = random;
@@ -152,15 +151,19 @@ public class Pokemon {
 		MovesRepository movesRepository = new MovesRepository();
 		for(Integer id : attacksIds) {
 			String[] infoAttack = movesRepository.getAttacksId(id);
-			Attack atack = new Attack(infoAttack);
+			Attack atack = new Attack(this.nextAttackId(), infoAttack);
 			ataques.add(atack);
 		}
 		return ataques;
 	}
+	private int nextAttackId(){
+		this.attackId = this.attackId + 1;
+		return this.attackId;
+	}
 	public boolean getWeak() {
 		return this.weak;
 	}
-	public ArrayList<State> getStates() {
+	public ArrayList<Attack> getStates() {
 		return this.states;
 	}
 	public ArrayList<Attack> getAttacks() {
@@ -192,20 +195,39 @@ public class Pokemon {
 		};
 	}
 
-	public void getDamage(int damage,int idAttack) {
+	public void getDamage(Attack damage, int idAttack, Pokemon attacker) {
 		MovesRepository movesRepository = new MovesRepository();
 		StatsRepository statsRepository = new StatsRepository();
-		String[]info = movesRepository.getAttackDamageAndType(idAttack);
-		double multiplicator = statsRepository.getMultiplier(info[0],this.type);
-		this.currentHealth = (int)(this.currentHealth - damage*multiplicator);
-		if(this.currentHealth < 0){
+		String[] info = movesRepository.getAttackDamageAndType(idAttack);
+		double multiplicator = statsRepository.getMultiplier(info[0], this.type);
+
+		// Calcular el daño según el tipo de ataque
+		double calculatedDamage = 0;
+
+		if (damage instanceof special) {
+			// Fórmula para ataque especial
+			calculatedDamage = ((attacker.specialAttack * multiplicator) / this.specialDefense);
+		}
+		else if (damage instanceof state) {
+			this.states.add(damage);
+			return; // Salimos del método porque no hay daño que aplicar
+		}
+		else{
+			calculatedDamage = ((attacker.attack * multiplicator) / this.defense);
+		}
+
+		// Aplicar el daño calculado
+		this.currentHealth = (int)(this.currentHealth - calculatedDamage);
+
+		// Asegurarnos que la salud no sea negativa
+		if(this.currentHealth < 0) {
 			this.currentHealth = 0;
 			this.weak = true;
 		}
 	}
 	public String[][] getAttacksInfo() {
 		int attacksSize = attacks.size();
-		String[][] attacksInfo = new String[attacksSize][7];
+		String[][] attacksInfo = new String[attacksSize][9];
 
 		for (int i = 0; i < attacksSize; i++) {
 			Attack attack = attacks.get(i);

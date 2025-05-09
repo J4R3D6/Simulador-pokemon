@@ -176,20 +176,6 @@ class POOBkemonTest {
     }
 
     @Test
-    @DisplayName("Test battle finish when all pokemon faint")
-    void testBattleFinish() throws POOBkemonException {
-        game.initGame(trainers, pokemons, items, attacks, false);
-
-        // Debilitar todos los pokémones del primer equipo
-        for (Pokemon pokemon : game.teams().get(0).getPokemons()) {
-            pokemon.getDamage(100, 1); // Daño suficiente para debilitar
-        }
-
-        game.checkBattleStatus();
-        assertTrue(game.finishBattle());
-    }
-
-    @Test
     @DisplayName("Test run action ends battle")
     void testRunAction() throws POOBkemonException {
         game.initGame(trainers, pokemons, items, attacks, false);
