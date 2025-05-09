@@ -62,4 +62,9 @@ public class Attack {
 		return this.idCSV;
 	}
 
+	public int getPPActual(){
+		return this.ppActual;
+	}
+
+
 }

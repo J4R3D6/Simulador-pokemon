@@ -281,6 +281,24 @@ public class POOBkemon {
 		}
 		return turnOrder;
 	}
+	//llama a los entrenadores maquina para que tomen una desicion
+	public String[] machineDecision(int idTrainer) throws POOBkemonException {
+		for (Team t : teams) {
+			if (idTrainer == t.getTrainer().getId()) {
+				Trainer trainer = t.getTrainer();
+
+				if (trainer instanceof Offensive ||
+						trainer instanceof Defensive ||
+						trainer instanceof Expert ||
+						trainer instanceof Random) {
+					String[] desci = ((Machine) trainer).machineMovement(this);
+					return desci;
+				}
+			}
+		}
+		return null;
+	}
+
 
 	/**
 	 * Método para procesar las decisiones de los entrenadores en un turno
@@ -297,7 +315,7 @@ public class POOBkemon {
 		String[] decision = decisionTrainer;
 
 		if (decision == null || decision.length == 0) {
-			throw new POOBkemonException("Se necesita introcucir un movimiento valido");
+			throw new POOBkemonException("Se necesita introducir un movimiento valido");
 		}
 
 		String action = decision[0];
@@ -306,9 +324,9 @@ public class POOBkemon {
 				case "Attack":
 					if (decision.length < 3) throw new POOBkemonException("Faltan parámetros para Attack");
 					int attackId = Integer.parseInt(decision[1]);
-					int targetId = Integer.parseInt(decision[2]);
-					this.attack(attackId, targetId);
-					moves.add("Player"+decision[1] + " usó ataque " + attackId + " contra " + targetId);
+					int pokemonId1 = Integer.parseInt(decision[2]);
+					this.attack(attackId, pokemonId1);
+					//falta agregar la accion a las acciones del movimiento
 					break;
 
 				case "UseItem":
@@ -343,12 +361,19 @@ public class POOBkemon {
 		if (finishBattle) {
 			System.out.println("Game Over");
 		}
-
-
 		// Verificar estado de la batalla después de ambos turnos
 		checkBattleStatus();
 	}
-
+	public boolean isMachine(int TrainerId){
+		for (Team t : teams) {
+			if(t.getTrainer().getId() == TrainerId){
+				if(t.getTrainer() instanceof Machine){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	/**
 	 * Verifica el estado de la batalla y determina si ha terminado.
 	 */

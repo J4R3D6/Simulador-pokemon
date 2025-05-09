@@ -5,5 +5,5 @@ public abstract class Machine extends Trainer {
 		super(id, bagPack);
 	}
 
-	public abstract String takeDescicion();
+	public abstract String[] machineMovement( POOBkemon game)  throws POOBkemonException;
 }

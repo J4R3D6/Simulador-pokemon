@@ -6,7 +6,7 @@ public class Expert extends Machine {
         super(id,bagPack);
 	}
 	@Override
-	public String takeDescicion() {
+	public String[] machineMovement( POOBkemon game)  throws POOBkemonException {
 		return null;
 	}
 
