@@ -341,7 +341,15 @@ public class POOBkemon {
 					if (decision.length < 3) throw new POOBkemonException("Faltan parámetros para ChangePokemon");
 					int newPokemonId = Integer.parseInt(decision[2]);
 					this.changePokemon(Integer.parseInt(decision[1]), newPokemonId);
-					moves.add("Player"+decision[1] + " cambió a Pokémon " + newPokemonId);
+					String pokemonName = "";
+					for(Team t : this.teams) {
+						for(Pokemon p :t.getPokemons()){
+							if(p.getId() == newPokemonId){
+								pokemonName = p.getName();
+							}
+						}
+					}
+					moves.add("Player"+decision[1] + " cambió a Pokémon " + pokemonName);
 					break;
 
 				case "Run":
@@ -506,7 +514,9 @@ public class POOBkemon {
 	public ArrayList<String> getMoves(){
 		return this.moves;
 	}
-
+	public String getLastMoves(){
+		return this.moves.getLast();
+	}
 	public boolean finishBattle(){
 		return this.finishBattle;
 	}

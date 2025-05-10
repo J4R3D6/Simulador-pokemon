@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.Random;
 import java.util.ArrayList;
 
 public class Pokemon {
@@ -35,6 +36,8 @@ public class Pokemon {
 	public int levelRequirement;
 
 	public int xp;
+
+	public int ivs;
 
 	private static boolean random;
 
@@ -82,6 +85,7 @@ public class Pokemon {
 		this.active = false;
 		this.weak = false;
 		this.random = false;
+		this.ivs = 10;
 		this.attacks = new ArrayList<>();
 	}
 
@@ -90,25 +94,43 @@ public class Pokemon {
 		this.name = info[1];
 		this.idPokedex = info[0];
 		this.type = info[2];
-		this.maxHealth = Integer.parseInt(info[5]);
-		this.currentHealth = this.maxHealth;
-		this.attack = Integer.parseInt(info[6]);
-		this.defense = Integer.parseInt(info[7]);
-		this.specialAttack = Integer.parseInt(info[8]);
-		this.specialDefense = Integer.parseInt(info[9]);
-		this.speed = Integer.parseInt(info[10]);
-		this.xp = 0;
 		this.level = pokemonLvl;
 		this.levelRequirement = 100;
-		this.states = new ArrayList<Attack>();
+		this.xp = 0;
 		this.active = false;
 		this.weak = false;
 		this.random = random;
 		this.attacks = new ArrayList<>(this.createAttacks(attacksIds));
+		this.states = new ArrayList<Attack>();
+		this.weak = false;
+		this.ivs = createRandom(32);
+		if (!random) {
+			this.maxHealth = Integer.parseInt(info[5]);
+			this.attack = Integer.parseInt(info[6]);
+			this.defense = Integer.parseInt(info[7]);
+			this.specialAttack = Integer.parseInt(info[8]);
+			this.specialDefense = Integer.parseInt(info[9]);
+			this.speed = Integer.parseInt(info[10]);
+		}else{
+			this.maxHealth = randomStatics(Integer.parseInt(info[5]));
+			this.attack = randomStatics(Integer.parseInt(info[6]));
+			this.defense = randomStatics(Integer.parseInt(info[7]));
+			this.specialAttack = randomStatics(Integer.parseInt(info[8]));
+			this.specialDefense = randomStatics(Integer.parseInt(info[9]));
+			this.speed = randomStatics(Integer.parseInt(info[10]));
+		}
+		this.currentHealth = this.maxHealth;
+	}
+	public int createRandom(int limit){
+		java.util.Random random = new Random();
+		int numeroAleatorio = random.nextInt(limit);
+		return numeroAleatorio;
+
 	}
 
 	private int randomStatics(int base) {
-		return 0;
+		int stat = (int) (((2* base + this.ivs+(createRandom(252)/4))/100)*this.level+5);
+		return stat;
 	}
 
 	public String[] pokemonInfo() {
@@ -170,7 +192,7 @@ public class Pokemon {
 		return this.attacks;
 	}
 	private void probShiny(){
-		this.shiny = Math.random() < 0.2;
+		this.shiny = Math.random() < 0.1;
 	}
 	public String[] getInfo() {
 
