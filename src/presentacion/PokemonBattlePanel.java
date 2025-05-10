@@ -678,7 +678,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
             });
 
             btn.addActionListener(e ->{
-                String[] decision = {"Attack", ""+currentPlayer, moveId[index]};//moveId[index] añadir id de movimiento
+                String[] decision = {"Attack", moveId[index],""+currentPlayer}; //Necesito el id del poikemon que lo lanza()
                 setDecision(decision);
                 showPanel("battle");
             });

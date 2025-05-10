@@ -150,9 +150,6 @@ public class Pokemon {
 
 	}
 
-	public void getDamage() {
-
-	}
 	public int getId() {
 		return this.id;
 	}
@@ -161,6 +158,11 @@ public class Pokemon {
 	}
 
 	public Attack getAttack(int id) {
+		for(Attack ataque : attacks) {
+			if(ataque.getIdInside() == id) {
+				return ataque;
+			}
+		}
 		return null;
 	}
 
@@ -220,6 +222,7 @@ public class Pokemon {
 	public void getDamage(Attack damage,Pokemon attacker) {
 		MovesRepository movesRepository = new MovesRepository();
 		StatsRepository statsRepository = new StatsRepository();
+		System.out.println(" Id del ataque: "+ damage.getIdCSV());
 		String[] info = movesRepository.getAttackDamageAndType(damage.getIdCSV());
 		double multiplicator = statsRepository.getMultiplier(info[0], this.type);
 

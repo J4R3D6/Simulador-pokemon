@@ -462,7 +462,10 @@ public class POOBkemon {
 		Pokemon attacker = null;
 		for (Team team : teams) {
 			for(Pokemon pokemon: team.getPokemons()) {
+				System.out.println("Pokemon " + idThrower + " otro: " + pokemon.getId());
+
 				if (pokemon.getId() == idThrower) {
+
 						damage = pokemon.getAttack(idAttack);
 						attacker = pokemon;
 						break;
@@ -482,7 +485,6 @@ public class POOBkemon {
 		try {
 			for (Team team : teams) {
 				for (Pokemon pokemon : team.getPokemons()) {
-					System.out.println("Pokemon: "+ " AAAAaaaaaaaaa " + pokemon.getWeak());
 					if (pokemon.getWeak() && pokemon.getActive()) {
 						int savePokemon = this.getAlivePokemon(team.getTrainer().getId());
 						this.changePokemon(team.getTrainer().getId(), savePokemon);
