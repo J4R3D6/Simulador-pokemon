@@ -29,7 +29,7 @@ public class Survive extends POOBkemon {
     @Override
     public void initGame(ArrayList<String> trainers,
                          HashMap<String, ArrayList<Integer>> pokemons,
-                         HashMap<String, int[][]> items,
+                         HashMap<String, String[][]> items,
                          HashMap<String, ArrayList<Integer>> attacks,
                          boolean random) throws POOBkemonException {
         this.pokemonLvl = 100;

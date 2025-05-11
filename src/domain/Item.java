@@ -1,20 +1,32 @@
 package domain;
 
-public class Item {
+public abstract class Item {
 	private int number;
-	private int id;
-	public Item(int number, int id){
+	protected String name;
+	public Item(int number){
 		this.number = number;
-		this.id = id;
 	}
 	public int number(){
 		return number;
 	}
 
-	public void action(Pokemon pokemon) {
+	public void effect(Pokemon pokemon){
+		if(!this.isUsed()) {
+			this.number = this.usedItem();
+			this.itemEffect(pokemon);
+		}
+	}
+	private int usedItem(){
+		this.number = this.number - 1;
+		return this.number;
+	}
+	public boolean isUsed(){
+		return this.number == 0;
+	}
 
+	public String getName() {
+		if(this.name == null) return "Unknown";
+		return this.name;
 	}
-	public  int getId(){
-		return id;
-	}
+	public abstract void itemEffect( Pokemon pokemon);
 }

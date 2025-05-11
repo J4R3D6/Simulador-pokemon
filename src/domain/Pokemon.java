@@ -289,6 +289,20 @@ public class Pokemon {
 		}
 		return attacksInfo;
 	}
-
-
+	private void heals(int heal) {
+		this.currentHealth = this.currentHealth + heal;
+		if(this.currentHealth > this.maxHealth) this.currentHealth = this.maxHealth;
+	}
+	private void revive() {
+		if(this.currentHealth == 0) this.currentHealth = this.maxHealth/2;
+	}
+	public void effect(String[] info) {
+		if(info[0].equalsIgnoreCase("Potion") || info[0].equalsIgnoreCase("Revive")) {
+			if(info[1].equalsIgnoreCase("Heals")) {
+				this.heals(Integer.parseInt(info[2]));
+			} else if (info[1].equalsIgnoreCase("Revive")) {
+				this.revive();
+			}
+		}
+	}
 }

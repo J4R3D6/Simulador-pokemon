@@ -101,4 +101,19 @@ public class Team {
 		return trainer;
 	}
 
+	public void useItem(int idPokemon,String datoItem) throws POOBkemonException{
+		Pokemon pokemonTarget = null;
+		for(Pokemon p : pokemons){
+			if(p.getId() == idPokemon){
+				pokemonTarget = p;
+				break;
+			}
+		}
+		//lanza error si no lo encuentra
+		if(pokemonTarget == null){
+			throw new POOBkemonException("Pokémon con ID " + idPokemon + " no encontrado en el Team");
+		}
+		this.getTrainer().useItem(pokemonTarget, datoItem);
+	}
+
 }

@@ -48,7 +48,7 @@ public class POOBkemon {
 	 */
 	public void initGame(ArrayList<String> trainers,
 						 HashMap<String, ArrayList<Integer>> pokemons,
-						 HashMap<String, int[][]> items,
+						 HashMap<String, String[][]> items,
 						 HashMap<String, ArrayList<Integer>> attacks,
 						 boolean random) throws POOBkemonException{
 		// Validar datos básicos
@@ -74,7 +74,7 @@ public class POOBkemon {
 				}
 
 				ArrayList<Integer> pokemonIds = pokemons.get(trainer);
-				int[][] trainerItems = items.get(trainer);
+				String[][] trainerItems = items.get(trainer);
 				ArrayList<Integer> trainerAttacks = attacks.get(trainer);
 
 				// Validar formatos
@@ -82,7 +82,9 @@ public class POOBkemon {
 					throw new POOBkemonException(POOBkemonException.INCOMPLETE_DATA);
 				}
 
+				//Error de Items aqui
 				BagPack bagPack = this.createBagPack(this.createItems(trainerItems));
+
 				Trainer train;
 				train = createTrainerByType(trainer, bagPack);
 				Team team = this.createTeam(this.createPokemons(pokemonIds, trainerAttacks),train );
@@ -186,15 +188,21 @@ public class POOBkemon {
 		return bagPack;
 	}
 
-	private ArrayList<Item> createItems(int[][] item) {
-		int id = 0;
-		ArrayList<Item> items = new ArrayList<Item>();
-		for(int[] i: item){
-			Item ite = new Item(i[0], i[1]);
-			items.add(ite);
-			id++;
+	private ArrayList<Item> createItems(String[][] items) {
+		ArrayList<Item> item = new ArrayList<Item>();
+		Potion ite = null;
+		Revive ite0 = null;
+		for(String[] i: items){
+			if(i[0].equals("Potion")){
+				ite = new Potion(Integer.parseInt(i[1]),Integer.parseInt(i[2]));
+
+				item.add(ite);
+			}else if (i[0].equals("Revive")) {
+				ite0 = new Revive(Integer.parseInt(i[1]));
+				item.add(ite0);
+			}
 		}
-		return items;
+		return item;
 	}
 
 	/**
@@ -329,12 +337,11 @@ public class POOBkemon {
 					break;
 
 				case "UseItem":
-					if (decision.length < 3) throw new POOBkemonException("Faltan parámetros para UseItem");
-					int itemId = Integer.parseInt(decision[1]);
+					if (decision.length < 2) throw new POOBkemonException("Faltan parámetros para UseItem");
+					int idTrainer = Integer.parseInt(decision[1]);
 					int pokemonId = Integer.parseInt(decision[2]);
-					this.useItem(Integer.valueOf(decision[1]), itemId, pokemonId);
-					moves.add("Player"+decision[1] + " usó ítem " + itemId + " en Pokémon " + pokemonId);
-					break;
+					String datoItem = decision[3];
+					this.useItem(idTrainer, pokemonId, datoItem);
 
 				case "ChangePokemon":
 					if (decision.length < 3) throw new POOBkemonException("Faltan parámetros para ChangePokemon");
@@ -448,8 +455,19 @@ public class POOBkemon {
 	/**
 	 * metodo para usar un item
 	 */
-	private void useItem(Integer trainer, int iditem, int idPokemon) {
-
+	private void useItem(int trainer, int idPokemon, String datoItem) throws POOBkemonException {
+		checkBattleStatus();
+		Team team_0 = null;
+		if (!finishBattle) {
+			for (Team team : teams) {
+				if (team.getTrainer().getId() == trainer) {
+					team_0 = team;
+					break;
+				}
+			}
+		}
+		if(team_0 == null)throw new POOBkemonException("Error: No se encontró el Equipo, para el uso de Item");
+		team_0.useItem(idPokemon,datoItem);
 	}
 	/**
 	 * Realiza un ataque entre Pokémon.

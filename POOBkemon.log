@@ -14334,3 +14334,22 @@ java.lang.IndexOutOfBoundsException: Index -1 out of bounds for length 386
 	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
 	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
 
+may 11, 2025 12:03:08 P. M. domain.Log record
+SEVERE: domain.POOBkemonException: Formato inválido en los datos del juego.: Cannot invoke "java.util.HashMap.get(Object)" because "items" is null
+domain.POOBkemonException: Formato inválido en los datos del juego.: Cannot invoke "java.util.HashMap.get(Object)" because "items" is null
+	at domain.POOBkemon.initGame(POOBkemon.java:103)
+	at domain.Survive.initGame(Survive.java:36)
+	at presentacion.POOBkemonGUI.initMode(POOBkemonGUI.java:1255)
+	at presentacion.POOBkemonGUI$16.actionPerformed(POOBkemonGUI.java:1233)
+	at java.desktop/javax.swing.Timer.fireActionPerformed(Timer.java:289)
+	at java.desktop/javax.swing.Timer$DoPostEvent.run(Timer.java:221)
+	at java.desktop/java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:318)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:723)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:702)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+

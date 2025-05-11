@@ -28,8 +28,9 @@ public class Trainer {
 	public void setCurrentPokemonId(int currentPokemonId) {
 		this.currentPokemonId = currentPokemonId;
 	}
-
-	public Item getItem(int id) {
-		return null;
+	public void useItem(Pokemon pokemon, String item) throws POOBkemonException{
+		Item itemUse = this.bagPack.getItem(item);
+		if(itemUse == null) throw new POOBkemonException("No se encontró el Item. ");
+		itemUse.effect(pokemon);
 	}
 }

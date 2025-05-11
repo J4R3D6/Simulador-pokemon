@@ -13,8 +13,12 @@ public class BagPack {
 		return null;
 	}
 
-	public Item getItem(int id) {
-		return null;
+	public Item getItem(String itemName) {
+		Item item = null;
+		for(Item i: items){
+			System.out.println(i.getName());
+			if(i.getName().equals(itemName)) item = i;
+		}
+		return item;
 	}
-
 }

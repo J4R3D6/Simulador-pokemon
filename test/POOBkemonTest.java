@@ -8,7 +8,7 @@ class POOBkemonTest {
     private POOBkemon game;
     private ArrayList<String> trainers;
     private HashMap<String, ArrayList<Integer>> pokemons;
-    private HashMap<String, int[][]> items;
+    private HashMap<String, String[][]> items;
     private HashMap<String, ArrayList<Integer>> attacks;
 
     @BeforeEach
@@ -24,9 +24,9 @@ class POOBkemonTest {
         pokemons.put("Player1", new ArrayList<>(List.of(1, 2, 56, 4,5,28)));
         pokemons.put("Player2", new ArrayList<>(List.of(3, 4, 45, 3,203,301)));
 
-        items = new HashMap<>();
-        items.put("Player1", new int[][]{{1, 5}, {2,3}});
-        items.put("Player2", new int[][]{{3, 2}, {4, 1}});
+        items = new HashMap<>();            //"Tipo","cantidad","SaludQueRecupera"
+        items.put("Player1", new String[][]{{"Potion", "5","54"},{"Potion", "2","20"}});
+        items.put("Player2", new String[][]{{"Potion", "2","5"},{"Potion", "1","20"}});
 
         attacks = new HashMap<>();
         attacks.put("Player1", new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,17,19,20,21,22,23,24)));
@@ -73,8 +73,8 @@ class POOBkemonTest {
         pokemons.put("Offensive2", new ArrayList<>(List.of(3, 4, 45, 3,203,301)));
 
         items = new HashMap<>();
-        items.put("Offensive1", new int[][]{{1, 5}, {2,3}});
-        items.put("Offensive2", new int[][]{{3, 2}, {4, 1}});
+        items.put("Offensive1", new String[][]{{"Potion", "5","54"},{"Potion", "2","20"}});
+        items.put("Offensive2", new String[][]{{"Potion", "2","5"},{"Potion", "1","20"}});
 
         attacks = new HashMap<>();
         attacks.put("Offensive1", new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,17,19,20,21,22,23,24)));
@@ -101,9 +101,8 @@ class POOBkemonTest {
         pokemons.put("Offensive2", new ArrayList<>(List.of(3, 4, 45, 3,203,301)));
 
         items = new HashMap<>();
-        items.put("Offensive1", new int[][]{{1, 5}, {2,3}});
-        items.put("Offensive2", new int[][]{{3, 2}, {4, 1}});
-
+        items.put("Offensive1", new String[][]{{"Potion", "5","54"},{"Potion", "2","20"}});
+        items.put("Offensive", new String[][]{{"Potion", "2","5"},{"Potion", "1","20"}});
         attacks = new HashMap<>();
         attacks.put("Offensive1", new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,17,19,20,21,22,23,24)));
         attacks.put("Offensive2", new ArrayList<>(List.of(9, 10, 11, 12, 13, 14, 15, 16,17,18,19,20,21,22,23,24,25,26,27,125,29,30,31,45)));
@@ -158,8 +157,8 @@ class POOBkemonTest {
         pokemons.put("Offensive2", new ArrayList<>(List.of(3, 4, 45, 3,203,301)));
 
         items = new HashMap<>();
-        items.put("Player1", new int[][]{{1, 5}, {2,3}});
-        items.put("Offensive2", new int[][]{{3, 2}, {4, 1}});
+        items.put("Player1", new String[][]{{"Potion", "5","54"},{"Potion", "2","20"}});
+        items.put("Offensive2", new String[][]{{"Potion", "2","5"},{"Potion", "1","20"}});
 
         attacks = new HashMap<>();
         attacks.put("Player1", new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,17,19,20,21,22,23,24)));
@@ -188,8 +187,8 @@ class POOBkemonTest {
         pokemons.put("Player2", new ArrayList<>(List.of(3, 4, 45, 3,203,301)));
 
         items = new HashMap<>();
-        items.put("Offensive1", new int[][]{{1, 5}, {2,3}});
-        items.put("Player2", new int[][]{{3, 2}, {4, 1}});
+        items.put("Offensive1", new String[][]{{"Potion", "5","54"},{"Potion", "2","20"}});
+        items.put("Player2", new String[][]{{"Potion", "2","5"},{"Potion", "1","20"}});
 
         attacks = new HashMap<>();
         attacks.put("Offensive1", new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,17,19,20,21,22,23,24)));
@@ -273,6 +272,36 @@ class POOBkemonTest {
             assertTrue(defender.getWeak());
         }
     }
+    @Test
+    @DisplayName("CreatePotis")
+    void shouldCreatePotis() {
+        try {
+            game.initGame(trainers, pokemons, items, attacks, false);
+        } catch (POOBkemonException e) {
+            fail("No debería lanzar POOBkemonException: " + e.getMessage());
+        }
+    }
+
+    @Test
+    @DisplayName("UsePotis")
+    void shouldUsePotis() {
+        try {
+            int pokemonId = -1;
+            game.initGame(trainers, pokemons, items, attacks, false);
+            for(Team team : game.getTeams()){
+                if(team.getTrainer().getId() == game.getOrder().get(0) ){
+                pokemonId = team.getTrainer().getCurrentPokemonId();
+                break;
+                }
+            }
+            //"UseItem","IdTrainer","IdPokemon","Item (Nombre)" ------> se generan dependiendo si es Revive, o cantidad de Hps que restauran
+            String[] decision = {"UseItem",String.valueOf(game.getOrder().get(0)), String.valueOf(pokemonId),"Normal"};
+            game.takeDecision(decision);
+        } catch (POOBkemonException e) {
+            fail(e.getMessage());
+        }
+    }
+
 
     @Test
     @DisplayName("Test game initialization with missing trainer data")
