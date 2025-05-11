@@ -32,14 +32,14 @@ public class AttackTest {
     @Test
     public void testGetInfo() {
         String[] info = testAttack.getInfo();
-        assertEquals(7, info.length);
+        assertEquals(9, info.length);
         assertEquals("Ember", info[0]);
         assertEquals("Fire", info[1]);
         assertEquals("40", info[2]);
         assertEquals("100", info[3]);
         assertEquals("25", info[4]);
-        assertEquals("52", info[5]);
-        assertEquals("The target is attacked with small flames. This may also leave the target with a burn.", info[6]);
+        assertEquals("25", info[5]);
+        assertEquals("The target is attacked with small flames. This may also leave the target with a burn.", info[7]);
     }
 
     @Test

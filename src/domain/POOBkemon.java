@@ -287,10 +287,7 @@ public class POOBkemon {
 			if (idTrainer == t.getTrainer().getId()) {
 				Trainer trainer = t.getTrainer();
 
-				if (trainer instanceof Offensive ||
-						trainer instanceof Defensive ||
-						trainer instanceof Expert ||
-						trainer instanceof Random) {
+				if (trainer instanceof Machine) {
 					String[] desci = ((Machine) trainer).machineMovement(this);
 					return desci;
 				}

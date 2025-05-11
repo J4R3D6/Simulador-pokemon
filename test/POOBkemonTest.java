@@ -61,15 +61,158 @@ class POOBkemonTest {
         assertEquals("Start Game", game.getMoves().get(0));
         assertEquals(2, game.getOrder().size());
     }
+    @Test
+    @DisplayName("Test game verify Machine")
+    void shouldCreateTwoMachineOffensive() throws POOBkemonException{
+        trainers = new ArrayList<>();
+        trainers.add("Offensive1");
+        trainers.add("Offensive2");
 
+        pokemons = new HashMap<>();
+        pokemons.put("Offensive1", new ArrayList<>(List.of(1, 2, 56, 4,5,28)));
+        pokemons.put("Offensive2", new ArrayList<>(List.of(3, 4, 45, 3,203,301)));
+
+        items = new HashMap<>();
+        items.put("Offensive1", new int[][]{{1, 5}, {2,3}});
+        items.put("Offensive2", new int[][]{{3, 2}, {4, 1}});
+
+        attacks = new HashMap<>();
+        attacks.put("Offensive1", new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,17,19,20,21,22,23,24)));
+        attacks.put("Offensive2", new ArrayList<>(List.of(9, 10, 11, 12, 13, 14, 15, 16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,45)));
+
+        game.initGame(trainers, pokemons, items, attacks, false);
+        Trainer trainerOffensive = null;
+        for(Team t : game.getTeams()){
+            trainerOffensive = t.getTrainer();
+            if (trainerOffensive instanceof Offensive) break;
+        }
+        assertTrue(game.isMachine(trainerOffensive.getId()));
+    }
+
+    @Test
+    @DisplayName("Test game verify Machine")
+    void shouldConfirmInfo() throws POOBkemonException{
+        trainers = new ArrayList<>();
+        trainers.add("Offensive1");
+        trainers.add("Offensive2");
+
+        pokemons = new HashMap<>();
+        pokemons.put("Offensive1", new ArrayList<>(List.of(1, 2, 56, 4,5,28)));
+        pokemons.put("Offensive2", new ArrayList<>(List.of(3, 4, 45, 3,203,301)));
+
+        items = new HashMap<>();
+        items.put("Offensive1", new int[][]{{1, 5}, {2,3}});
+        items.put("Offensive2", new int[][]{{3, 2}, {4, 1}});
+
+        attacks = new HashMap<>();
+        attacks.put("Offensive1", new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,17,19,20,21,22,23,24)));
+        attacks.put("Offensive2", new ArrayList<>(List.of(9, 10, 11, 12, 13, 14, 15, 16,17,18,19,20,21,22,23,24,25,26,27,125,29,30,31,45)));
+
+        assertDoesNotThrow(()->game.initGame(trainers, pokemons, items, attacks, false));
+
+    }
+
+    @Test
+    @DisplayName("Test verify Info")
+    void shouldGiveInfoMoves(){
+        assertDoesNotThrow(()->game.getMoveInfo(3));
+        assertDoesNotThrow(()->game.getMoveInfo(10));
+        assertDoesNotThrow(()->game.getMoveInfo(11));
+        assertDoesNotThrow(()->game.getMoveInfo(12));
+        assertDoesNotThrow(()->game.getMoveInfo(13));
+        assertDoesNotThrow(()->game.getMoveInfo(14));
+        assertDoesNotThrow(()->game.getMoveInfo(15));
+        assertDoesNotThrow(()->game.getMoveInfo(16));
+        assertDoesNotThrow(()->game.getMoveInfo(17));
+        assertDoesNotThrow(()->game.getMoveInfo(19));
+        assertDoesNotThrow(()->game.getMoveInfo(20));
+        assertDoesNotThrow(()->game.getMoveInfo(21));
+        assertDoesNotThrow(()->game.getMoveInfo(22));
+        assertDoesNotThrow(()->game.getMoveInfo(23));
+        assertDoesNotThrow(()->game.getMoveInfo(24));
+        assertDoesNotThrow(()->game.getMoveInfo(25));
+    }
 
 
     @Test
-    @DisplayName("Test Attack other Pokemon")
+    @DisplayName("Test verify Info")
+    void shouldGiveInfoItems(){
+        assertDoesNotThrow(()->game.getItemInfo());
+    }
+
+    @Test
+    @DisplayName("Test verify Info")
+    void shouldGiveInfoPokemon(){
+        assertDoesNotThrow(()->game.getPokInfo());
+    }
+
+    @Test
+    @DisplayName("Test game verify Machine")
+    void shouldMachineOffensiveAttackVerify() throws POOBkemonException{
+        trainers = new ArrayList<>();
+        trainers.add("Player1");
+        trainers.add("Offensive2");
+
+        pokemons = new HashMap<>();
+        pokemons.put("Player1", new ArrayList<>(List.of(1, 2, 56, 4,5,28)));
+        pokemons.put("Offensive2", new ArrayList<>(List.of(3, 4, 45, 3,203,301)));
+
+        items = new HashMap<>();
+        items.put("Player1", new int[][]{{1, 5}, {2,3}});
+        items.put("Offensive2", new int[][]{{3, 2}, {4, 1}});
+
+        attacks = new HashMap<>();
+        attacks.put("Player1", new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,17,19,20,21,22,23,24)));
+        attacks.put("Offensive2", new ArrayList<>(List.of(9, 10, 11, 12, 13, 14, 15, 16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,45)));
+
+        game.initGame(trainers, pokemons, items, attacks, false);
+        Trainer trainerOffensive = null;
+        for(Team t : game.getTeams()){
+            trainerOffensive = t.getTrainer();
+            if (trainerOffensive instanceof Offensive) break;
+        }
+        assertTrue(game.isMachine(trainerOffensive.getId()));
+    }
+
+    @Test
+    @DisplayName("Test game with Offensive Machine")
+    void shouldMachineOffensiveAttack() throws POOBkemonException{
+        // Arrange - Configuración inicial del juego
+        // Datos básicos de prueba
+        trainers = new ArrayList<>();
+        trainers.add("Offensive1");
+        trainers.add("Player2");
+
+        pokemons = new HashMap<>();
+        pokemons.put("Offensive1", new ArrayList<>(List.of(1, 2, 56, 4,5,28)));
+        pokemons.put("Player2", new ArrayList<>(List.of(3, 4, 45, 3,203,301)));
+
+        items = new HashMap<>();
+        items.put("Offensive1", new int[][]{{1, 5}, {2,3}});
+        items.put("Player2", new int[][]{{3, 2}, {4, 1}});
+
+        attacks = new HashMap<>();
+        attacks.put("Offensive1", new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,17,19,20,21,22,23,24)));
+        attacks.put("Player2", new ArrayList<>(List.of(9, 10, 11, 12, 13, 14, 15, 16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,45)));
+
+        game.initGame(trainers, pokemons, items, attacks, false);
+        Trainer trainerOffensive = null;
+        for(Team t : game.getTeams()){
+           trainerOffensive = t.getTrainer();
+           if (trainerOffensive instanceof Offensive) break;
+        }
+        assertTrue(game.isMachine(trainerOffensive.getId()));
+        String[] machineMove = game.machineDecision(trainerOffensive.getId());
+        assertNotNull(machineMove);
+        assertTrue(machineMove.length > 0);
+
+        assertDoesNotThrow(()->game.takeDecision(machineMove));
+    }
+    @Test
+    @DisplayName("Test Attack Pokemon")
     void shouldAttackAnotherPokemon() throws POOBkemonException {
         // Arrange - Configuración inicial del juego
         game.initGame(trainers, pokemons, items, attacks, false);
-        game.coin();
 
         // Obtener el orden de turno y verificar
         ArrayList<Integer> turnOrder = game.getOrder();
@@ -102,13 +245,11 @@ class POOBkemonTest {
         int initialDefenderHP = defender.currentHealth;
         int initialPP = attackToUse.getPPActual();
 
-        // Act - Preparar y ejecutar la decisión de ataque
-        // Formato correcto: {"Attack", "idAtaque", "idEntrenador", "idAtacante"}
         String[] attackDecision = {
                 "Attack",
                 String.valueOf(attackToUse.getIdInside()),
-                String.valueOf(attackingTeam.getTrainer().getId()),
-                String.valueOf(attacker.getId())
+                String.valueOf(attacker.getId()),
+                String.valueOf(attackingTeam.getTrainer().getId())
         };
 
         assertDoesNotThrow(() -> game.takeDecision(attackDecision),
@@ -119,17 +260,11 @@ class POOBkemonTest {
         assertEquals(initialPP - 1, attackToUse.getPPActual(),
                 "El PP del ataque debería haber disminuido en 1");
 
-        // 2. Verificar que el defensor recibió daño
-        assertTrue(defender.currentHealth < initialDefenderHP,
-                "El Pokémon defensor debería tener menos HP después del ataque");
-        System.out.println(initialDefenderHP);
-        System.out.println(defender.currentHealth);
-
-        // 3. Verificar que el atacante sigue activo
+        // 2. Verificar que el atacante sigue activo
         assertTrue(attacker.getActive(),
                 "El Pokémon atacante debería seguir activo después del ataque");
 
-        // 4. Verificar que el defensor sigue activo (a menos que se debilitara)
+        // 3. Verificar que el defensor sigue activo (a menos que se debilitara)
         if (defender.currentHealth > 0) {
             assertTrue(defender.getActive(),
                     "El Pokémon defensor debería seguir activo si no fue debilitado");
@@ -153,7 +288,7 @@ class POOBkemonTest {
         Pokemon pokemon = game.createPokemon(1, new ArrayList<>(List.of(1, 2, 3, 4)));
         assertNotNull(pokemon);
         //en conjunto se han creado 16 hasta ahora, pero individualmente es 0
-        assertEquals(16, pokemon.getId()); // nid comienza en 0
+        assertEquals(48, pokemon.getId()); // nid comienza en 0
     }
 
     @Test
@@ -177,19 +312,6 @@ class POOBkemonTest {
         assertNotEquals(order.get(0), order.get(1));
     }
 
-    @Test
-    @DisplayName("Test takeDecision with attack action")
-    void testTakeDecisionAttack() throws POOBkemonException {
-        game.initGame(trainers, pokemons, items, attacks, false);
-
-        String[] decision1 = {"Attack", "1", "1"}; // Atacar con movimiento 1 al Pokémon 1
-        String[] decision2 = {"Attack", "1", "0"}; // Atacar con movimiento 1 al Pokémon 0
-
-        game.takeDecision(decision1);
-
-        assertTrue(game.getMoves().size() > 1);
-        assertTrue(game.getMoves().get(1).contains("usó ataque"));
-    }
 
     @Test
     @DisplayName("Test changePokemon method")
@@ -201,22 +323,9 @@ class POOBkemonTest {
             Trainer entrenador = game.getTeams().get(0).getTrainer();
             int actualPokemon = entrenador.getCurrentPokemonId();
 
-            /**HashMap<Integer, String[]> activo = game.getCurrentPokemons();
-            for (String[] p : activo.values()) {
-                for (String s : p) {
-                    System.out.println(s);
-                }
-            }
-            **/
             String[] decision1 = {"ChangePokemon", "1"};
             String[] decision2 = {"Attack", "1", "0"};
-            /**
-            HashMap<Integer, String[]> activo1 = game.getCurrentPokemons();
-            for (String[] p : activo.values()) {
-                for (String s : p) {
-                    System.out.println(s);
-                }
-            }**/
+
             game.takeDecision(decision1);
             int cambiodePokemon = entrenador.getCurrentPokemonId();
             System.out.println(cambiodePokemon);

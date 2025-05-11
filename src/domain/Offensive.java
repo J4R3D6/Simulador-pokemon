@@ -20,16 +20,18 @@ public class Offensive extends Machine {
         }
         Attack selectedAttack = null;
         for(Attack a: myActivePokemon.getAttacks()){
-            if(a.getPPActual()>0){
+            if(a.getPPActual()>0 && !(a instanceof state)){
                 selectedAttack = a;
                 break;
+            } else if (selectedAttack == null && a.getPPActual() > 0) {
+                selectedAttack = a;
             }
         }
 
         int attackId = selectedAttack.getIdInside();
 
         // 4. Crear la decisión de ataque
-        String[] decision = {"Attack", String.valueOf(attackId), String.valueOf(myActivePokemon.getId())};
+        String[] decision = {"Attack", String.valueOf(attackId), String.valueOf(myActivePokemon.getId()), String.valueOf(this.getId())};
         return decision;
     }
 }

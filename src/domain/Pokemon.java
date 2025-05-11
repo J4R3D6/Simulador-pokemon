@@ -129,7 +129,14 @@ public class Pokemon {
 	}
 
 	private int randomStatics(int base) {
-		int stat = (int) (((2* base + this.ivs+(createRandom(252)/4))/100)*this.level+5);
+		// 1. Generar un EV aleatorio entre 0 y 252 (como en Pokémon real)
+		int ev = createRandom(253); // EVs van de 0 a 252
+
+		// 2. Fórmula mejorada con EVs y IVs
+		int stat = (int) (
+				( ( (2 * base + this.ivs + (ev / 4) ) * this.level ) / 100 ) + 5
+		);
+
 		return stat;
 	}
 
@@ -189,12 +196,15 @@ public class Pokemon {
 	public boolean getWeak() {
 		return this.weak;
 	}
+
 	public ArrayList<Attack> getStates() {
 		return this.states;
 	}
+
 	public ArrayList<Attack> getAttacks() {
 		return this.attacks;
 	}
+
 	private void probShiny(){
 		this.shiny = Math.random() < 0.1;
 	}
@@ -240,12 +250,8 @@ public class Pokemon {
 			return; // Salimos del método porque no hay daño que aplicar
 		}
 		else{
-			calculatedDamage = (((((2*attacker.level)/5)+2)*damage.getPower()*((attacker.attack / this.defense)/50)+2)*4);
-			System.out.println("puntos de ataque: "+ attacker.attack);
-			System.out.println("puntos de defensa: "+ this.defense);
-			System.out.println("puntos de special: "+ this.specialDefense);
-			System.out.println("puntos de power: "+ damage.getPower());
-			System.out.println("puntos de nivel atacante: "+ attacker.level);
+			int random = (int) (Math.random()*10);
+			calculatedDamage = (((((2*attacker.level)/5)+2)*damage.getPower()*((attacker.attack / this.defense)/50)+2)*random); //Casi siempre da 8
 			System.out.println(calculatedDamage+" - "+calculatedDamage*multiplicator);
 		}
 
@@ -254,8 +260,8 @@ public class Pokemon {
 			this.currentHealth = (int) (this.currentHealth - calculatedDamage*multiplicator);
 		}
 
-		// Asegurarnos que la salud no sea negativa
-		if(this.currentHealth < 0) {
+		// Asegurarnos que la salud no sea negativa (si no agregamos el = si es exacatamente 0 sigue vivo)
+		if(this.currentHealth <= 0) {
 			this.currentHealth = 0;
 			this.weak = true;
 		}
