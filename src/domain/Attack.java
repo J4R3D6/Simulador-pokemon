@@ -65,6 +65,9 @@ public class Attack {
 	public int getPPActual(){
 		return this.ppActual;
 	}
+	public int getPPMax(){
+		return this.ppMax;
+	}
 
 
 }

@@ -21,16 +21,16 @@ class POOBkemonTest {
         trainers.add("Player2");
 
         pokemons = new HashMap<>();
-        pokemons.put("Player1", new ArrayList<>(List.of(1, 2)));
-        pokemons.put("Player2", new ArrayList<>(List.of(3, 4)));
+        pokemons.put("Player1", new ArrayList<>(List.of(1, 2, 56, 4,5,28)));
+        pokemons.put("Player2", new ArrayList<>(List.of(3, 4, 45, 3,203,301)));
 
         items = new HashMap<>();
-        items.put("Player1", new int[][]{{1, 5}, {2, 3}});
+        items.put("Player1", new int[][]{{1, 5}, {2,3}});
         items.put("Player2", new int[][]{{3, 2}, {4, 1}});
 
         attacks = new HashMap<>();
-        attacks.put("Player1", new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8)));
-        attacks.put("Player2", new ArrayList<>(List.of(9, 10, 11, 12, 13, 14, 15, 16)));
+        attacks.put("Player1", new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,17,19,20,21,22,23,24)));
+        attacks.put("Player2", new ArrayList<>(List.of(9, 10, 11, 12, 13, 14, 15, 16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,45)));
     }
 
     @Test
@@ -60,6 +60,84 @@ class POOBkemonTest {
         assertEquals(2, game.teams().size());
         assertEquals("Start Game", game.getMoves().get(0));
         assertEquals(2, game.getOrder().size());
+    }
+
+
+
+    @Test
+    @DisplayName("Test Attack other Pokemon")
+    void shouldAttackAnotherPokemon() throws POOBkemonException {
+        // Arrange - Configuración inicial del juego
+        game.initGame(trainers, pokemons, items, attacks, false);
+        game.coin();
+
+        // Obtener el orden de turno y verificar
+        ArrayList<Integer> turnOrder = game.getOrder();
+        assertEquals(2, turnOrder.size(), "Debe haber exactamente 2 entrenadores");
+
+        // Identificar equipos y entrenadores
+        Team attackingTeam = null;
+        Team defendingTeam = null;
+
+        for (Team team : game.getTeams()) {
+            if (team.getTrainer().getId() == turnOrder.get(0)) {
+                attackingTeam = team;
+            } else if (team.getTrainer().getId() == turnOrder.get(1)) {
+                defendingTeam = team;
+            }
+        }
+
+        assertNotNull(attackingTeam, "Equipo atacante no encontrado");
+        assertNotNull(defendingTeam, "Equipo defensor no encontrado");
+
+        // Obtener Pokémon atacante y defensor
+        Pokemon attacker = attackingTeam.getPokemonById(attackingTeam.getTrainer().getCurrentPokemonId());
+        Pokemon defender = defendingTeam.getPokemonById(defendingTeam.getTrainer().getCurrentPokemonId());
+
+        assertTrue(attacker.getActive(), "Pokémon atacante debe estar activo");
+        assertTrue(defender.getActive(), "Pokémon defensor debe estar activo");
+
+        // Obtener el primer ataque del Pokémon atacante
+        Attack attackToUse = attacker.getAttacks().get(3);
+        int initialDefenderHP = defender.currentHealth;
+        int initialPP = attackToUse.getPPActual();
+
+        // Act - Preparar y ejecutar la decisión de ataque
+        // Formato correcto: {"Attack", "idAtaque", "idAtacante"}
+        String[] attackDecision = {
+                "Attack",
+                String.valueOf(attackToUse.getIdInside()),
+                String.valueOf(attackingTeam.getTrainer().getId()),
+                String.valueOf(attacker.getId())
+        };
+
+        assertDoesNotThrow(() -> game.takeDecision(attackDecision),
+                "El ataque no debería lanzar excepción");
+
+        // Assert - Verificaciones post-ataque
+        // 1. Verificar que el PP del ataque disminuyó
+        assertEquals(initialPP - 1, attackToUse.getPPActual(),
+                "El PP del ataque debería haber disminuido en 1");
+
+        // 2. Verificar que el defensor recibió daño
+        assertTrue(defender.currentHealth < initialDefenderHP,
+                "El Pokémon defensor debería tener menos HP después del ataque");
+        System.out.println(initialDefenderHP);
+        System.out.println(defender.currentHealth);
+
+        // 3. Verificar que el atacante sigue activo
+        assertTrue(attacker.getActive(),
+                "El Pokémon atacante debería seguir activo después del ataque");
+
+        // 4. Verificar que el defensor sigue activo (a menos que se debilitara)
+        if (defender.currentHealth > 0) {
+            assertTrue(defender.getActive(),
+                    "El Pokémon defensor debería seguir activo si no fue debilitado");
+        }
+        if(defender.currentHealth == 0){
+            assertTrue(defender.getWeak());
+            assertFalse(defender.getActive());
+        }
     }
 
     @Test

@@ -222,9 +222,9 @@ public class Pokemon {
 	public void getDamage(Attack damage,Pokemon attacker) {
 		MovesRepository movesRepository = new MovesRepository();
 		StatsRepository statsRepository = new StatsRepository();
-		System.out.println(" Id del ataque: "+ damage.getIdCSV());
 		String[] info = movesRepository.getAttackDamageAndType(damage.getIdCSV());
 		double multiplicator = statsRepository.getMultiplier(info[0], this.type);
+		System.out.println(multiplicator);
 
 		// Calcular el daño según el tipo de ataque
 		double calculatedDamage = 0;
@@ -238,6 +238,8 @@ public class Pokemon {
 			return; // Salimos del método porque no hay daño que aplicar
 		}
 		else{
+			System.out.println("puntos de ataque: "+ attacker.attack);
+			System.out.println("puntos de defensa: "+ this.defense);
 			calculatedDamage = ((attacker.attack * multiplicator) / this.defense);
 		}
 

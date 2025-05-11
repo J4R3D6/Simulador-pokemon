@@ -100,12 +100,6 @@ public class PokemonTest {
     }
 
     @Test
-    public void testGetDamage() {
-        // Este test verifica que el método no lance excepciones
-        assertDoesNotThrow(() -> pokemon.getDamage());
-    }
-
-    @Test
     public void testConstructorWithIncompleteInfo_ShouldCreateDefaultPokemon() {
         // Arrange
         String[] incompleteInfo = {"001", "Bulbasaur"}; // Falta type, HP, etc. (menos de 11 campos)

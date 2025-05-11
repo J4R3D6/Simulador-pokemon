@@ -20,13 +20,13 @@ public class AttackTest {
 
     @Test
     public void testConstructorInitialization() {
-        assertEquals(52, testAttack.getId());
+        assertEquals(52, testAttack.getIdCSV());
         assertEquals("Ember", testAttack.getInfo()[0]);
         assertEquals("Fire", testAttack.getInfo()[1]);
         assertEquals("40", testAttack.getInfo()[2]);
         assertEquals("100", testAttack.getInfo()[3]);
         assertEquals("25", testAttack.getInfo()[4]);
-        assertEquals("The target is attacked with small flames. This may also leave the target with a burn.", testAttack.getInfo()[6]);
+        assertEquals("The target is attacked with small flames. This may also leave the target with a burn.", testAttack.getInfo()[7]);
     }
 
     @Test

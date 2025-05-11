@@ -266,7 +266,7 @@ public class POOBkemon {
 	 * Determina aleatoriamente el orden de turnos inicial.
 	 * @return Lista con IDs de entrenadores en orden de turno
 	 */
-	private ArrayList<Integer> coin(){
+	public ArrayList<Integer> coin(){
 		ArrayList<Integer> turnOrder = new ArrayList<>();
 		if (this.teams.size() < 2) return turnOrder;
 
@@ -325,7 +325,8 @@ public class POOBkemon {
 					if (decision.length < 3) throw new POOBkemonException("Faltan parámetros para Attack");
 					int attackId = Integer.parseInt(decision[1]);
 					int pokemonId1 = Integer.parseInt(decision[2]);
-					this.attack(attackId, pokemonId1);
+					int trainerId = Integer.parseInt(decision[3]);
+					this.attack(attackId,trainerId, pokemonId1);
 					//falta agregar la accion a las acciones del movimiento
 					break;
 
@@ -457,27 +458,50 @@ public class POOBkemon {
 	 * @param idAttack ID del ataque a utilizar
 	 * @param idThrower ID del Pokémon que realiza el ataque
 	 */
-	private void attack( int idAttack, int idThrower){
+	private void attack(int idAttack, int idTrainer, int idThrower) throws POOBkemonException{
 		Attack damage = null;
 		Pokemon attacker = null;
+		Pokemon target = null;
+		// Primero: Encontrar el Pokémon atacante (idThrower) en el equipo del entrenador (idTrainer)
 		for (Team team : teams) {
-			for(Pokemon pokemon: team.getPokemons()) {
-				System.out.println("Pokemon " + idThrower + " otro: " + pokemon.getId());
-
-				if (pokemon.getId() == idThrower) {
-
-						damage = pokemon.getAttack(idAttack);
+			if (team.getTrainer().getId() == idTrainer) { // Buscamos en el equipo del entrenador
+				for (Pokemon pokemon : team.getPokemons()) {
+					if (pokemon.getId() == idThrower) {
 						attacker = pokemon;
+						damage = pokemon.getAttack(idAttack);
 						break;
+					}
 				}
-			}
-			for(Pokemon pokemon : team.getPokemons()) {
-				if(pokemon.getActive() && pokemon.getId() != idThrower){
-					pokemon.getDamage(damage,attacker);
-				}
+				break; // Salimos después de encontrar el equipo correcto
 			}
 		}
-		//por implementar
+
+		// Segundo: Encontrar el Pokémon objetivo (el activo del otro equipo)
+		for (Team team : teams) {
+			if (team.getTrainer().getId() != idTrainer) { // Buscamos en el equipo contrario
+				for (Pokemon pokemon : team.getPokemons()) {
+					if (pokemon.getActive()) {
+						target = pokemon;
+						break;
+					}
+				}
+				break; // Solo necesitamos un objetivo activo
+			}
+		}
+		// Verificar que tenemos ambos Pokémon
+		if (attacker == null) {
+			throw new POOBkemonException("Error: No se encontró el Pokemon atacante");
+		}
+		if( damage == null){
+			throw new POOBkemonException("Error: No se encontró el ataque");
+		}
+		if (target == null) {
+			throw new POOBkemonException("Error: No se encontró un Pokémon objetivo activo");
+		}
+		// Aplicar el daño
+		damage.usePP();
+		target.getDamage(damage, attacker);
+		// Cambio automático si es necesario
 		this.autoChangePokemon();
 	}
 	//Para cuando est debilitado el pokemon activo haga un cambio automatico
