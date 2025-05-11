@@ -51,11 +51,13 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         void onBattleEnd(boolean playerWon);
     }
 
-    public PokemonBattlePanel(POOBkemon game) {
+    public PokemonBattlePanel(POOBkemon game,int fondo,int frame) {
         if (game == null) throw new IllegalArgumentException("Game cannot be null");
         this.game = game;
         this.order = game.getOrder();
         this.currentPlayer = game.getOrder().get(0);
+        this.fondo = fondo;
+        this.frame = frame;
         initializeUI();
     }
 
@@ -219,9 +221,9 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
 
         BarraVidaConImagen playerHPBar = new BarraVidaConImagen(Integer.parseInt(player[5]));
         playerHPBar.setValue(Integer.parseInt(player[6]));//player[6]
-        ImagePanel front = new ImagePanel(null,frontFloor+0+PNG_EXT);
+        ImagePanel front = new ImagePanel(null,frontFloor+fondo+PNG_EXT);
         front.setOpaque(false);
-        ImagePanel back = new ImagePanel(null,backFloor+0+PNG_EXT);
+        ImagePanel back = new ImagePanel(null,backFloor+fondo+PNG_EXT);
         front.setOpaque(false);
 
 
@@ -678,7 +680,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
             });
 
             btn.addActionListener(e ->{
-                String[] decision = {"Attack", moveId[index],""+currentPlayer}; //Necesito el id del poikemon que lo lanza()
+                String[] decision = {"Attack", ""+currentPlayer, moveId[index]};//moveId[index] añadir id de movimiento
                 setDecision(decision);
                 showPanel("battle");
             });
@@ -714,9 +716,9 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
 
         BarraVidaConImagen playerHPBar = new BarraVidaConImagen(Integer.parseInt(player[5]));
         playerHPBar.setValue(Integer.parseInt(player[6]));//player[6]
-        ImagePanel front = new ImagePanel(null,frontFloor+0+PNG_EXT);
+        ImagePanel front = new ImagePanel(null,frontFloor+fondo+PNG_EXT);
         front.setOpaque(false);
-        ImagePanel back = new ImagePanel(null,backFloor+0+PNG_EXT);
+        ImagePanel back = new ImagePanel(null,backFloor+fondo+PNG_EXT);
         front.setOpaque(false);
 
 
@@ -922,7 +924,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
 
 
     private void showSwitchAnimation(int playerId, String pokemonId) {
-        
+
     }
 
     private void showAttackAnimation(int playerId, String attackId) {

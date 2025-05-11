@@ -39,16 +39,19 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     private JMenuBar menuBar;
     private JMenu menuArchivo;
     private JMenu menuOption;
+    private JMenu fondos;
+    private JMenu frames;
     //
+    private JMenuItem fondo1;
+    private JMenuItem fondo2;
+    private JMenuItem frame1;
+    private JMenuItem frame2;
     private JMenuItem itemNuevo;
     private JMenuItem itemAbrir;
     private JMenuItem itemSalvar;
     private JMenuItem itemSalir;
     //
-    private int currentPlayer;
-    private String[] decisionTrainer1 = null;
-    private String[] decisionTrainer2 = null;
-    private boolean turnInProgress = false;
+    private int fondo = 0,frame= 0;
     private ArrayList<Integer> order;
     private JButton playButton;
     private JButton pokedexButton;
@@ -58,10 +61,6 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     private JButton onePlayer;
     private JButton twoPlayers;
     private JButton machines;
-    private JButton machine1;
-    private JButton machine2;
-    private JButton machine3;
-    private JButton machine4;
     private JButton backButtonMenu;
     //
     private static final String CHARACTER = "resources/personaje/";
@@ -139,7 +138,13 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
 		//
 		menuArchivo = new JMenu("Archivo");
 		menuOption = new JMenu("Opciones");
+        fondos = new JMenu("Fondos");
+        frames = new JMenu("Frames");
         //
+        frame1 = new JMenuItem("Dorado");
+        frame2 = new JMenuItem("Clasico");
+        fondo1 = new JMenuItem("Hierba alta");
+        fondo2 = new JMenuItem("Alto Mando");
 		itemNuevo = new JMenuItem("Nuevo Juego");
 		itemAbrir = new JMenuItem("Abrir Partida");
 		itemSalvar = new JMenuItem("Guardar Partida");
@@ -150,6 +155,12 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
         menuArchivo.add(itemSalvar);
         menuArchivo.addSeparator();
         menuArchivo.add(itemSalir);
+        frames.add(frame1);
+        frames.add(frame2);
+        fondos.add(fondo1);
+        fondos.add(fondo2);
+        menuOption.add(fondos);
+        menuOption.add(frames);
         //
         menuBar.add(menuArchivo);
         menuBar.add(menuOption);
@@ -161,6 +172,10 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
         itemAbrir.addActionListener(e -> openGame());
         itemSalvar.addActionListener(e -> saveGame());
         itemSalir.addActionListener(e -> confirmExit());
+        fondo1.addActionListener(e -> {fondo=0;});
+        fondo2.addActionListener(e -> {fondo=1;});
+        frame1.addActionListener(e -> {frame=0;});
+        frame2.addActionListener(e -> {frame=1;});
     }
     private void prepareIntroductionPanel() {
     	IntroductionPanel = new ImagePanel(null, MENU+"start.png");
@@ -1236,7 +1251,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
         refresh(BattleStartPanel);
     }
     private void startBattle(POOBkemon game) {
-        PokemonBattlePanel battlePanel = new PokemonBattlePanel(game);
+        PokemonBattlePanel battlePanel = new PokemonBattlePanel(game, fondo, frame);
         battlePanel.setBattleListener(playerWon -> {
             //showBattleResult(playerWon);
             refresh(menuPanel);
