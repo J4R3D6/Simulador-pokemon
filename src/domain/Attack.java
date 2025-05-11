@@ -70,4 +70,7 @@ public class Attack {
 	}
 
 
+    public int getPower() {
+		return this.power;
+    }
 }

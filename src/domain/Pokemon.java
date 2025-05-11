@@ -175,8 +175,10 @@ public class Pokemon {
 		MovesRepository movesRepository = new MovesRepository();
 		for(Integer id : attacksIds) {
 			String[] infoAttack = movesRepository.getAttacksId(id);
-			Attack atack = new Attack(this.nextAttackId(), infoAttack);
-			ataques.add(atack);
+			if(infoAttack[4].equalsIgnoreCase("physical")) {
+				Attack atack = new Attack(this.nextAttackId(), infoAttack);
+				ataques.add(atack);
+			}
 		}
 		return ataques;
 	}
@@ -231,20 +233,26 @@ public class Pokemon {
 
 		if (damage instanceof special) {
 			// Fórmula para ataque especial
-			calculatedDamage = ((attacker.specialAttack * multiplicator) / this.specialDefense);
+			calculatedDamage = (((((2*attacker.level)/5)+2)*damage.getPower()*((attacker.specialAttack / this.specialDefense)/50)+2));
 		}
 		else if (damage instanceof state) {
 			this.states.add(damage);
 			return; // Salimos del método porque no hay daño que aplicar
 		}
 		else{
+			calculatedDamage = (((((2*attacker.level)/5)+2)*damage.getPower()*((attacker.attack / this.defense)/50)+2)*4);
 			System.out.println("puntos de ataque: "+ attacker.attack);
 			System.out.println("puntos de defensa: "+ this.defense);
-			calculatedDamage = ((attacker.attack * multiplicator) / this.defense);
+			System.out.println("puntos de special: "+ this.specialDefense);
+			System.out.println("puntos de power: "+ damage.getPower());
+			System.out.println("puntos de nivel atacante: "+ attacker.level);
+			System.out.println(calculatedDamage+" - "+calculatedDamage*multiplicator);
 		}
 
 		// Aplicar el daño calculado
-		this.currentHealth = (int)(this.currentHealth - calculatedDamage);
+		if (attacker.currentHealth > 0) {
+			this.currentHealth = (int) (this.currentHealth - calculatedDamage*multiplicator);
+		}
 
 		// Asegurarnos que la salud no sea negativa
 		if(this.currentHealth < 0) {

@@ -77,7 +77,8 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     private static final String BUTTONS = "resources/menu/buttons/";
     private static final String POKEDEX = "resources/menu/pokedex.png";
     private static final String TYPES =  "resources/pokemones/Emerald/types/";
-    private static final String GALERIA_ITEMS =  "resources/menu/galeria_items.png"; 
+    private static final String GALERIA_ITEMS =  "resources/menu/galeria_items.png";
+    private static final String APP_ICON = "resources/icon/pokemon_icon.png";
 
     
     private POOBkemonGUI() {
@@ -99,20 +100,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
         add(IntroductionPanel);
         IntroductionPanel.setFocusable(true);
         IntroductionPanel.requestFocusInWindow();
-        // Cargar y establecer el icono (Buscando Icono) (no lo carga)
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream("resources/icon/pokemon_icon.png")) {
-            if (is != null) {
-                byte[] imageBytes = is.readAllBytes();
-                ImageIcon icon = new ImageIcon(imageBytes);
-                setIconImage(icon.getImage());
-            } else {
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
+        setIconImage(new ImageIcon(APP_ICON).getImage());
     }
     private void prepareActions(){
     	prepareActionsMenuBar();
@@ -1416,12 +1404,14 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
         return button;
     }
     private boolean booleanInput(String m){
-    	int respuesta = JOptionPane.showConfirmDialog(
-    		    null, 
-    		    m, 
-    		    "Confirmación", 
-    		    JOptionPane.YES_NO_OPTION);
-
+        int respuesta = JOptionPane.showConfirmDialog(
+                null,
+                m,
+                "Confirmación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                new ImageIcon(APP_ICON)
+        );
     	boolean resultado = (respuesta == JOptionPane.YES_OPTION);
     	return resultado;
     }
@@ -1527,7 +1517,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
                 "¿Estás seguro de que quieres salir?",
                 "Confirmar salida",
                 JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE);
+                JOptionPane.QUESTION_MESSAGE,new ImageIcon(APP_ICON));
         
         if (option == JOptionPane.YES_OPTION) {
             System.exit(0);
@@ -1588,7 +1578,8 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     //
     private void mostrarError(String titulo, String error) {
         String mensaje = titulo + ":\n"+ error;
-        JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, mensaje,
+                "Error", JOptionPane.ERROR_MESSAGE,new ImageIcon(APP_ICON));
     }
     //
     public static void main(String[] args) {
