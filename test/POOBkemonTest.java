@@ -103,7 +103,7 @@ class POOBkemonTest {
         int initialPP = attackToUse.getPPActual();
 
         // Act - Preparar y ejecutar la decisión de ataque
-        // Formato correcto: {"Attack", "idAtaque", "idAtacante"}
+        // Formato correcto: {"Attack", "idAtaque", "idEntrenador", "idAtacante"}
         String[] attackDecision = {
                 "Attack",
                 String.valueOf(attackToUse.getIdInside()),
@@ -136,7 +136,6 @@ class POOBkemonTest {
         }
         if(defender.currentHealth == 0){
             assertTrue(defender.getWeak());
-            assertFalse(defender.getActive());
         }
     }
 

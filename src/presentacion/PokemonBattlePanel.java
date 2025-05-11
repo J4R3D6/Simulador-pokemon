@@ -549,64 +549,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
     //
     private JPanel createAtaquesView() {
         HashMap<Integer,String[]> currentPokemons = this.game.getCurrentPokemons();
-        final String[] player = this.game.getCurrentPokemons().get(this.order.get(0));
-        final String[] enemy = this.game.getCurrentPokemons().get(this.order.get(1));
-        final String playerPokemon = player[16].equals("true")
-                ? BACK_SHINY_PATH + player[2] + PNG_EXT
-                : BACK_PATH + player[2] + PNG_EXT;
-        final String enemyPokemon = enemy[16].equals("true")
-                ? SHINY_PATH + enemy[2] + PNG_EXT
-                : NORMAL_PATH + enemy[2] + PNG_EXT;
-        final Image bg = new ImageIcon(MAP + this.fondo + PNG_EXT).getImage();
-        final Image currentPlayerImg = new ImageIcon(CHARACTER + this.currentPlayer + PNG_EXT).getImage();
-        final ImageIcon playerIcon = new ImageIcon(playerPokemon);
-        final BufferedImage playerBufferedImg = toBufferedImage(playerIcon.getImage());
-        final int playerLowestY = findAbsoluteLowestVisibleY(playerBufferedImg);
-        final ImageIcon enemyIcon = new ImageIcon(enemyPokemon);
-        final BufferedImage enemyBufferedImg = toBufferedImage(enemyIcon.getImage());
-        final int enemyLowestY = findAbsoluteLowestVisibleY(enemyBufferedImg);
-        final double PLAYER_TARGET_RATIO = 0.72;  // 72% para jugador
-        final double ENEMY_TARGET_RATIO = 0.44;   // 44% para enemigo
-        final int MARGIN = 15;                    // Margen para ambos
-
-        // Crear paneles para las imágenes
-        JPanel playerImagePanel = new JPanel(null) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.drawImage(playerBufferedImg, 0, 0, getWidth(), getHeight(), this);
-            }
-        };
-        playerImagePanel.setOpaque(false);
-
-        JPanel enemyImagePanel = new JPanel(null) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.drawImage(enemyBufferedImg, 0, 0, getWidth(), getHeight(), this);
-            }
-        };
-        enemyImagePanel.setOpaque(false);
-
-        JPanel panel = new JPanel(null) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                final int w = getWidth();
-                final int h = getHeight();
-                super.paintComponent(g);
-                g.drawImage(bg, 0, 0, w, h, this);
-                g.drawImage(currentPlayerImg,
-                        (int)(w * 0.88),
-                        (int)(h * 0.01),
-                        (int)(w * 0.12),
-                        (int)(h * 0.15),
-                        this);
-            }
-        };
-
-        // Configurar el layout y añadir los paneles de imágenes
-        panel.add(playerImagePanel);
-        panel.add(enemyImagePanel);
+        JPanel panel = createUpPanel();
         JPanel frame = new ImagePanel(null,FRAME_ATTACK+this.frame+PNG_EXT);
         JPanel buttonContainer = new JPanel(new BorderLayout());
         buttonContainer.setBackground(Color.GRAY);
@@ -680,9 +623,10 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
             });
 
             btn.addActionListener(e ->{
-                String[] decision = {"Attack", ""+currentPlayer, moveId[index]};//moveId[index] añadir id de movimiento
+                if(movePP[index].equals("0")) {}else{
+                String[] decision = {"Attack",moveId[index],currentPokemons.get(this.currentPlayer)[0],""+currentPlayer};//moveId[index] añadir id de movimiento
                 setDecision(decision);
-                showPanel("battle");
+                showPanel("battle");}
             });
 
             buttonPanel.add(btn);
@@ -829,7 +773,68 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
     }
 
     //
+    private JPanel createUpPanel(){
+        HashMap<Integer,String[]> currentPokemons = this.game.getCurrentPokemons();
+        final String[] player = this.game.getCurrentPokemons().get(this.order.get(0));
+        final String[] enemy = this.game.getCurrentPokemons().get(this.order.get(1));
+        final String playerPokemon = player[16].equals("true")
+                ? BACK_SHINY_PATH + player[2] + PNG_EXT
+                : BACK_PATH + player[2] + PNG_EXT;
+        final String enemyPokemon = enemy[16].equals("true")
+                ? SHINY_PATH + enemy[2] + PNG_EXT
+                : NORMAL_PATH + enemy[2] + PNG_EXT;
+        final Image bg = new ImageIcon(MAP + this.fondo + PNG_EXT).getImage();
+        final Image currentPlayerImg = new ImageIcon(CHARACTER + this.currentPlayer + PNG_EXT).getImage();
+        final ImageIcon playerIcon = new ImageIcon(playerPokemon);
+        final BufferedImage playerBufferedImg = toBufferedImage(playerIcon.getImage());
+        final int playerLowestY = findAbsoluteLowestVisibleY(playerBufferedImg);
+        final ImageIcon enemyIcon = new ImageIcon(enemyPokemon);
+        final BufferedImage enemyBufferedImg = toBufferedImage(enemyIcon.getImage());
+        final int enemyLowestY = findAbsoluteLowestVisibleY(enemyBufferedImg);
+        final double PLAYER_TARGET_RATIO = 0.72;  // 72% para jugador
+        final double ENEMY_TARGET_RATIO = 0.44;   // 44% para enemigo
+        final int MARGIN = 15;                    // Margen para ambos
 
+        // Crear paneles para las imágenes
+        JPanel playerImagePanel = new JPanel(null) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(playerBufferedImg, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        playerImagePanel.setOpaque(false);
+
+        JPanel enemyImagePanel = new JPanel(null) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(enemyBufferedImg, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        enemyImagePanel.setOpaque(false);
+
+        JPanel panel = new JPanel(null) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                final int w = getWidth();
+                final int h = getHeight();
+                super.paintComponent(g);
+                g.drawImage(bg, 0, 0, w, h, this);
+                g.drawImage(currentPlayerImg,
+                        (int)(w * 0.88),
+                        (int)(h * 0.01),
+                        (int)(w * 0.12),
+                        (int)(h * 0.15),
+                        this);
+            }
+        };
+
+        // Configurar el layout y añadir los paneles de imágenes
+        panel.add(playerImagePanel);
+        panel.add(enemyImagePanel);
+
+    }
     private void showAttackAnimation(String attackName) {
         JPanel attackPanel = new JPanel(null) {
             private Image bgImage = new ImageIcon("resources/battle_bg.jpg").getImage();
@@ -856,7 +861,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         cardLayout.show(mainPanel, "attack_animation");
 
         Timer timer = new Timer(2000, e -> {
-            cardLayout.show(mainPanel, "battle");
+            showPanel("battle");
             mainPanel.remove(attackPanel);
             updateAfterAttack();
         });
@@ -916,8 +921,9 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
 
         // Usar un Timer para esperar que terminen las animaciones antes de resetear
         Timer timer = new Timer(5000, e -> {
-            resetForNextTurn();
+
         });
+        resetForNextTurn();
         timer.setRepeats(false);
         timer.start();
     }
@@ -934,7 +940,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
 
         // Configurar temporizador para volver a la vista de batalla
         Timer timer = new Timer(2000, e -> {
-            cardLayout.show(mainPanel, "battle");
+            showPanel("battle");
         });
         timer.setRepeats(false);
         timer.start();
@@ -955,7 +961,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         currentPlayer = order.get(0); // Volver al primer jugador en el orden
 
         // Actualizar la vista de batalla con los nuevos estados
-        cardLayout.show(mainPanel, "battle");
+        showPanel("battle");
     }
 
     // 13. NUEVO MÉTODO PARA CREAR VISTA DE ANIMACIÓN
@@ -980,8 +986,6 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         panel.setName(name); // ¡Muy importante!
         mainPanel.add(panel, name);
         cardLayout.show(mainPanel, name);
-        mainPanel.revalidate();
-        mainPanel.repaint();
     }
 
 }

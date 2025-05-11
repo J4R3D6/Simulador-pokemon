@@ -323,6 +323,7 @@ public class POOBkemon {
 			switch (action) {
 				case "Attack":
 					if (decision.length < 3) throw new POOBkemonException("Faltan parámetros para Attack");
+					System.out.println();
 					int attackId = Integer.parseInt(decision[1]);
 					int pokemonId1 = Integer.parseInt(decision[2]);
 					int trainerId = Integer.parseInt(decision[3]);
@@ -458,7 +459,7 @@ public class POOBkemon {
 	 * @param idAttack ID del ataque a utilizar
 	 * @param idThrower ID del Pokémon que realiza el ataque
 	 */
-	private void attack(int idAttack, int idTrainer, int idThrower) throws POOBkemonException{
+	public void attack(int idAttack, int idTrainer, int idThrower) throws POOBkemonException{
 		Attack damage = null;
 		Pokemon attacker = null;
 		Pokemon target = null;
