@@ -140,14 +140,6 @@ public class Pokemon {
 		return stat;
 	}
 
-	public String[] pokemonInfo() {
-		return null;
-	}
-
-	public String[][] attackInfo() {
-		return null;
-	}
-
 	public boolean getActive() {
 		return this.active;
 	}
@@ -211,23 +203,23 @@ public class Pokemon {
 	public String[] getInfo() {
 
 		return new String[] {
-				String.valueOf(id),           // 0 - ID
-				name,                         // 1 - Nombre
-				idPokedex,                    // 2 - ID Pokédex
-				type,                         // 3 - Tipo
-				String.valueOf(level),        // 4 - Nivel
-				String.valueOf(maxHealth),    // 5 - Vida máxima
-				String.valueOf(currentHealth), // 6 - Vida actual
-				String.valueOf(attack),        // 7 - Ataque
-				String.valueOf(defense),      // 8 - Defensa
-				String.valueOf(specialAttack), // 9 - Ataque Especial
-				String.valueOf(specialDefense),// 10 - Defensa Especial
-				String.valueOf(speed),         // 11 - Velocidad
-				String.valueOf(xp),            // 12 - XP actual
-				String.valueOf(levelRequirement), // 13 - XP requerido
-				String.valueOf(active),        // 14 - Estado (activo)
-				String.valueOf(weak),        // 15 - Pokemon debilitad
-				String.valueOf(shiny),          // 16 - Pokemon shiny
+				String.valueOf(this.id),           // 0 - ID
+				this.name,                         // 1 - Nombre
+				this.idPokedex,                    // 2 - ID Pokédex
+				this.type,                         // 3 - Tipo
+				String.valueOf(this.level),        // 4 - Nivel
+				String.valueOf(this.maxHealth),    // 5 - Vida máxima
+				String.valueOf(this.currentHealth), // 6 - Vida actual
+				String.valueOf(this.attack),        // 7 - Ataque
+				String.valueOf(this.defense),      // 8 - Defensa
+				String.valueOf(this.specialAttack), // 9 - Ataque Especial
+				String.valueOf(this.specialDefense),// 10 - Defensa Especial
+				String.valueOf(this.speed),         // 11 - Velocidad
+				String.valueOf(this.xp),            // 12 - XP actual
+				String.valueOf(this.levelRequirement), // 13 - XP requerido
+				String.valueOf(this.active),        // 14 - Estado (activo)
+				String.valueOf(this.weak),        // 15 - Pokemon debilitad
+				String.valueOf(this.shiny),          // 16 - Pokemon shiny
 		};
 	}
 

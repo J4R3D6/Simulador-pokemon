@@ -12,6 +12,7 @@ import java.io.IOException;
 
 public interface Auxiliar {
 
+    static final String APP_ICON = "resources/icon/gear.png";
     public static JButton crearBotonTransparente(String texto, Rectangle bounds, boolean alineado) {
         JButton boton = new JButton(texto);
 
@@ -96,6 +97,12 @@ public interface Auxiliar {
     public static ImageIcon scaleIcon(ImageIcon icon, int width, int height) {
         Image img = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(img);
+    }
+
+    static void mostrarError(String titulo, String error) {
+        String mensaje = titulo + ":\n"+ error;
+        JOptionPane.showMessageDialog(null, mensaje,
+                "Error", JOptionPane.ERROR_MESSAGE,new ImageIcon(APP_ICON));
     }
 
     default int findAbsoluteLowestVisibleY(BufferedImage img) {

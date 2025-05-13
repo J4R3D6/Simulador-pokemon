@@ -3,7 +3,7 @@ package domain;
 public class Revive extends Item{
     public Revive(int number){
         super(number);
-        this.name = "Revive";
+        this.name = "revive";
     }
 
     @Override
@@ -14,5 +14,10 @@ public class Revive extends Item{
         //aplico el efecto de la poti
         pokemon.effect(info);
     }
-
+    public String[] getItemInfo(){
+        String[] info = new String[2];
+        info[0] = ""+this.name; // nombre del item
+        info[1] = ""+this.number;
+        return  info;
+    }
 }

@@ -35,4 +35,8 @@ public class Survive extends POOBkemon {
         this.pokemonLvl = 100;
         super.initGame(trainers, pokemons, items, attacks, random);
     }
+    @Override
+    public String[][] getInfoItems(int trainerId) throws POOBkemonException {
+        return new String[][]{};
+    }
 }

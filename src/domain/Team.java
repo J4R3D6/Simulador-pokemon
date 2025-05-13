@@ -82,12 +82,14 @@ public class Team {
 		return inactivePokemons;
 	}
 	public Pokemon getPokemonById(int id) throws POOBkemonException {
+		Pokemon pokemon = null;
 		for (Pokemon p : pokemons) {
 			if (p.getId() == id) {
-				return p;
+				pokemon = p;
 			}
 		}
-		throw new POOBkemonException("Pokémon con ID " + id + " no encontrado");
+		if(pokemon == null)throw new POOBkemonException("Pokémon con ID " + id + " no encontrado");
+		return pokemon;
 	}
 	public Pokemon getPokemonByPOkedex(int id) throws POOBkemonException {
 		for (Pokemon p : pokemons) {

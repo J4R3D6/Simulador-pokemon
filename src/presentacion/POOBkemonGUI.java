@@ -25,7 +25,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
 	private ArrayList<String> players = new ArrayList<>(); //[trainer1, trainer2]
 	private HashMap<String,ArrayList<Integer>> pokemones = new HashMap<>(); //<trainer, pokemones(int)>
 	private HashMap<String,ArrayList<Integer>> moves = new HashMap<>(); //trianer, moves (en el orden de los pokemones)>
-    private HashMap<String,int[][]> items = new HashMap<>();
+    private HashMap<String,String[][]> items = new HashMap<>();
 	private POOBkemon game;
 	//
     private Clip clip;
@@ -739,7 +739,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
 	                    
 	                }
 	                else if (selectedPokemons1.size() == 6 && selectedPokemons2.size() == 6 && doneButton.isVisible()) {
-                    	mostrarError("Pokemones completos","Porfavor Dar en Listo");
+                    	Auxiliar.mostrarError("Pokemones completos","Porfavor Dar en Listo");
                     }
 	                
 	                // Aquí es donde ocultamos la imagen y el botón
@@ -942,7 +942,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
                         }
 
                     } else if (selectedMoves1.size() == 24 && selectedMoves2.size() == 24 && doneButton.isVisible()) {
-                        mostrarError("movimientos completos", "Porfavor Dar en Listo");
+                        Auxiliar.mostrarError("movimientos completos", "Porfavor Dar en Listo");
                     }
 
                     addButton.setVisible(false);
@@ -1058,40 +1058,41 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
         JButton itemButton2= createImageButton("x2", ITEMS+"superPotion.png",1,1,100,100,20,false,false);
         JButton itemButton3 = createImageButton("x2", ITEMS+"hyperPotion.png",1,1,100,100,20,false,false);
         JButton itemButton4 = createImageButton("x1", ITEMS+"revive.png",1,1,100,100,20,false,false);
+
         itemButton1.addActionListener(ev -> {
             String currentPlayer = players.get(contador[0]);
-            if(this.items.get(currentPlayer)[0][1] < 2){
+            if(Integer.parseInt(this.items.get(currentPlayer)[0][1]) < 2){
                 assingItem(contador[0], 0);
-                itemButton1.setText("x"+(2-this.items.get(currentPlayer)[0][1]));
+                itemButton1.setText("x"+(2-Integer.parseInt(this.items.get(currentPlayer)[0][1])));
             } else {
-                mostrarError("Maximo de item", "Ya tiene el maximo de este item");
+                Auxiliar.mostrarError("Maximo de item", "Ya tiene el maximo de este item");
             }
         });
         itemButton2.addActionListener(ev -> {
             String currentPlayer = players.get(contador[0]);
-            if(this.items.get(currentPlayer)[1][1] < 2){
+            if(Integer.parseInt(this.items.get(currentPlayer)[1][1]) < 2){
                 assingItem(contador[0], 1);
-                itemButton2.setText("x"+(2-this.items.get(currentPlayer)[1][1]));
+                itemButton2.setText("x"+(2-Integer.parseInt(this.items.get(currentPlayer)[1][1])));
             } else {
-                mostrarError("Maximo de item", "Ya tiene el maximo de este item");
+                Auxiliar.mostrarError("Maximo de item", "Ya tiene el maximo de este item");
             }
         });
         itemButton3.addActionListener(ev -> {
             String currentPlayer = players.get(contador[0]);
-            if(this.items.get(currentPlayer)[2][1] < 2){
+            if(Integer.parseInt(this.items.get(currentPlayer)[2][1]) < 2){
                 assingItem(contador[0], 2);
-                itemButton3.setText("x"+(2-this.items.get(currentPlayer)[2][1]));
+                itemButton3.setText("x"+(2-Integer.parseInt(this.items.get(currentPlayer)[2][1])));
             } else {
-                mostrarError("Maximo de item", "Ya tiene el maximo de este item");
+                Auxiliar.mostrarError("Maximo de item", "Ya tiene el maximo de este item");
             }
         });
         itemButton4.addActionListener(ev -> {
             String currentPlayer = players.get(contador[0]);
-            if(this.items.get(currentPlayer)[3][1] < 1){
+            if(Integer.parseInt(this.items.get(currentPlayer)[3][1]) < 1){
                 assingItem(contador[0], 3);
-                itemButton4.setText("x"+(1-this.items.get(currentPlayer)[3][1]));
+                itemButton4.setText("x"+(1-Integer.parseInt(this.items.get(currentPlayer)[3][1])));
             } else {
-                mostrarError("Maximo de item", "Ya tiene el maximo de este item");
+                Auxiliar.mostrarError("Maximo de item", "Ya tiene el maximo de este item");
             }
         });
 
@@ -1252,17 +1253,17 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
             if (mode.equals("s")) {
                 this.game.deleteGame();
                 this.game = Survive.getInstance();
-                game.initGame(this.players, this.pokemones, null, this.moves, this.random);
+                game.initGame(this.players, this.pokemones, this.items, this.moves, this.random);
             } else if (mode.equals("p")) {
                 this.game.deleteGame();
                 this.game = POOBkemon.getInstance();
-                game.initGame(this.players, this.pokemones, null, this.moves, this.random);
+                game.initGame(this.players, this.pokemones, this.items, this.moves, this.random);
             }
             startBattle(game);
         }catch (POOBkemonException e){
             Log.record(e);
             refresh(IntroductionPanel);
-            this.mostrarError("POOBkemon Error",e.getMessage());
+            Auxiliar.mostrarError("POOBkemon Error",e.getMessage());
         }
     }
     private JButton createImageButton(String imagePath, int x, int y, int width, int height) {
@@ -1410,7 +1411,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
                 "Confirmación",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
-                new ImageIcon(APP_ICON)
+                new ImageIcon("resources/icon/gear.png")
         );
     	boolean resultado = (respuesta == JOptionPane.YES_OPTION);
     	return resultado;
@@ -1550,7 +1551,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     }
     private void prepareItem(){
         for(int i =0 ; i<2; i++) {
-            int[][] items ={{20, 0},{50, 0},{100, 0},{0, 0}};
+            String[][] items ={{"Potion", "0","25"},{"Potion", "0","50"},{"Potion", "0","100"},{"Revive", "0"}};
             this.items.put(this.players.get(i), items);
         }
     }
@@ -1572,15 +1573,11 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     	moves.put(players.get(1),trainer2);
     }
     private void assingItem(int player, int item){
-        int[][] items = this.items.get(players.get(player));
-        items[item][1]++;
+        String[][] items = this.items.get(players.get(player));
+        items[item][1] = String.valueOf(Integer.parseInt(items[item][1])+1);
     }
     //
-    private void mostrarError(String titulo, String error) {
-        String mensaje = titulo + ":\n"+ error;
-        JOptionPane.showMessageDialog(this, mensaje,
-                "Error", JOptionPane.ERROR_MESSAGE,new ImageIcon(APP_ICON));
-    }
+
     //
     public static void main(String[] args) {
        POOBkemonGUI ventana = new POOBkemonGUI();

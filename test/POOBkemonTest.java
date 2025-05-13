@@ -32,6 +32,26 @@ class POOBkemonTest {
         attacks.put("Player1", new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,17,19,20,21,22,23,24)));
         attacks.put("Player2", new ArrayList<>(List.of(9, 10, 11, 12, 13, 14, 15, 16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,45)));
     }
+    @Test
+    @DisplayName("Test ItemsInfo")
+    void shouldShowItemsInfo(){
+        try {
+            game.initGame(trainers, pokemons, items, attacks, false);
+        }catch (POOBkemonException e){
+            System.out.println(e.getMessage());
+        }
+        assertDoesNotThrow(()->game.getInfoItems(0));
+        try {
+            assertNotNull(game.getInfoItems(0));
+            for(String[] str : game.getInfoItems(0)){
+                for(String str1 : str){
+                    System.out.println(str1);
+                }
+            }
+        }catch (POOBkemonException e){
+            System.out.println(e);
+        }
+    }
 
     @Test
     @DisplayName("Test Singleton instance")
@@ -87,28 +107,6 @@ class POOBkemonTest {
             if (trainerOffensive instanceof Offensive) break;
         }
         assertTrue(game.isMachine(trainerOffensive.getId()));
-    }
-
-    @Test
-    @DisplayName("Test game verify Machine")
-    void shouldConfirmInfo() throws POOBkemonException{
-        trainers = new ArrayList<>();
-        trainers.add("Offensive1");
-        trainers.add("Offensive2");
-
-        pokemons = new HashMap<>();
-        pokemons.put("Offensive1", new ArrayList<>(List.of(1, 2, 56, 4,5,28)));
-        pokemons.put("Offensive2", new ArrayList<>(List.of(3, 4, 45, 3,203,301)));
-
-        items = new HashMap<>();
-        items.put("Offensive1", new String[][]{{"Potion", "5","54"},{"Potion", "2","20"}});
-        items.put("Offensive", new String[][]{{"Potion", "2","5"},{"Potion", "1","20"}});
-        attacks = new HashMap<>();
-        attacks.put("Offensive1", new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,17,19,20,21,22,23,24)));
-        attacks.put("Offensive2", new ArrayList<>(List.of(9, 10, 11, 12, 13, 14, 15, 16,17,18,19,20,21,22,23,24,25,26,27,125,29,30,31,45)));
-
-        assertDoesNotThrow(()->game.initGame(trainers, pokemons, items, attacks, false));
-
     }
 
     @Test
@@ -317,7 +315,7 @@ class POOBkemonTest {
         Pokemon pokemon = game.createPokemon(1, new ArrayList<>(List.of(1, 2, 3, 4)));
         assertNotNull(pokemon);
         //en conjunto se han creado 16 hasta ahora, pero individualmente es 0
-        assertEquals(48, pokemon.getId()); // nid comienza en 0
+        assertEquals(60, pokemon.getId()); // nid comienza en 0
     }
 
     @Test

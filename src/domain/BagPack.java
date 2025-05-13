@@ -21,4 +21,11 @@ public class BagPack {
 		}
 		return item;
 	}
+	public String[][] getItems(){
+		String[][] items = new String[this.items.size()][2];
+		for (int i = 0; i<this.items.size(); i++ ){
+			items[i] = this.items.get(i).getItemInfo();
+		}
+		return  items;
+	}
 }

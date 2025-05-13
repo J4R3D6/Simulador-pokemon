@@ -74,18 +74,6 @@ public class PokemonTest {
     }
 
     @Test
-    public void testPokemonInfo() {
-        // Este test fallará hasta que implementes pokemonInfo()
-        assertNull(pokemon.pokemonInfo());
-    }
-
-    @Test
-    public void testAttackInfo() {
-        // Este test fallará hasta que implementes attackInfo()
-        assertNull(pokemon.attackInfo());
-    }
-
-    @Test
     public void testGetAttack() {
         // Este test fallará hasta que implementes getAttack()
         assertNull(pokemon.getAttack(1));

@@ -99,8 +99,6 @@ public class POOBkemon {
 			this.moves.add("Start Game");
 			this.ok = true;
 
-
-
 		} catch (NullPointerException | NumberFormatException e) {
 			throw new POOBkemonException(POOBkemonException.INVALID_FORMAT + ": " + e.getMessage());
 		}
@@ -248,6 +246,7 @@ public class POOBkemon {
 		String[] infoPokemon = info.getPokemonId(id);
 		Pokemon pokemon = new Pokemon(nid,infoPokemon,attackIds, this.random, this.pokemonLvl);
 		this.nextIdPokemon();
+		System.out.print(this.nid);
 		return pokemon;
 	}
 
@@ -342,6 +341,7 @@ public class POOBkemon {
 					int pokemonId = Integer.parseInt(decision[2]);
 					String datoItem = decision[3];
 					this.useItem(idTrainer, pokemonId, datoItem);
+					break;
 
 				case "ChangePokemon":
 					if (decision.length < 3) throw new POOBkemonException("Faltan parámetros para ChangePokemon");
@@ -369,11 +369,6 @@ public class POOBkemon {
 			}
 		} catch (NumberFormatException e) {
 			throw new POOBkemonException("Formato inválido en parámetros: " + e.getMessage());
-		}
-
-		// Verificar si la batalla ha terminado después de cada acción
-		if (finishBattle) {
-			System.out.println("Game Over");
 		}
 		// Verificar estado de la batalla después de ambos turnos
 		checkBattleStatus();
@@ -420,19 +415,13 @@ public class POOBkemon {
 				break;
 			}
 		}
-
 		// Verificar si se encontró el entrenador
 		if (selectedTrainer == null) {
 			throw new POOBkemonException("Entrenador con ID " + trainerId + " no encontrado");
 		}
+		// Intentar cambiar el Pokémon
+		team.changePokemon(pokemonId);
 
-		try {
-			// Intentar cambiar el Pokémon
-			team.changePokemon(pokemonId);
-		} catch (POOBkemonException e) {
-			// Relanzar la excepción con contexto adicional
-			throw new POOBkemonException("Error al cambiar Pokémon del entrenador " + trainerId + ": " + e.getMessage());
-		}
 	}
 
 	/**
@@ -521,8 +510,7 @@ public class POOBkemon {
 		this.autoChangePokemon();
 	}
 	//Para cuando est debilitado el pokemon activo haga un cambio automatico
-	private void autoChangePokemon(){
-		try {
+	private void autoChangePokemon() throws POOBkemonException{
 			for (Team team : teams) {
 				for (Pokemon pokemon : team.getPokemons()) {
 					if (pokemon.getWeak() && pokemon.getActive()) {
@@ -531,13 +519,10 @@ public class POOBkemon {
 					}
 				}
 			}
-		}catch (POOBkemonException e){
-			System.out.println("Error al cambiar autocambio del Pokemon: " + e.getMessage());
-		}
 	}
 	//para el cambio automatico que encuentre un pokemon Valido
 	private int getAlivePokemon(int trainerId){
-		int id = 0;
+		int id = -1;
 		for (Team team : teams) {
 			if(team.getTrainer().getId() == trainerId){
 				for(Pokemon p: team.getPokemons()){
@@ -550,6 +535,9 @@ public class POOBkemon {
 		return id;
 	}
 
+	public ArrayList<Team> getTeams(){
+		return teams;
+	}
 	public boolean isOk (){
 		return this.ok;
 	}
@@ -597,8 +585,27 @@ public class POOBkemon {
 				ArrayList<Integer> inactiveIds = new ArrayList<>();
 				for (Pokemon p : pokemons) {
 					if (!p.getActive()) {
-						inactiveIds.add(Integer.parseInt(p.idPokedex));
+						inactiveIds.add(p.getId());
 					}
+				}
+				// Convertir ArrayList a arreglo
+				int[] result = new int[inactiveIds.size()];
+				for (int i = 0; i < inactiveIds.size(); i++) {
+					result[i] = inactiveIds.get(i);
+				}
+				return result;
+			}
+		}
+		return new int[0]; // Si no se encuentra el entrenador
+	}
+	public int[] getPokemonsPerTrainer(int idTrainer) {
+		for (Team t : teams) {
+			if (t.getTrainer().getId() == idTrainer) {
+				ArrayList<Pokemon> pokemons = t.getPokemons();
+				int activePokemonId = t.getTrainer().getCurrentPokemonId();
+				ArrayList<Integer> inactiveIds = new ArrayList<>();
+				for (Pokemon p : pokemons) {
+					inactiveIds.add(p.getId());
 				}
 				// Convertir ArrayList a arreglo
 				int[] result = new int[inactiveIds.size()];
@@ -622,22 +629,14 @@ public class POOBkemon {
 	 */
 	public String[] getPokemonInfo(int idTrainer, int idPokemon) throws POOBkemonException {
 		// Buscar el entrenador
+		String[] infoPokemon = null;
 		for (Team t : teams) {
 			if (t.getTrainer().getId() == idTrainer) {
-				try {
-					String[] pokemon = t.getPokemonById(idPokemon).getInfo();
-					return pokemon;
-				} catch (POOBkemonException e) {
-					try {
-						String[] pokemon = t.getPokemonByPOkedex(idPokemon).getInfo();
-						return pokemon;
-					}catch (POOBkemonException e2){
-						throw new POOBkemonException("Error al obtener información del Pokémon: " + e.getMessage());
-					}
-				}
+				infoPokemon = t.getPokemonById(idPokemon).getInfo();
 			}
 		}
-		throw new POOBkemonException("Entrenador con ID " + idTrainer + " no encontrado");
+		if(infoPokemon == null) throw new POOBkemonException("Entrenador con ID " + idTrainer + " no encontrado");
+		return infoPokemon;
 	}
 	public HashMap<Integer, String[][]> getActiveAttacks(){
 		HashMap<Integer, String[][]> pokemons = new HashMap<>();
@@ -680,7 +679,14 @@ public class POOBkemon {
 		String info = new MovesRepository().getAttackId(id);
 		return info;
 	}
-	public ArrayList<Team> getTeams(){
-		return teams;
+	public String[][] getInfoItems(int trainerId) throws POOBkemonException {
+		Trainer trainer = null;
+		for (Team t: this.teams){
+			if(t.getTrainer().getId() == trainerId){
+				trainer = t.getTrainer();
+			}
+		}
+		if(trainer == null) throw new POOBkemonException("Entrenador no encontrado");
+		return trainer.getBagPack().getItems();
 	}
 }

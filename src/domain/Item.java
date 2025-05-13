@@ -1,7 +1,7 @@
 package domain;
 
 public abstract class Item {
-	private int number;
+	protected int number;
 	protected String name;
 	public Item(int number){
 		this.number = number;
@@ -29,4 +29,5 @@ public abstract class Item {
 		return this.name;
 	}
 	public abstract void itemEffect( Pokemon pokemon);
+	public abstract String[] getItemInfo();
 }
