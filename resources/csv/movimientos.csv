@@ -160,7 +160,7 @@
 159,Sharpen,The user lowers its polygon count to make itself more jagged raising the Attack stat.,Normal,status,0,100,30
 160,Conversion,The user changes its type to become the same type as the move at the top of the list of moves it knows.,Normal,status,0,100,30
 161,Tri Attack,The user strikes with a simultaneous three-beam attack. May also burn freeze or leave the target with paralysis.,Normal,special,80,100,10
-162,Super Fang,The user chomps hard on the target with its sharp front fangs. This cuts the target’s HP in half.,Normal,physical,30,90,,10
+162,Super Fang,The user chomps hard on the target with its sharp front fangs. This cuts the target’s HP in half.,Normal,physical,30,90,10
 163,Slash,The target is attacked with a slash of claws or blades. Critical hits land more easily.,Normal,physical,70,100,20
 164,Substitute,The user makes a copy of itself using some of its HP. The copy serves as the user’s decoy.,Normal,status,0,100,10
 165,Struggle,An attack that is used in desperation only if the user has no PP. This also damages the user a little.,Normal,physical,50,100,20
@@ -353,3 +353,4 @@
 352,Water Pulse,The user attacks the target with a pulsing blast of water. This may also confuse the target.,Water,special,60,100,20
 353,Doom Desire,Two turns after this move is used the user blasts the target with a concentrated bundle of light.,Steel,special,140,100,5
 354,Psycho Boost,The user attacks the target at full power. The attack’s recoil harshly lowers the user’s Sp. Atk stat.,Psychic,special,140,90,5
+357,Last Struggle,Attacks with a simple effect.,Normal,physical,10,10,-1

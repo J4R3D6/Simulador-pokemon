@@ -21,17 +21,24 @@ public class Attack {
 
 	private String description;
 
-	public Attack( int idInside,String[] info) {
-		//id,nombre,descripcion,tipo,clase,potencia,precision,pp
-		this.idInside = idInside;
-		this.idCSV = Integer.parseInt(info[0]);
-		this.name = info[1];
-		this.type = info[3];
-		this.power = Integer.parseInt(info[5]);
-		this.presition = Integer.parseInt(info[6]);
-		this.ppMax = Integer.parseInt(info[7]);
-		this.ppActual = this.ppMax;
-		this.description = info[2];
+	public Attack(int idInside, String[] info) throws POOBkemonException {
+		try {
+			this.idInside = idInside;
+			this.idCSV = Integer.parseInt(info[0]);
+			this.name = info[1];
+			this.type = info[3];
+			this.power = Integer.parseInt(info[5]);
+			this.presition = Integer.parseInt(info[6]);
+			this.ppMax = Integer.parseInt(info[7]);
+			this.ppActual = this.ppMax;
+			this.description = info[2];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			throw new POOBkemonException("Error al crear ataque: información incompleta en el array" + e.getMessage());
+		} catch (NumberFormatException e) {
+			throw new POOBkemonException("Error al crear ataque: formato numérico inválido" + e.getMessage());
+		} catch (Exception e) {
+			throw new POOBkemonException("Error inesperado al crear ataque" + e.getMessage());
+		}
 	}
 
 	public void usePP(){

@@ -206,7 +206,7 @@ public class POOBkemon {
 	/**
 	 * crear los Pokemons
 	 */
-	public ArrayList<Pokemon> createPokemons(ArrayList<Integer> pokemonIds, ArrayList<Integer> attackIds) {
+	public ArrayList<Pokemon> createPokemons(ArrayList<Integer> pokemonIds, ArrayList<Integer> attackIds) throws POOBkemonException {
 		ArrayList<Pokemon> pokemons = new ArrayList<>();
 		final int ATTACKS_PER_POKEMON = 4;
 		int totalAttacksNeeded = pokemonIds.size() * ATTACKS_PER_POKEMON;
@@ -241,7 +241,7 @@ public class POOBkemon {
 	 * @param attackIds Lista de IDs de ataques
 	 * @return Pokémon creado
 	 */
-	public Pokemon createPokemon(int id, ArrayList<Integer> attackIds){
+	public Pokemon createPokemon(int id, ArrayList<Integer> attackIds) throws POOBkemonException{
 		PokemonRepository info = new PokemonRepository();
 		String[] infoPokemon = info.getPokemonId(id);
 		Pokemon pokemon = new Pokemon(nid,infoPokemon,attackIds, this.random, this.pokemonLvl);
@@ -258,15 +258,6 @@ public class POOBkemon {
 	private Team createTeam(ArrayList<Pokemon> pokemones, Trainer trainer){
 		Team team = new Team(pokemones, trainer);
 		return team;
-	}
-
-	/**
-	 * crear al entrenador
-	 */
-	private Trainer createTrainer(Team team, BagPack bagPack) throws POOBkemonException {
-		Trainer trainer = new Trainer(trainerId, bagPack);
-		this.trainerId++;
-		return trainer;
 	}
 
 	/**
@@ -355,12 +346,12 @@ public class POOBkemon {
 							}
 						}
 					}
-					moves.add("Player"+decision[1] + " cambió a Pokémon " + pokemonName);
+					moves.add("Player "+decision[1] + " cambió a Pokémon " + pokemonName);
 					break;
 
 				case "Run":
 					this.run(Integer.valueOf(decision[1]));
-					moves.add("Player"+decision[1] + " huyó de la batalla");
+					moves.add("Player "+decision[1] + " huyó de la batalla");
 					this.finishBattle = true;
 					break;
 

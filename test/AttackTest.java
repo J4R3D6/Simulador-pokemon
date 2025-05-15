@@ -2,6 +2,7 @@
 
 import domain.Attack;
 import domain.MovesRepository;
+import domain.POOBkemonException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +16,11 @@ public class AttackTest {
     public void setUp() {
         MovesRepository sampleAttackData = new MovesRepository();
         String[] sampleAttackData1 = sampleAttackData.getAttacksId(52);
-        testAttack = new Attack(1,sampleAttackData1);
+        try {
+            testAttack = new Attack(1, sampleAttackData1);
+        }catch (POOBkemonException e){
+            System.out.println(e);
+        }
     }
 
     @Test

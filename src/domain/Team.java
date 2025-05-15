@@ -91,14 +91,6 @@ public class Team {
 		if(pokemon == null)throw new POOBkemonException("Pokémon con ID " + id + " no encontrado");
 		return pokemon;
 	}
-	public Pokemon getPokemonByPOkedex(int id) throws POOBkemonException {
-		for (Pokemon p : pokemons) {
-			if (Integer.parseInt(p.idPokedex) == id) {
-				return p;
-			}
-		}
-		throw new POOBkemonException("Pokémon con ID " + id + " no encontrado");
-	}
 	public Trainer getTrainer() {
 		return trainer;
 	}

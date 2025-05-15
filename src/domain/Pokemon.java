@@ -47,11 +47,11 @@ public class Pokemon {
 	private boolean shiny;
 	private ArrayList<Attack> states;
 
-	public Pokemon() {
+	public Pokemon() throws POOBkemonException {
 		initDefault();
 	}
 
-	public Pokemon(int id, String[] info, ArrayList<Integer> attacksIds, boolean random, int pokemonLvl) {
+	public Pokemon(int id, String[] info, ArrayList<Integer> attacksIds, boolean random, int pokemonLvl) throws POOBkemonException {
 		try {
 			if (info.length < 11) throw new POOBkemonException(POOBkemonException.LESS_INFORMACION_POKEMON);
 			initFromParameters(id, info, attacksIds, random, pokemonLvl);
@@ -66,7 +66,7 @@ public class Pokemon {
 		this.probShiny();
 	}
 
-	private void initDefault() {
+	private void initDefault() throws POOBkemonException {
 		this.id = 0;
 		this.name = "MissingNo";
 		this.idPokedex = "0";
@@ -87,9 +87,10 @@ public class Pokemon {
 		this.random = false;
 		this.ivs = 10;
 		this.attacks = new ArrayList<>();
+		this.attackDefault();
 	}
 
-	private void initFromParameters(int id, String[] info, ArrayList<Integer> attacksIds, boolean random, int pokemonLvl) {
+	private void initFromParameters(int id, String[] info, ArrayList<Integer> attacksIds, boolean random, int pokemonLvl) throws POOBkemonException{
 		this.id = id;
 		this.name = info[1];
 		this.idPokedex = info[0];
@@ -120,6 +121,9 @@ public class Pokemon {
 			this.speed = randomStatics(Integer.parseInt(info[10]));
 		}
 		this.currentHealth = this.maxHealth;
+		if(this.attacks.size() == 0){
+			this.attackDefault();
+		}
 	}
 	public int createRandom(int limit){
 		java.util.Random random = new Random();
@@ -169,13 +173,16 @@ public class Pokemon {
 
 	}
 
-	private ArrayList<Attack> createAttacks(ArrayList<Integer> attacksIds) {
+	private ArrayList<Attack> createAttacks(ArrayList<Integer> attacksIds) throws POOBkemonException {
 		ArrayList<Attack> ataques =  new ArrayList<>();
 		MovesRepository movesRepository = new MovesRepository();
 		for(Integer id : attacksIds) {
 			String[] infoAttack = movesRepository.getAttacksId(id);
 			if(infoAttack[4].equalsIgnoreCase("physical")) {
 				Attack atack = new Attack(this.nextAttackId(), infoAttack);
+				ataques.add(atack);
+			} else if(infoAttack[4].equalsIgnoreCase("special")){
+				Attack atack = new special(this.nextAttackId(), infoAttack);
 				ataques.add(atack);
 			}
 		}
@@ -223,7 +230,7 @@ public class Pokemon {
 		};
 	}
 
-	public void getDamage(Attack damage,Pokemon attacker) {
+	public void getDamage(Attack damage,Pokemon attacker) throws POOBkemonException {
 		MovesRepository movesRepository = new MovesRepository();
 		StatsRepository statsRepository = new StatsRepository();
 		String[] info = movesRepository.getAttackDamageAndType(damage.getIdCSV());
@@ -257,6 +264,7 @@ public class Pokemon {
 			this.currentHealth = 0;
 			this.weak = true;
 		}
+		attacker.spectorPP();
 	}
 	public String[][] getAttacksInfo() {
 		int attacksSize = attacks.size();
@@ -295,6 +303,24 @@ public class Pokemon {
 			} else if (info[1].equalsIgnoreCase("Revive")) {
 				this.revive();
 			}
+		}
+	}
+	private void attackDefault() throws POOBkemonException{
+		ArrayList<Integer> unickAttack = new ArrayList<>();
+		unickAttack.add(357);
+		this.attacks = this.createAttacks(unickAttack);
+		if(this.attacks.size() == 0)throw new POOBkemonException("Ataque no creado.");
+	}
+	private void spectorPP()throws POOBkemonException{
+		boolean inspector = false;
+		for(Attack attack: this.attacks){
+			if(attack.getPPActual()>0){
+				inspector = true;
+			}
+		}
+		if(!inspector){
+			this.attacks.clear();
+			this.attackDefault();
 		}
 	}
 }

@@ -18,7 +18,7 @@ public class Survive extends POOBkemon {
         return instance;
     }
     @Override
-    public Pokemon createPokemon(int id, ArrayList<Integer> attackIds){
+    public Pokemon createPokemon(int id, ArrayList<Integer> attackIds)throws POOBkemonException{
         PokemonRepository info = new PokemonRepository();
         String[] infoPokemon = info.getPokemonId(id);
         Pokemon pokemon = new Pokemon(nid,infoPokemon,attackIds, this.random, this.pokemonLvl);
