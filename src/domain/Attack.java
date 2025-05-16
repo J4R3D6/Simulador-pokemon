@@ -75,7 +75,12 @@ public class Attack {
 	public int getPPMax(){
 		return this.ppMax;
 	}
-
+	public int getAccuracy() {
+		return this.presition;
+	}
+	public String getName() {
+		return this.name;
+	}
 
     public int getPower() {
 		return this.power;

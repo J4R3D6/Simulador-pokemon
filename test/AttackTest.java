@@ -65,7 +65,6 @@ public class AttackTest {
     @Test
     public void testConstructorWithShortArray() {
         String[] shortData = {"52", "Water Gun", "Shoots water"};
-
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
             new Attack(1,shortData);
         });

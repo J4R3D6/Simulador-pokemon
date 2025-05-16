@@ -3,75 +3,88 @@ package domain;
 import java.util.Random;
 import java.util.ArrayList;
 
+/**
+ * Represents a Pokemon creature with all its attributes and battle capabilities.
+ * This class handles Pokemon creation, stats calculation, and battle mechanics.
+ */
 public class Pokemon {
 
+	// Basic Pokemon attributes
 	public String name;
-
 	public String idPokedex;
-
 	private int id;
-
 	public String type;
 
+	// Combat stats
 	public int maxHealth;
-
 	public int currentHealth;
-
 	public int attack;
-
 	public int defense;
-
 	public int specialAttack;
-
 	public int specialDefense;
-
 	public int speed;
-
 	public int level;
 
+	// Status flags
 	private boolean active;
-
 	private boolean weak;
+	private boolean shiny;
 
+	// Progression
 	public int levelRequirement;
-
 	public int xp;
-
 	public int ivs;
 
+	// Battle modifiers
 	private static boolean random;
-
 	private static int attackId = 0;
-
 	private ArrayList<Attack> attacks;
-	private boolean shiny;
 	private ArrayList<Attack> states;
+	private int accuracyStage = (int)(Math.random() * 13) - 6;
+	private int evasionStage = (int)(Math.random() * 13) - 6;
 
+	// Constants for battle calculations
+	private static final double CRITICAL_HIT_CHANCE = 0.1; // 4.17% standar = 0.0417
+	private static final double STAGE_MODIFIER = 1.3;  // 1.5 Pokemon standar (Modify Accuracy)
+
+	/**
+	 * Default constructor for Pokemon.
+	 * @throws POOBkemonException if there's an error during creation
+	 */
 	public Pokemon() throws POOBkemonException {
 		initDefault();
 	}
 
+	/**
+	 * Parameterized constructor for Pokemon.
+	 * @param id Pokemon ID
+	 * @param info Array containing Pokemon information
+	 * @param attacksIds List of attack IDs
+	 * @param random Whether to generate random stats
+	 * @param pokemonLvl Initial level
+	 * @throws POOBkemonException if there's an error during creation
+	 */
 	public Pokemon(int id, String[] info, ArrayList<Integer> attacksIds, boolean random, int pokemonLvl) throws POOBkemonException {
 		try {
 			if (info.length < 11) throw new POOBkemonException(POOBkemonException.LESS_INFORMACION_POKEMON);
 			initFromParameters(id, info, attacksIds, random, pokemonLvl);
 		} catch (POOBkemonException | NumberFormatException e) {
 			initDefault();
-			System.out.println(id+" "+info.toString()+" "+attacksIds.toString()+" "+random);
-			for(String s: info){
-				System.out.println(s);
-			}
-			System.err.println("Error al crear Pokémon: " + e.getMessage());
+			System.err.println("Error creating Pokémon: " + e.getMessage());
 		}
 		this.probShiny();
 	}
 
+	/**
+	 * Initializes default values for a Pokemon.
+	 * @throws POOBkemonException if default attack cannot be created
+	 */
 	private void initDefault() throws POOBkemonException {
 		this.id = 0;
 		this.name = "MissingNo";
 		this.idPokedex = "0";
 		this.type = "Normal";
-		this.maxHealth = 100;
+		this.maxHealth = 180;
 		this.currentHealth = this.maxHealth;
 		this.attack = 10;
 		this.defense = 10;
@@ -90,12 +103,24 @@ public class Pokemon {
 		this.attackDefault();
 	}
 
-	private void initFromParameters(int id, String[] info, ArrayList<Integer> attacksIds, boolean random, int pokemonLvl) throws POOBkemonException{
+	/**
+	 * Initializes Pokemon from parameters.
+	 * @param id Pokemon ID
+	 * @param info Pokemon information array
+	 * @param attacksIds List of attack IDs
+	 * @param random Whether to generate random stats
+	 * @param pokemonLvl Initial level
+	 * @throws POOBkemonException if there's an error during creation
+	 */
+	private void initFromParameters(int id, String[] info, ArrayList<Integer> attacksIds, boolean random, int pokemonLvl) throws POOBkemonException {
 		this.id = id;
 		this.name = info[1];
 		this.idPokedex = info[0];
 		this.type = info[2];
-		this.level = pokemonLvl;
+
+		// Level handling
+		this.level = random ? (int)(Math.random() * 31) + 25 : pokemonLvl;
+
 		this.levelRequirement = 100;
 		this.xp = 0;
 		this.active = false;
@@ -103,63 +128,97 @@ public class Pokemon {
 		this.random = random;
 		this.attacks = new ArrayList<>(this.createAttacks(attacksIds));
 		this.states = new ArrayList<Attack>();
-		this.weak = false;
 		this.ivs = createRandom(32);
-		if (!random) {
-			this.maxHealth = Integer.parseInt(info[5]);
-			this.attack = Integer.parseInt(info[6]);
-			this.defense = Integer.parseInt(info[7]);
-			this.specialAttack = Integer.parseInt(info[8]);
-			this.specialDefense = Integer.parseInt(info[9]);
-			this.speed = Integer.parseInt(info[10]);
-		}else{
-			this.maxHealth = randomStatics(Integer.parseInt(info[5]));
-			this.attack = randomStatics(Integer.parseInt(info[6]));
-			this.defense = randomStatics(Integer.parseInt(info[7]));
-			this.specialAttack = randomStatics(Integer.parseInt(info[8]));
-			this.specialDefense = randomStatics(Integer.parseInt(info[9]));
-			this.speed = randomStatics(Integer.parseInt(info[10]));
+
+		// Base stats
+		int baseHP = Integer.parseInt(info[5]);
+		int baseAttack = Integer.parseInt(info[6]);
+		int baseDefense = Integer.parseInt(info[7]);
+		int baseSpAttack = Integer.parseInt(info[8]);
+		int baseSpDefense = Integer.parseInt(info[9]);
+		int baseSpeed = Integer.parseInt(info[10]);
+
+		// Calculate scaled stats
+		if (random) {
+			this.maxHealth = calculateHPStat(baseHP, this.level, true);
+			this.attack = calculateOtherStat(baseAttack, this.level, true);
+			this.defense = calculateOtherStat(baseDefense, this.level, true);
+			this.specialAttack = calculateOtherStat(baseSpAttack, this.level, true);
+			this.specialDefense = calculateOtherStat(baseSpDefense, this.level, true);
+			this.speed = calculateOtherStat(baseSpeed, this.level, true);
+		} else {
+			this.maxHealth = calculateHPStat(baseHP, this.level);
+			this.attack = calculateOtherStat(baseAttack, this.level);
+			this.defense = calculateOtherStat(baseDefense, this.level);
+			this.specialAttack = calculateOtherStat(baseSpAttack, this.level);
+			this.specialDefense = calculateOtherStat(baseSpDefense, this.level);
+			this.speed = calculateOtherStat(baseSpeed, this.level);
 		}
+
 		this.currentHealth = this.maxHealth;
-		if(this.attacks.size() == 0){
+		if(this.attacks.size() == 0) {
 			this.attackDefault();
 		}
 	}
-	public int createRandom(int limit){
-		java.util.Random random = new Random();
-		int numeroAleatorio = random.nextInt(limit);
-		return numeroAleatorio;
 
+	/**
+	 * Calculates HP stat using Pokemon formula.
+	 * @param baseStat Base HP stat
+	 * @param level Pokemon level
+	 * @param random Whether to use random IVs/EVs
+	 * @return Calculated HP stat
+	 */
+	private int calculateHPStat(int baseStat, int level, boolean random) {
+		int iv = random ? (int)(Math.random() * 32) : this.ivs;
+		int ev = random ? (int)(Math.random() * 256) : 0;
+		return (int)(((2 * baseStat + iv + (ev / 4)) * level) / 100) + level + 10;
 	}
 
-	private int randomStatics(int base) {
-		// 1. Generar un EV aleatorio entre 0 y 252 (como en Pokémon real)
-		int ev = createRandom(253); // EVs van de 0 a 252
-
-		// 2. Fórmula mejorada con EVs y IVs
-		int stat = (int) (
-				( ( (2 * base + this.ivs + (ev / 4) ) * this.level ) / 100 ) + 5
-		);
-
-		return stat;
+	/**
+	 * Calculates other stats using Pokemon formula.
+	 * @param baseStat Base stat value
+	 * @param level Pokemon level
+	 * @param random Whether to use random IVs/EVs
+	 * @return Calculated stat value
+	 */
+	private int calculateOtherStat(int baseStat, int level, boolean random) {
+		int iv = random ? (int)(Math.random() * 32) : this.ivs;
+		int ev = random ? (int)(Math.random() * 256) : 0;
+		return (int)(((2 * baseStat + iv + (ev / 4)) * level / 100) + 5);
 	}
 
-	public boolean getActive() {
-		return this.active;
+	// Overloaded stat calculation methods without random flag
+	private int calculateHPStat(int baseStat, int level) {
+		return calculateHPStat(baseStat, level, false);
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
-
+	private int calculateOtherStat(int baseStat, int level) {
+		return calculateOtherStat(baseStat, level, false);
 	}
 
-	public int getId() {
-		return this.id;
-	}
-	public String getName() {
-		return this.name;
+	/**
+	 * Generates a random number up to specified limit.
+	 * @param limit Upper bound (exclusive)
+	 * @return Random number
+	 */
+	public int createRandom(int limit) {
+		return new Random().nextInt(limit);
 	}
 
+	// Getters and setters
+	public boolean getActive() { return this.active; }
+	public void setActive(boolean active) { this.active = active; }
+	public int getId() { return this.id; }
+	public String getName() { return this.name; }
+	public boolean getWeak() { return this.weak; }
+	public ArrayList<Attack> getStates() { return this.states; }
+	public ArrayList<Attack> getAttacks() { return this.attacks; }
+
+	/**
+	 * Gets a specific attack by ID.
+	 * @param id Attack ID
+	 * @return Attack object or null if not found
+	 */
 	public Attack getAttack(int id) {
 		for(Attack ataque : attacks) {
 			if(ataque.getIdInside() == id) {
@@ -169,46 +228,119 @@ public class Pokemon {
 		return null;
 	}
 
-	public void levelUp() {
-
-	}
-
+	/**
+	 * Creates attacks from IDs.
+	 * @param attacksIds List of attack IDs
+	 * @return List of Attack objects
+	 * @throws POOBkemonException if attack creation fails
+	 */
 	private ArrayList<Attack> createAttacks(ArrayList<Integer> attacksIds) throws POOBkemonException {
-		ArrayList<Attack> ataques =  new ArrayList<>();
+		ArrayList<Attack> ataques = new ArrayList<>();
 		MovesRepository movesRepository = new MovesRepository();
+
 		for(Integer id : attacksIds) {
 			String[] infoAttack = movesRepository.getAttacksId(id);
-			if(infoAttack[4].equalsIgnoreCase("physical")) {
-				Attack atack = new Attack(this.nextAttackId(), infoAttack);
-				ataques.add(atack);
-			} else if(infoAttack[4].equalsIgnoreCase("special")){
-				Attack atack = new special(this.nextAttackId(), infoAttack);
-				ataques.add(atack);
-			}
+			Attack attack = infoAttack[4].equalsIgnoreCase("physical") ?
+					new Attack(this.nextAttackId(), infoAttack) :
+					new special(this.nextAttackId(), infoAttack);
+			ataques.add(attack);
 		}
 		return ataques;
 	}
-	private int nextAttackId(){
-		this.attackId = this.attackId + 1;
-		return this.attackId;
-	}
-	public boolean getWeak() {
-		return this.weak;
+
+	private int nextAttackId() {
+		return ++this.attackId;
 	}
 
-	public ArrayList<Attack> getStates() {
-		return this.states;
+	/**
+	 * Calculates damage dealt by an attack.
+	 * @param damage Attack being used
+	 * @param attacker Pokemon using the attack
+	 * @return Result message string
+	 * @throws POOBkemonException if damage calculation fails
+	 */
+	public String getDamage(Attack damage, Pokemon attacker) throws POOBkemonException {
+		if (attacker.currentHealth <= 0) {
+			return "";
+		}
+
+		MovesRepository movesRepository = new MovesRepository();
+		StatsRepository statsRepository = new StatsRepository();
+		String[] info = movesRepository.getAttackDamageAndType(damage.getIdCSV());
+
+		double multiplicator = statsRepository.getMultiplier(info[0], this.type);
+		if (multiplicator == 0.0) {
+			attacker.spectorPP();
+			return " No afecta a " + this.name + "...";
+		}
+
+		if (damage.getAccuracy() < 100 && !doesAttackHit(damage, attacker)) {
+			attacker.spectorPP();
+			return attacker.name + " falló el ataque!";
+		}
+
+		String damageString = "";
+		if (multiplicator == 2.0) {
+			damageString = " ¡Fue super efectivo! ";
+		} else if (multiplicator == 0.5) {
+			damageString = " No fue muy efectivo... ";
+		}
+
+		double calculatedDamage = calculateDamage(damage, attacker, multiplicator);
+		this.currentHealth = Math.max(0, this.currentHealth - (int)calculatedDamage);
+
+		if (this.currentHealth <= 0) {
+			this.currentHealth = 0;
+			this.weak = true;
+		}
+
+		attacker.spectorPP();
+		return damageString + " [" + damage.getName() + "] causó " + (int)calculatedDamage + " puntos de daño!";
 	}
 
-	public ArrayList<Attack> getAttacks() {
-		return this.attacks;
+	/**
+	 * Determines if an attack hits.
+	 * @param damage Attack being used
+	 * @param attacker Pokemon using the attack
+	 * @return true if attack hits, false otherwise
+	 */
+	private boolean doesAttackHit(Attack damage, Pokemon attacker) {
+		if (damage.getAccuracy() >= 100) return true;
+
+		double hitProbability = (damage.getAccuracy() / 100.0) *
+				(Math.pow(STAGE_MODIFIER, attacker.accuracyStage) / Math.pow(STAGE_MODIFIER, -this.evasionStage));
+
+		hitProbability *= (damage.getAccuracy() <= 30) ? 0.6 : 1.0;
+		return Math.random() < Math.max(0.1, Math.min(1.0, hitProbability));
 	}
 
-	private void probShiny(){
-		this.shiny = Math.random() < 0.1;
+	/**
+	 * Calculates damage using Pokemon formula.
+	 * @param damage Attack being used
+	 * @param attacker Pokemon using the attack
+	 * @param typeEffectiveness Type effectiveness multiplier
+	 * @return Calculated damage
+	 */
+	private double calculateDamage(Attack damage, Pokemon attacker, double typeEffectiveness) {
+		int power = damage.getPower();
+		int level = attacker.level;
+		double randomFactor = 0.85 + (Math.random() * 0.15);
+		double critical = (Math.random() < CRITICAL_HIT_CHANCE) ? 2 : 1.0;
+
+		double attackStat = damage instanceof special ? attacker.specialAttack : attacker.attack;
+		double defenseStat = damage instanceof special ? this.specialDefense : this.defense;
+
+		double damageValue = (((2 * level / 5 + 2) * power * attackStat / defenseStat) / 50 + 2);
+		damageValue *= critical * typeEffectiveness * randomFactor;
+
+		return Math.max(1, Math.round(damageValue));
 	}
+
+	/**
+	 * Obtiene la información del Pokémon en un arreglo de Strings.
+	 * @return Arreglo con toda la información del Pokémon
+	 */
 	public String[] getInfo() {
-
 		return new String[] {
 				String.valueOf(this.id),           // 0 - ID
 				this.name,                         // 1 - Nombre
@@ -225,47 +357,15 @@ public class Pokemon {
 				String.valueOf(this.xp),            // 12 - XP actual
 				String.valueOf(this.levelRequirement), // 13 - XP requerido
 				String.valueOf(this.active),        // 14 - Estado (activo)
-				String.valueOf(this.weak),        // 15 - Pokemon debilitad
-				String.valueOf(this.shiny),          // 16 - Pokemon shiny
+				String.valueOf(this.weak),          // 15 - Pokemon debilitado
+				String.valueOf(this.shiny)          // 16 - Pokemon shiny
 		};
 	}
 
-	public void getDamage(Attack damage,Pokemon attacker) throws POOBkemonException {
-		MovesRepository movesRepository = new MovesRepository();
-		StatsRepository statsRepository = new StatsRepository();
-		String[] info = movesRepository.getAttackDamageAndType(damage.getIdCSV());
-		double multiplicator = statsRepository.getMultiplier(info[0], this.type);
-		System.out.println(multiplicator);
-
-		// Calcular el daño según el tipo de ataque
-		double calculatedDamage = 0;
-
-		if (damage instanceof special) {
-			// Fórmula para ataque especial
-			calculatedDamage = (((((2*attacker.level)/5)+2)*damage.getPower()*((attacker.specialAttack / this.specialDefense)/50)+2));
-		}
-		else if (damage instanceof state) {
-			this.states.add(damage);
-			return; // Salimos del método porque no hay daño que aplicar
-		}
-		else{
-			int random = (int) (Math.random()*10);
-			calculatedDamage = (((((2*attacker.level)/5)+2)*damage.getPower()*((attacker.attack / this.defense)/50)+2)*random); //Casi siempre da 8
-			System.out.println(calculatedDamage+" - "+calculatedDamage*multiplicator);
-		}
-
-		// Aplicar el daño calculado
-		if (attacker.currentHealth > 0) {
-			this.currentHealth = (int) (this.currentHealth - calculatedDamage*multiplicator);
-		}
-
-		// Asegurarnos que la salud no sea negativa (si no agregamos el = si es exacatamente 0 sigue vivo)
-		if(this.currentHealth <= 0) {
-			this.currentHealth = 0;
-			this.weak = true;
-		}
-		attacker.spectorPP();
-	}
+	/**
+	 * Obtiene la información de todos los ataques del Pokémon.
+	 * @return Matriz con la información de cada ataque
+	 */
 	public String[][] getAttacksInfo() {
 		int attacksSize = attacks.size();
 		String[][] attacksInfo = new String[attacksSize][9];
@@ -275,7 +375,7 @@ public class Pokemon {
 			if (attack != null) {
 				attacksInfo[i] = attack.getInfo();
 			} else {
-				// Valores por defecto si el ataque es null (Por si alguna vez pasa xd)
+				// Valores por defecto si el ataque es null
 				attacksInfo[i] = new String[]{
 						"Desconocido",  // nombre
 						"Normal",       // tipo
@@ -289,13 +389,31 @@ public class Pokemon {
 		}
 		return attacksInfo;
 	}
+
+	/**
+	 * Cura al Pokémon una cantidad específica de HP.
+	 * @param heal Cantidad de HP a curar
+	 */
 	private void heals(int heal) {
 		this.currentHealth = this.currentHealth + heal;
-		if(this.currentHealth > this.maxHealth) this.currentHealth = this.maxHealth;
+		if(this.currentHealth > this.maxHealth) {
+			this.currentHealth = this.maxHealth;
+		}
 	}
+
+	/**
+	 * Revive al Pokémon con la mitad de su vida máxima.
+	 */
 	private void revive() {
-		if(this.currentHealth == 0) this.currentHealth = this.maxHealth/2;
+		if(this.currentHealth == 0) {
+			this.currentHealth = this.maxHealth/2;
+		}
 	}
+
+	/**
+	 * Aplica un efecto al Pokémon según la información proporcionada.
+	 * @param info Información del efecto a aplicar
+	 */
 	public void effect(String[] info) {
 		if(info[0].equalsIgnoreCase("Potion") || info[0].equalsIgnoreCase("Revive")) {
 			if(info[1].equalsIgnoreCase("Heals")) {
@@ -305,22 +423,40 @@ public class Pokemon {
 			}
 		}
 	}
-	private void attackDefault() throws POOBkemonException{
+
+	/**
+	 * Initializes default attack when no attacks are available.
+	 * @throws POOBkemonException if default attack cannot be created
+	 */
+	private void attackDefault() throws POOBkemonException {
 		ArrayList<Integer> unickAttack = new ArrayList<>();
 		unickAttack.add(357);
 		this.attacks = this.createAttacks(unickAttack);
-		if(this.attacks.size() == 0)throw new POOBkemonException("Ataque no creado.");
+		if(this.attacks.size() == 0) throw new POOBkemonException("Ataque no creado.");
 	}
-	private void spectorPP()throws POOBkemonException{
-		boolean inspector = false;
-		for(Attack attack: this.attacks){
-			if(attack.getPPActual()>0){
-				inspector = true;
+
+	/**
+	 * Checks and resets PP if all attacks are exhausted.
+	 * @throws POOBkemonException if default attack cannot be created
+	 */
+	private void spectorPP() throws POOBkemonException {
+		boolean hasPP = false;
+		for(Attack attack: this.attacks) {
+			if(attack.getPPActual() > 0) {
+				hasPP = true;
+				break;
 			}
 		}
-		if(!inspector){
+		if(!hasPP) {
 			this.attacks.clear();
 			this.attackDefault();
 		}
+	}
+
+	/**
+	 * Determines if Pokemon is shiny (10% chance).
+	 */
+	private void probShiny() {
+		this.shiny = Math.random() < 0.1;
 	}
 }

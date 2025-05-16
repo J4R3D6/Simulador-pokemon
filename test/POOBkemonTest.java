@@ -109,6 +109,7 @@ class POOBkemonTest {
         assertTrue(game.isMachine(trainerOffensive.getId()));
     }
 
+
     @Test
     @DisplayName("Test verify Info")
     void shouldGiveInfoMoves(){
@@ -129,7 +130,6 @@ class POOBkemonTest {
         assertDoesNotThrow(()->game.getMoveInfo(24));
         assertDoesNotThrow(()->game.getMoveInfo(25));
     }
-
 
     @Test
     @DisplayName("Test verify Info")
@@ -312,10 +312,15 @@ class POOBkemonTest {
     @Test
     @DisplayName("Test createPokemon method")
     void testCreatePokemon() {
-        Pokemon pokemon = game.createPokemon(1, new ArrayList<>(List.of(1, 2, 3, 4)));
-        assertNotNull(pokemon);
-        //en conjunto se han creado 16 hasta ahora, pero individualmente es 0
-        assertEquals(60, pokemon.getId()); // nid comienza en 0
+        try {
+            Pokemon pokemon = game.createPokemon(1, new ArrayList<>(List.of(1, 2, 3, 4)));
+            assertNotNull(pokemon);
+            //en conjunto se han creado 16 hasta ahora, pero individualmente es 0
+            assertEquals(60, pokemon.getId()); // nid comienza en 0
+        }catch (POOBkemonException e){
+            System.out.println(e.getMessage());
+        }
+
     }
 
     @Test

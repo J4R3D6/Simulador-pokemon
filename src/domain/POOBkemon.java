@@ -150,33 +150,6 @@ public class POOBkemon {
 		R apply(T t) throws POOBkemonException;
 	}
 
-	private Trainer createDefensive( BagPack bagPack) throws POOBkemonException {
-		Trainer trainer = new Defensive(trainerId,bagPack);
-		trainerId++;
-		return trainer;
-
-	}
-
-	private Trainer createOffensive(  BagPack bagPack) throws POOBkemonException {
-		Trainer trainer = new Offensive(trainerId,bagPack);
-		trainerId++;
-		return trainer;
-
-	}
-
-	private Trainer createRandom(BagPack bagPack) throws POOBkemonException {
-		Trainer trainer = new Random(trainerId,bagPack);
-		trainerId++;
-		return trainer;
-
-	}
-
-	private Trainer createExpert(BagPack bagPack) throws POOBkemonException {
-		Trainer trainer = new Expert(trainerId,bagPack);
-		trainerId++;
-		return trainer;
-
-	}
 
 	/**
 	 * crear la maleta
@@ -323,7 +296,6 @@ public class POOBkemon {
 					int pokemonId1 = Integer.parseInt(decision[2]);
 					int trainerId = Integer.parseInt(decision[3]);
 					this.attack(attackId,trainerId, pokemonId1);
-					//falta agregar la accion a las acciones del movimiento
 					break;
 
 				case "UseItem":
@@ -339,14 +311,10 @@ public class POOBkemon {
 					int newPokemonId = Integer.parseInt(decision[2]);
 					this.changePokemon(Integer.parseInt(decision[1]), newPokemonId);
 					String pokemonName = "";
-					for(Team t : this.teams) {
-						for(Pokemon p :t.getPokemons()){
-							if(p.getId() == newPokemonId){
-								pokemonName = p.getName();
-							}
-						}
-					}
+
+					pokemonName = this.searchPokemon(newPokemonId).getName();
 					moves.add("Player "+decision[1] + " cambió a Pokémon " + pokemonName);
+
 					break;
 
 				case "Run":
@@ -363,6 +331,7 @@ public class POOBkemon {
 		}
 		// Verificar estado de la batalla después de ambos turnos
 		checkBattleStatus();
+		System.out.println(this.getLastMoves());
 	}
 	public boolean isMachine(int TrainerId){
 		for (Team t : teams) {
@@ -381,7 +350,7 @@ public class POOBkemon {
 		for (Team team : teams) {
 			if (team.allFainted()) {
 				this.finishBattle = true;
-				moves.add("¡Batalla terminada! Equipo " + team + " ha sido derrotado");
+				moves.add("¡Batalla terminada! " + team.getTrainer().getId() + " ha sido derrotado");
 				break;
 			}
 		}
@@ -421,15 +390,11 @@ public class POOBkemon {
 	private void run(int trainer) {
 		for (Team team : teams) {
 			if (team.getTrainer().getId() == trainer) {
-				this.moves.add("GameOver");
+				this.moves.add("GameOver para el jugador " + team.getTrainer().getId());
 				break;
 			}
 		}
-		checkBattleStatus();
-		if (finishBattle) {
-			System.out.println("Game Over");
-		}
-
+		this.finishBattle = true;
 	}
 
 	/**
@@ -448,6 +413,8 @@ public class POOBkemon {
 		}
 		if(team_0 == null)throw new POOBkemonException("Error: No se encontró el Equipo, para el uso de Item");
 		team_0.useItem(idPokemon,datoItem);
+		String message = "El entrenador " + trainer + " ha usado " + datoItem + " en " + team_0.getPokemonById(idPokemon).getName();
+		this.moves.add(message);
 	}
 	/**
 	 * Realiza un ataque entre Pokémon.
@@ -484,6 +451,9 @@ public class POOBkemon {
 				break; // Solo necesitamos un objetivo activo
 			}
 		}
+
+
+
 		// Verificar que tenemos ambos Pokémon
 		if (attacker == null) {
 			throw new POOBkemonException("Error: No se encontró el Pokemon atacante");
@@ -496,7 +466,16 @@ public class POOBkemon {
 		}
 		// Aplicar el daño
 		damage.usePP();
-		target.getDamage(damage, attacker);
+		String effect = target.getDamage(damage, attacker);
+
+		//agrego el mensaje de la ultima acción
+		if(effect.equals("")){
+			//si el pokemon atacante ya esta debilitado no agregar nada.
+		}else {
+			String message = attacker.getName() + " atacó a " + target.getName() + effect;
+			this.moves.add(message);
+		}
+
 		// Cambio automático si es necesario
 		this.autoChangePokemon();
 	}
@@ -507,9 +486,23 @@ public class POOBkemon {
 					if (pokemon.getWeak() && pokemon.getActive()) {
 						int savePokemon = this.getAlivePokemon(team.getTrainer().getId());
 						this.changePokemon(team.getTrainer().getId(), savePokemon);
+						String message = pokemon.getName() + " ha sido debilitado, cambiando a " + searchPokemon(savePokemon).getName();
+						this.moves.add(message);
+						return;
 					}
 				}
 			}
+	}
+	//Metodo que busca un pokemon en todos los equipos (No lo uso siempre porque es más ineficiente)
+	private Pokemon searchPokemon(int id){
+		for (Team team : teams) {
+			for (Pokemon pokemon : team.getPokemons()) {
+				if (pokemon.getId() == id) {
+					return pokemon;
+				}
+			}
+		}
+		return null;
 	}
 	//para el cambio automatico que encuentre un pokemon Valido
 	private int getAlivePokemon(int trainerId){

@@ -88,7 +88,7 @@
 87,Thunder,A wicked thunderbolt is dropped on the target to inflict damage. This may also leave the target with paralysis.,Electric,special,110,70,10
 88,Rock Throw,The user picks up and throws a small rock at the target to attack.,Rock,physical,50,90,15
 89,Earthquake,The user sets off an earthquake that strikes every Pokémon around it. ,Ground,physical,100,100,10
-90,Fissure,The user opens up a fissure in the ground and drops the target in. The target faints instantly if this attack hits.,Ground,physical,10000,30,5
+90,Fissure,The user opens up a fissure in the ground and drops the target in. The target faints instantly if this attack hits.,Ground,physical,30,30,5
 91,Dig,The user burrows then attacks on the next turn. It can also be used to exit dungeons.,Ground,physical,80,100,10
 92,Toxic,A move that leaves the target badly poisoned. Its poison damage worsens every turn.,Poison,status,0,90,10
 93,Confusion,The target is hit by a weak telekinetic force. This may also confuse the target.,Psychic,special,50,100,25
@@ -353,4 +353,4 @@
 352,Water Pulse,The user attacks the target with a pulsing blast of water. This may also confuse the target.,Water,special,60,100,20
 353,Doom Desire,Two turns after this move is used the user blasts the target with a concentrated bundle of light.,Steel,special,140,100,5
 354,Psycho Boost,The user attacks the target at full power. The attack’s recoil harshly lowers the user’s Sp. Atk stat.,Psychic,special,140,90,5
-357,Last Struggle,Attacks with a simple effect.,Normal,physical,10,10,-1
+357,Last Struggle,Attacks with a simple effect.,Normal,physical,10,101,-1
