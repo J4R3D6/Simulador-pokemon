@@ -39,12 +39,14 @@ public class Pokemon {
 	private static boolean random;
 	private static int attackId = 0;
 	private ArrayList<Attack> attacks;
-	private ArrayList<Attack> states;
+	private ArrayList<State> states;
+
+	private State principalState;
 	private int accuracyStage = (int)(Math.random() * 13) - 6;
 	private int evasionStage = (int)(Math.random() * 13) - 6;
 
 	// Constants for battle calculations
-	private static final double CRITICAL_HIT_CHANCE = 0.1; // 4.17% standar = 0.0417
+	private static final double CRITICAL_HIT_CHANCE = 0.0417; // 4.17% standar = 0.0417
 	private static final double STAGE_MODIFIER = 1.3;  // 1.5 Pokemon standar (Modify Accuracy)
 
 	/**
@@ -94,7 +96,7 @@ public class Pokemon {
 		this.xp = 0;
 		this.level = 1;
 		this.levelRequirement = 100;
-		this.states = new ArrayList<Attack>();
+		this.states = new ArrayList<State>();
 		this.active = false;
 		this.weak = false;
 		this.random = false;
@@ -127,7 +129,7 @@ public class Pokemon {
 		this.weak = false;
 		this.random = random;
 		this.attacks = new ArrayList<>(this.createAttacks(attacksIds));
-		this.states = new ArrayList<Attack>();
+		this.states = new ArrayList<State>();
 		this.ivs = createRandom(32);
 
 		// Base stats
@@ -211,7 +213,7 @@ public class Pokemon {
 	public int getId() { return this.id; }
 	public String getName() { return this.name; }
 	public boolean getWeak() { return this.weak; }
-	public ArrayList<Attack> getStates() { return this.states; }
+	public ArrayList<State> getStates() { return this.states; }
 	public ArrayList<Attack> getAttacks() { return this.attacks; }
 
 	/**
@@ -240,10 +242,24 @@ public class Pokemon {
 
 		for(Integer id : attacksIds) {
 			String[] infoAttack = movesRepository.getAttacksId(id);
-			Attack attack = infoAttack[4].equalsIgnoreCase("physical") ?
-					new Attack(this.nextAttackId(), infoAttack) :
-					new special(this.nextAttackId(), infoAttack);
-			ataques.add(attack);
+			if(infoAttack[4].equalsIgnoreCase("physical")){
+				Attack attack = new Attack(this.nextAttackId(), infoAttack);
+				ataques.add(attack);
+			}
+
+			if(infoAttack[4].equalsIgnoreCase("special")){
+				Attack attack = new special(this.nextAttackId(), infoAttack);
+				ataques.add(attack);
+			}
+
+			if(infoAttack[4].equalsIgnoreCase("status")){
+				StatusRepository statusRepository = new StatusRepository();
+				String [] infoStatus = statusRepository.getStatusByName(infoAttack[8].toUpperCase());
+				if(infoAttack[8].equalsIgnoreCase("ally")){
+					Attack attack =new StateHeal(this.nextAttackId(),infoStatus);
+					ataques.add(attack);
+				}
+			}
 		}
 		return ataques;
 	}
@@ -263,6 +279,36 @@ public class Pokemon {
 		if (attacker.currentHealth <= 0) {
 			return "";
 		}
+		//verificar que sea un ataque de estado aplicado al enemigo (this)
+		if (damage instanceof StateAttack) {
+			StateAttack stateAttack = (StateAttack) damage;
+
+			// Verifica si se aplica el estado con base en su precisión
+			double prob = Math.random() * 100;
+			if (prob < stateAttack.getAccuracy()) {
+				StatusRepository infoState = new StatusRepository();
+
+				// Obtiene el estado por nombre (ej. "Paralisis")
+				String[] info = infoState.getStatusByName(stateAttack.getState());
+
+				if (info != null) {
+					try {
+						// Crea el objeto State usando la información del CSV
+						State estado = new State(info, State.stateType.valueOf(info[0].toUpperCase()));
+						if(estado.isPrincipal()){
+							this.principalState = estado;
+						}else{
+							this.states.add(estado); // Aplica el estado al Pokémon actual
+						}
+					} catch (IllegalArgumentException e) {
+						System.err.println("Tipo de estado inválido: " + info[0]);
+					}
+				}
+			}
+			String message = " ["+ attacker.getName()+"] dejó afectado a " + this.getName();
+			return message;
+		}
+
 
 		MovesRepository movesRepository = new MovesRepository();
 		StatsRepository statsRepository = new StatsRepository();
@@ -329,12 +375,37 @@ public class Pokemon {
 
 		double attackStat = damage instanceof special ? attacker.specialAttack : attacker.attack;
 		double defenseStat = damage instanceof special ? this.specialDefense : this.defense;
+		if (damage instanceof StateHeal) {
+			StateHeal state = (StateHeal) damage;
+			healsState(state, attacker);
+		}
+
 
 		double damageValue = (((2 * level / 5 + 2) * power * attackStat / defenseStat) / 50 + 2);
 		damageValue *= critical * typeEffectiveness * randomFactor;
 
 		return Math.max(1, Math.round(damageValue));
 	}
+
+	private void healsState(StateHeal damage, Pokemon attacker){
+		int sum = damage.healer();
+		attacker.heal(sum);
+	}
+	private void heal(int sum){
+		this.currentHealth += sum;
+		if(this.currentHealth>= this.maxHealth){
+			this.currentHealth = this.maxHealth;
+		}
+	}
+	private void persistentDamage(State attackStateRival){
+		if(principalState == null && attackStateRival.isPrincipal()){
+			principalState = attackStateRival;
+		}else if(!attackStateRival.isPrincipal()){
+			this.states.add(attackStateRival);
+		}
+	}
+
+
 
 	/**
 	 * Obtiene la información del Pokémon en un arreglo de Strings.
