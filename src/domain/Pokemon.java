@@ -213,7 +213,7 @@ public class Pokemon {
 	public int getId() { return this.id; }
 	public String getName() { return this.name; }
 	public boolean getWeak() { return this.weak; }
-	public ArrayList<State> getStates() { return this.states; }
+	//public ArrayList<State> getStates() { return this.states; }
 	public ArrayList<Attack> getAttacks() { return this.attacks; }
 
 	/**
@@ -251,7 +251,7 @@ public class Pokemon {
 				Attack attack = new special(this.nextAttackId(), infoAttack);
 				ataques.add(attack);
 			}
-
+			/**
 			if(infoAttack[4].equalsIgnoreCase("status")){
 				StatusRepository statusRepository = new StatusRepository();
 				String [] infoStatus = statusRepository.getStatusByName(infoAttack[8].toUpperCase());
@@ -260,6 +260,7 @@ public class Pokemon {
 					ataques.add(attack);
 				}
 			}
+			 */
 		}
 		return ataques;
 	}
@@ -280,6 +281,7 @@ public class Pokemon {
 			return "";
 		}
 		//verificar que sea un ataque de estado aplicado al enemigo (this)
+		/**
 		if (damage instanceof StateAttack) {
 			StateAttack stateAttack = (StateAttack) damage;
 
@@ -307,7 +309,7 @@ public class Pokemon {
 			}
 			String message = " ["+ attacker.getName()+"] dejó afectado a " + this.getName();
 			return message;
-		}
+		}*/
 
 
 		MovesRepository movesRepository = new MovesRepository();
@@ -529,5 +531,14 @@ public class Pokemon {
 	 */
 	private void probShiny() {
 		this.shiny = Math.random() < 0.1;
+	}
+
+	/**
+	 * Decision auntomatica si se le acaba el tiempo al entrenador
+	 */
+	public void timeOver() {
+		for (Attack at : this.attacks) {
+			at.timeOver();
+		}
 	}
 }

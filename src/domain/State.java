@@ -74,4 +74,6 @@ public class State {
     public String toString() {
         return type.name() + (duration > 0 ? " (" + duration + " turnos restantes)" : "");
     }
+
 }
+

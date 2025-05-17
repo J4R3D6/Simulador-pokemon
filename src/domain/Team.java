@@ -109,5 +109,15 @@ public class Team {
 		}
 		this.getTrainer().useItem(pokemonTarget, datoItem);
 	}
-
+	/**
+	 * Decision auntomatica si se le acaba el tiempo al entrenador
+	 * @param pokemonID Id del pokemon al que se le ejecuta la accion
+	 */
+	public void timeOver(int pokemonID) {
+		for (Pokemon p : pokemons) {
+			if (p.getId() == pokemonID) {
+				p.timeOver();
+			}
+		}
+	}
 }

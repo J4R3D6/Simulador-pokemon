@@ -323,6 +323,13 @@ public class POOBkemon {
 					this.finishBattle = true;
 					break;
 
+				case "timeOver":
+					if (decision.length < 2) throw new POOBkemonException("Faltan parámetros para Attack");
+					int trainerid = Integer.parseInt(decision[1]);
+					int pokemonid = Integer.parseInt(decision[2]);
+					this.timeOver(trainerid,pokemonid);
+					moves.add("Player se le acabo el tiempo");
+					break;
 				default:
 					throw new POOBkemonException("Acción no reconocida: " + action);
 			}
@@ -384,6 +391,22 @@ public class POOBkemon {
 
 	}
 
+	/**
+	 * Decision auntomatica si se le acaba el tiempo al entrenador
+	 * @param trainerId Id del entrador al que se le ejecuta la accion
+	 * @param pokemonId Id el pokemon al que se le ejecuta la accion
+	 */
+	private void timeOver(int trainerId, int pokemonId) throws POOBkemonException {
+		Team team = null;
+		for (Team t : teams)
+			if (t.getTrainer().getId() == trainerId) {
+				team = t;
+			}
+		if (team == null) {
+			throw new POOBkemonException("Entrenador con ID " + trainerId + " no fue encontrado");
+		}
+		team.timeOver(pokemonId);
+	}
 	/**
 	 * metodo parasalir de la pelea
 	 */
