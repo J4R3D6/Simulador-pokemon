@@ -38,7 +38,7 @@ public class Team implements Serializable {
 		}
 		// Validaciones
 		if (pokemonToActivate == null) {
-			throw new POOBkemonException( POOBkemonException.POKEMON_ID_NOT_FOUND + id);
+			throw new POOBkemonException( POOBkemonException.POKEMON_ID_NOT_FOUND + id + "Error Aqui");
 		}
 		if (pokemonToActivate.currentHealth <= 0) {
 			throw new POOBkemonException(POOBkemonException.POKEMON_WEAK_CHANGE);
