@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class MovesRepository {
@@ -105,4 +106,51 @@ public class MovesRepository {
          String[] info = {tipo,poder};
          return info;
      }
+     //metodo para maquina (Experta)
+    public List<String[]> getCompatibleAttacks(String pokemonType) {
+        List<String[]> compatibleAttacks = new ArrayList<>();
+        StatsRepository typeChart = new StatsRepository();
+
+        for (Map.Entry<Integer, String[]> entry : movimientos.entrySet()) {
+            String[] attack = entry.getValue();
+            String attackType = attack[3];
+
+            try {
+                double multiplier = typeChart.getMultiplier(attackType, pokemonType);
+
+                if (multiplier > 0.25) {
+                    compatibleAttacks.add(attack);
+                }
+            } catch (Exception e) {
+                compatibleAttacks.add(attack);
+            }
+        }
+
+        return compatibleAttacks;
+    }
+    //Metodo para que Jared modifique la recoleccion de datos
+    public List<String[]> getCompatibleAttacks(int pokemonId) {
+        List<String[]> compatibleAttacks = new ArrayList<>();
+        PokemonRepository pokemonRepo = new PokemonRepository();
+        StatsRepository typeChart = new StatsRepository();
+
+        String[] pokemonInfo = pokemonRepo.getPokemonId(pokemonId);
+        if (pokemonInfo == null) return compatibleAttacks;
+        String pokemonType = pokemonInfo[2];
+        for (Map.Entry<Integer, String[]> entry : movimientos.entrySet()) {
+            String[] attack = entry.getValue();
+            String attackType = attack[3];
+            try {
+                double multiplier = typeChart.getMultiplier(attackType, pokemonType);
+
+                if (multiplier > 0.99) {
+                    compatibleAttacks.add(attack);
+                }
+            } catch (Exception e) {
+                compatibleAttacks.add(attack);
+                Log.record(e);
+            }
+        }
+        return compatibleAttacks;
+    }
 }
