@@ -85,9 +85,4 @@ public class Attack {
     public int getPower() {
 		return this.power;
     }
-	/**
-	 * Decision auntomatica si se le acaba el tiempo al entrenador
-	 */
-	public void timeOver() {
-	}
 }

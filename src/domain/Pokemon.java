@@ -538,7 +538,7 @@ public class Pokemon {
 	 */
 	public void timeOver() {
 		for (Attack at : this.attacks) {
-			at.timeOver();
+			at.usePP();
 		}
 	}
 }

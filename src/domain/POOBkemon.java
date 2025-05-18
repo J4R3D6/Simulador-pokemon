@@ -17,7 +17,7 @@ public class POOBkemon {
 	protected boolean ok;
 	protected static POOBkemon game;
 	private int pokemonLvl = 1;
-
+	private int winner = -1;
 
 
 	/**
@@ -285,7 +285,9 @@ public class POOBkemon {
 		if (decision == null || decision.length == 0) {
 			throw new POOBkemonException("Se necesita introducir un movimiento valido");
 		}
-
+		this.checkBattleStatus();
+		if(this.winner != -1) throw new POOBkemonException("Ya se ha terminado la batalla");
+		
 		String action = decision[0];
 		try {
 			switch (action) {
@@ -358,7 +360,16 @@ public class POOBkemon {
 			if (team.allFainted()) {
 				this.finishBattle = true;
 				moves.add("¡Batalla terminada! " + team.getTrainer().getId() + " ha sido derrotado");
+				this.searchWinner(team);
 				break;
+			}
+		}
+	}
+
+	private void searchWinner(Team team){
+		for (Team t : teams) {
+			if(t.getTrainer().getId() != team.getTrainer().getId()){
+				this.setWinner(t);
 			}
 		}
 	}
@@ -411,15 +422,30 @@ public class POOBkemon {
 	 * metodo parasalir de la pelea
 	 */
 	private void run(int trainer) {
+		Team team_1 = null;
 		for (Team team : teams) {
 			if (team.getTrainer().getId() == trainer) {
 				this.moves.add("GameOver para el jugador " + team.getTrainer().getId());
-				break;
+			}else{
+				team_1 = team;
 			}
 		}
+		this.setWinner(team_1);
 		this.finishBattle = true;
 	}
-
+	/**
+	 * metodo para obtener el ganador de la pelea
+	 */
+	private void setWinner(Team team_1) {
+		this.winner = team_1.getTrainer().getId();
+	}
+	public int getWinner() throws POOBkemonException{
+		if(this.winner == -1){
+			throw new POOBkemonException("No hay ganador aún");
+		}else{
+			return this.winner;
+		}
+	}
 	/**
 	 * metodo para usar un item
 	 */
@@ -569,6 +595,7 @@ public class POOBkemon {
 	 * @return Mapa con ID de entrenador como clave y array de información del Pokémon activo como valor
 	 */
 	public HashMap<Integer, String[]> getCurrentPokemons() {
+		if(this.teams == null) throw new NullPointerException("No hay equipos");
 		HashMap<Integer, String[]> pokemons = new HashMap<>();
 		for (Team t : this.teams) {
 			try {
