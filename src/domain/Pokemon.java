@@ -1,5 +1,6 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -7,7 +8,7 @@ import java.util.ArrayList;
  * Represents a Pokemon creature with all its attributes and battle capabilities.
  * This class handles Pokemon creation, stats calculation, and battle mechanics.
  */
-public class Pokemon {
+public class Pokemon implements Serializable {
 
 	// Basic Pokemon attributes
 	public String name;

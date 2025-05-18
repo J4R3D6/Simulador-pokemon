@@ -1,11 +1,12 @@
 package domain;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class POOBkemon {
+public class POOBkemon implements Serializable {
 
 	protected ArrayList<String> moves;
 	protected ArrayList<Integer> order;
@@ -30,7 +31,7 @@ public class POOBkemon {
 	 * @return Instancia única del juego
 	 * @throws IllegalStateException Si el juego no ha sido inicializado
 	 */
-	public static POOBkemon getInstance() {
+	public static POOBkemon getInstance(){
 		if (game == null) {
 			game = new POOBkemon();
 		}
@@ -300,6 +301,7 @@ public class POOBkemon {
 					int pokemonId1 = Integer.parseInt(decision[2]);
 					int trainerId = Integer.parseInt(decision[3]);
 					this.attack(attackId,trainerId, pokemonId1);
+					checkBattleStatus();
 					break;
 
 				case "UseItem":
@@ -337,6 +339,7 @@ public class POOBkemon {
 				default:
 					throw new POOBkemonException("Acción no reconocida: " + action);
 			}
+			checkBattleStatus();
 		} catch (NumberFormatException e) {
 			throw new POOBkemonException("Formato inválido en parámetros: " + e.getMessage());
 		}
@@ -724,5 +727,29 @@ public class POOBkemon {
 		}
 		if(trainer == null) throw new POOBkemonException("Entrenador no encontrado");
 		return trainer.getBagPack().getItems();
+	}
+	public void save(File archivo) throws POOBkemonException {
+		try (ObjectOutputStream writer = new ObjectOutputStream(
+				new BufferedOutputStream(new FileOutputStream(archivo)))) {
+			writer.writeObject(this);
+		} catch (FileNotFoundException e) {
+			throw new POOBkemonException("Archivo no encontrado al intentar guardar: " + archivo.getAbsolutePath());
+		} catch (IOException e) {
+			throw new POOBkemonException("Error de E/S al guardar la batalla: " + e.getMessage());
+		}
+	}
+
+	public static POOBkemon open(File archivo) throws POOBkemonException {
+		try (ObjectInputStream reader = new ObjectInputStream(
+				new BufferedInputStream(new FileInputStream(archivo)))) {
+			System.out.println("La partida fue abierta con exito.");
+			return (POOBkemon) reader.readObject();
+		} catch (FileNotFoundException e) {
+			throw new POOBkemonException("Archivo no encontrado al intentar abrir: " + archivo.getAbsolutePath());
+		} catch (ClassNotFoundException e) {
+			throw new POOBkemonException("Clase no encontrada al leer el archivo: " + e.getMessage());
+		} catch (IOException e) {
+			throw new POOBkemonException("Error de E/S al abrir la batalla: " + e.getMessage());
+		}
 	}
 }

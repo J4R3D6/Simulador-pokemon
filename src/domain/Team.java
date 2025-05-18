@@ -1,8 +1,9 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Team {
+public class Team implements Serializable {
 
 	private ArrayList<Pokemon> pokemons;
 	private Trainer trainer;
@@ -51,7 +52,7 @@ public class Team {
 		return pokemonToActivate;
 	}
 	public boolean allFainted(){
-		for (Pokemon pokemon : pokemons) {
+		for (Pokemon pokemon : this.pokemons) {
 			if(!pokemon.getWeak()) {
 				return false;
 			}

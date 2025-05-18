@@ -1,9 +1,11 @@
 package domain;
 
+import java.io.Serializable;
+
 /**
  * Representa un estado alterado aplicado a un Pokémon (como envenenado, paralizado, dormido, etc.).
  */
-public class State {
+public class State implements Serializable {
     public enum stateType {
         PARALISIS, QUEMADURA, ENVENENAMIENTO, ENVENENAMIENTO_GRAVE, SUEÑO, CONGELACION,
         CONFUSION, ATRAPADO

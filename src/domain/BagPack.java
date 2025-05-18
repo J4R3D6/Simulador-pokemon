@@ -1,8 +1,9 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BagPack {
+public class BagPack implements Serializable {
 	private ArrayList<Item> items;
 
 	public BagPack(ArrayList<Item> items){

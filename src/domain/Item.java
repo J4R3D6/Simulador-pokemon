@@ -1,6 +1,8 @@
 package domain;
 
-public abstract class Item {
+import java.io.Serializable;
+
+public abstract class Item implements Serializable {
 	protected int number;
 	protected String name;
 	public Item(int number){

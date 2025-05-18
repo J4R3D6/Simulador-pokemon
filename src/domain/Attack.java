@@ -1,8 +1,9 @@
 package domain;
 
 
+import java.io.Serializable;
 
-public class Attack {
+public class Attack implements Serializable {
 
 	private String name;
 

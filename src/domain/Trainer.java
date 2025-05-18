@@ -1,8 +1,9 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Trainer {
+public class Trainer implements Serializable {
 
 	private int currentPokemonId = -1;  // Ahora es solo el ID (int)
 	private BagPack bagPack;
