@@ -255,13 +255,17 @@ public class Pokemon implements Serializable {
 			/**
 			if(infoAttack[4].equalsIgnoreCase("status")){
 				StatusRepository statusRepository = new StatusRepository();
+				if(infoAttack[8] == null) throw new POOBkemonException("Error en el archivo de ataques: no se pudo obtener la direccón.");
 				String [] infoStatus = statusRepository.getStatusByName(infoAttack[8].toUpperCase());
 				if(infoAttack[8].equalsIgnoreCase("ally")){
 					Attack attack =new StateHeal(this.nextAttackId(),infoStatus);
 					ataques.add(attack);
+				} else {
+					Attack attack = new StateAttack(this.nextAttackId(), infoStatus);
+					ataques.add(attack);
 				}
 			}
-			 */
+			 **/
 		}
 		return ataques;
 	}
@@ -281,8 +285,9 @@ public class Pokemon implements Serializable {
 		if (attacker.currentHealth <= 0) {
 			return "";
 		}
-		//verificar que sea un ataque de estado aplicado al enemigo (this)
-		/**
+
+
+		// ver si el estado es de ayuda o daño
 		if (damage instanceof StateAttack) {
 			StateAttack stateAttack = (StateAttack) damage;
 
@@ -290,7 +295,6 @@ public class Pokemon implements Serializable {
 			double prob = Math.random() * 100;
 			if (prob < stateAttack.getAccuracy()) {
 				StatusRepository infoState = new StatusRepository();
-
 				// Obtiene el estado por nombre (ej. "Paralisis")
 				String[] info = infoState.getStatusByName(stateAttack.getState());
 
@@ -310,7 +314,14 @@ public class Pokemon implements Serializable {
 			}
 			String message = " ["+ attacker.getName()+"] dejó afectado a " + this.getName();
 			return message;
-		}*/
+		} else if (damage instanceof StateHeal) {
+			StateHeal state = (StateHeal) damage;
+			healsState(state, attacker);
+			String message = " ["+ attacker.getName()+"] dejó fortalecido a " + attacker.getName();
+			return message;
+		}
+
+		//si no es de estado, atacar como normalmente lo hace
 
 
 		MovesRepository movesRepository = new MovesRepository();
@@ -541,5 +552,9 @@ public class Pokemon implements Serializable {
 		for (Attack at : this.attacks) {
 			at.usePP();
 		}
+	}
+
+	public String getType() {
+		return type;
 	}
 }

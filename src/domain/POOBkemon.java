@@ -138,7 +138,7 @@ public class POOBkemon implements Serializable {
 
 		CheckedFunction<BagPack, Trainer> factory = trainerFactories.getOrDefault(
 				trainerType,
-				bp -> new Random(trainerId++, bp)
+				bp -> new Switcher(trainerId++, bp)
 		);
 
 		return factory.apply(bagPack);

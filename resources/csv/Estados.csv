@@ -1,6 +1,6 @@
 Tipo,Duracion,EsPermanente,EsVolatil,Descripcion
-Paralisis,-1,true,false,Reduce la velocidad y puede impedir el movimiento en cada turno.
-Quemadura,-1,true,false,Causa daño al final de cada turno y reduce el ataque físico.
-Envenenamiento,-1,true,false,Causa daño constante al final de cada turno.
-Sueno,1-5,false,false,Impide actuar durante varios turnos (entre 1 y 5).
-Congelacion,-1,false,false,Impide actuar y se descongela con ataques de fuego o al azar.
+PARALISIS,-1,true,false,Reduce la velocidad y puede impedir el movimiento en cada turno.
+QUEMADURA,-1,true,false,Causa daño al final de cada turno y reduce el ataque físico.
+ENVENENAMIENTO,-1,true,false,Causa daño constante al final de cada turno.
+SUENO,random,false,false,Impide actuar durante varios turnos (entre 1 y 5).
+CONGELACION,-1,false,false,Impide actuar y se descongela con ataques de fuego o al azar.
