@@ -139,10 +139,8 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
                 btn.addActionListener(e -> showPanel("attack"));
             } else if(option.equals("RUN")) {
                 btn.addActionListener(e -> {
-                    if (battleListener != null) {
-                        battleListener.onBattleEnd(false);
-                    }
-                    //setDecision(new String[]{"Flee", ""}); // Decisión de huir
+                    showPanel("processTurn");
+                    setDecision(new String[]{"Run", ""+this.currentPlayer});
                 });
             } else if(option.equals("ITEM")) {
                 btn.addActionListener(e -> showPanel("items"));
@@ -683,7 +681,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         final BufferedImage enemyBufferedImg = toBufferedImage(enemyIcon.getImage());
         final int enemyLowestY = findAbsoluteLowestVisibleY(enemyBufferedImg);
         final double PLAYER_TARGET_RATIO = 0.72;
-        final double ENEMY_TARGET_RATIO = 0.44;
+        final double ENEMY_TARGET_RATIO = 0.47;
         final int MARGIN = 15;
 
         JPanel playerImagePanel = new JPanel(null) {
@@ -911,6 +909,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
     }
     //
     private JPanel createPusePanel() {
+        pauseTimer();
         newTurn=true;
         JPanel pausePanel = new JPanel(new BorderLayout());
         pausePanel.setBackground(Color.BLACK); // Fondo completamente negro
@@ -1036,6 +1035,14 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         stopDecisionTimer();
         if (currentPlayer == order.get(0)) {
             decisionTrainer1 = decision;
+            if(decisionTrainer1[0].equals("Run")){
+                try {
+                    this.game.takeDecision(decisionTrainer1);
+                } catch (POOBkemonException e) {
+                    throw new RuntimeException(e);
+                }
+                battleListener.onBattleEnd(false);
+            }
         } else {
             decisionTrainer2 = decision;
         }
@@ -1047,7 +1054,9 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
             executeTurn();
             newTurn = true;
         } else {
-            switchPlayer();
+            if(!decisionTrainer1[0].equals("Run")){
+                switchPlayer();
+            }
         }
     }
 
@@ -1068,11 +1077,19 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
     private void executeTurn() {
         try {
             this.game.takeDecision(decisionTrainer1);
-            this.game.takeDecision(decisionTrainer2);
+            if(game.finishBattle()){
+                battleListener.onBattleEnd(false);
+            }else {
+                this.game.takeDecision(decisionTrainer2);
+            }
         } catch (POOBkemonException e) {
             System.err.println("Error al procesar turno: " + e.getMessage());
         }
-        resetForNextTurn();
+        if(game.finishBattle()) {
+            battleListener.onBattleEnd(false);
+        }else {
+            resetForNextTurn();
+        }
     }
 
     /**

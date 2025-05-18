@@ -112,6 +112,8 @@ public class POOBkemon {
 		this.teams = null;
 		this.moves = null;
 		this.ok = true;
+		this.finishBattle = false;
+		this.winner = -1;
 	}
 	protected void nextIdPokemon(){
 		this.nid = this.nid + 1;

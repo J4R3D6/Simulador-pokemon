@@ -79,6 +79,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     private static final String TYPES =  "resources/pokemones/Emerald/types/";
     private static final String GALERIA_ITEMS =  "resources/menu/galeria_items.png";
     private static final String APP_ICON = "resources/icon/pokemon_icon.png";
+    private static final String WINNER = "resources/menu/winner/";
 
     
     private POOBkemonGUI() {
@@ -222,7 +223,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     }
     private void prepareActionsMenuPanel() {
     	playButton.addActionListener(e -> startNewGame());
-    	pokedexButton.addActionListener(e -> showPokedex());
+    	pokedexButton.addActionListener(e -> showFishPanel());//showPokedex());
     	itemsButton.addActionListener(e -> showItemsGalery());
     	stastRandomButton.addActionListener(e -> actualizarTextoDificultad());
         exitButton.addActionListener(e -> confirmExit());
@@ -1242,10 +1243,32 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     private void startBattle(POOBkemon game) {
         PokemonBattlePanel battlePanel = new PokemonBattlePanel(game, fondo, frame);
         battlePanel.setBattleListener(playerWon -> {
-            //showBattleResult(playerWon);
-            refresh(menuPanel);
+            showFishPanel();
+            game.deleteGame();
         });
         refresh(battlePanel);
+    }
+    private void showFishPanel(){
+        int winnerId = 0;
+        try {
+            winnerId = game.getWinner();
+        } catch (POOBkemonException e) {
+            throw new RuntimeException(e);
+        }
+        JPanel FishPanel = new ImagePanel(new BorderLayout(), WINNER+winnerId+PNG_EXT);
+        JLabel message = new JLabel("Jugador "+winnerId+" a ganado", SwingConstants.CENTER);
+        message.setFont(Auxiliar.cargarFuentePixel(30));
+        message.setForeground(Color.WHITE);
+        FishPanel.add(message, BorderLayout.CENTER);
+        Timer timer = new Timer(5000, e -> {
+            refresh(menuPanel);
+        });
+        timer.setRepeats(false);
+        timer.start();
+        getContentPane().removeAll();
+        add(FishPanel);
+        revalidate();
+        repaint();
     }
     // ========== Métodos auxiliares ========== //
     private void initMode(String mode){
