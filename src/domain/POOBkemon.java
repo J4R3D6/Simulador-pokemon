@@ -617,7 +617,6 @@ public class POOBkemon implements Serializable {
 	 * @return Mapa con ID de entrenador como clave y array de información del Pokémon activo como valor
 	 */
 	public HashMap<Integer, String[]> getCurrentPokemons() {
-		if(this.finishBattle)return null;
 		if(this.teams == null) throw new NullPointerException("No hay equipos");
 		HashMap<Integer, String[]> pokemons = new HashMap<>();
 		for (Team t : this.teams) {

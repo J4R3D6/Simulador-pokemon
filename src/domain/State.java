@@ -24,7 +24,6 @@ public class State implements Serializable {
 
     /**
      * Crea un nuevo estado.
-     * @param tipo Tipo del estado.
      * @param info Contiene la informacion del estado
      */
     public State (String[] info) {
@@ -79,38 +78,28 @@ public class State implements Serializable {
             case "QUEMADURA":
                 damage = pokemon.maxHealth / 8;
                 pokemon.currentHealth = Math.max(0, pokemon.currentHealth - damage);
-                if(pokemon.currentHealth == 0){
-                    pokemon.setActive(false);
-                }
-                return pokemon.getName() + " sufre por quemaduras y pierde " + damage + " de salud.\n";
+                break;
             case "POISON":
                 damage = pokemon.maxHealth / 8;
                 pokemon.currentHealth = Math.max(0, pokemon.currentHealth - damage);
-                if(pokemon.currentHealth == 0){
-                    pokemon.setActive(false);
-                }
-                return pokemon.getName() + " se debilita por el veneno y pierde " + damage + " de salud.\n";
+                System.out.println(pokemon.getName() + " sufre " + damage + " por envenenamiento..");
+                break;
             case "PARALYSIS":
                 pokemon.speed = pokemon.speed - (int)(pokemon.speed*(0.5));
-                if(pokemon.currentHealth == 0){
-                    pokemon.setActive(false);
-                }
+                System.out.println("La nueva velocidad de: " +pokemon.getName() +" es " +pokemon.speed);
                 break;
             case "BAD_POISON":
                 damage = (pokemon.maxHealth / 16) * turnsActive;
                 pokemon.currentHealth = Math.max(0, pokemon.currentHealth - damage);
                 System.out.println(pokemon.getName() + " sufre " + damage + " por envenenamiento grave.");
                 turnsActive++;
-                if(pokemon.currentHealth == 0){
-                    //pokemon.setActive(false);
-                }
                 break;
         }
-
+        pokemon.isWeak();
         if (duration > 0) {
             duration--;
             if (duration == 0) {
-                // Aquí podrías marcar el estado como finalizado si implementas eso
+
                 return pokemon.getName() + " se ha curado de " + (this.type.name().toLowerCase());
             }
     }

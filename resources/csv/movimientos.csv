@@ -149,7 +149,7 @@
 148,Flash,The user flashes a bright light that cuts the target's accuracy.,Normal,status,0,100,20,enemy,accuracy_down,100
 149,Psywave,The target is attacked with an odd psychic wave. The attack varies in intensity.,Psychic,special,50,100,15,,,0
 150,Splash,The user just flops and splashes around to no effect at all...,Normal,status,0,100,40,,,0
-151,Acid Armor,The user alters its cellular structure to liquefy itself sharply raising its Defense stat.,Poison,status,0,100,20,ally,defense_up,100
+151,Acid Armor,The user alters its cellular structure to liquefy itself sharply rais ing its Defense stat.,Poison,status,0,100,20,ally,defense_up,100
 152,Crabhammer,The target is hammered with a large pincer. Critical hits land more easily.,Water,physical,100,90,10,,,0
 153,Explosion,The user attacks everything around it by causing a tremendous explosion. The user faints upon using this move.,Normal,physical,250,100,5,,,0
 154,Fury Swipes,The target is raked with sharp claws or scythes quickly two to five times in a row.,Normal,physical,18,80,15,,,0

@@ -285,7 +285,6 @@ public class Pokemon implements Serializable {
 			return "";
 		}
 
-
 		// ver si el estado es de ayuda o daño
 		if (damage instanceof StateAttack) {
 			StateAttack stateAttack = (StateAttack) damage;
@@ -322,8 +321,6 @@ public class Pokemon implements Serializable {
 		}
 
 		//si no es de estado, atacar como normalmente lo hace
-
-
 		MovesRepository movesRepository = new MovesRepository();
 		StatsRepository statsRepository = new StatsRepository();
 		String[] info = movesRepository.getAttackDamageAndType(damage.getIdCSV());
@@ -350,15 +347,18 @@ public class Pokemon implements Serializable {
 
 		double calculatedDamage = calculateDamage(damage, attacker, multiplicator);
 		this.currentHealth = Math.max(0, this.currentHealth - (int)calculatedDamage);
-
-		if (this.currentHealth <= 0) {
-			this.currentHealth = 0;
-			this.weak = true;
-		}
+		this.isWeak();
 
 		attacker.spectorPP();
 		System.out.print(applyStatus());
 		return damageString + " [" + damage.getName() + "] causó " + (int)calculatedDamage + " puntos de daño!";
+	}
+
+	public void isWeak(){
+		if (this.currentHealth <= 0) {
+			this.currentHealth = 0;
+			this.weak = true;
+		}
 	}
 
 	/**

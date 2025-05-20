@@ -1,8 +1,74 @@
 Tipo,Duracion,EsPermanente,EsVolatil,Descripcion
-PARALISIS,-1,1,2,Reduce la velocidad y puede impedir el movimiento en cada turno.
-QUEMADURA,-1,1,2,Causa daño al final de cada turno y reduce el ataque físico.
+PARALYSIS,-1,1,2,Reduce la velocidad y puede impedir el movimiento en cada turno.
+BURN,-1,1,2,Causa daño al final de cada turno y reduce el ataque físico.
 POISON,-1,1,2,Causa daño constante al final de cada turno.
 BAD_POISON, -1,1,2,Causa daño constante PROGRESIVO al final de cada turno.
-SUENO,random,2,2,Impide actuar durante varios turnos (entre 1 y 5).
-CONGELACION,-1,2,2,Impide actuar y se descongela con ataques de fuego o al azar.
-HEAL, 10
+SLEEP,random,2,2,Impide actuar durante varios turnos (entre 1 y 5).
+FREEZE,-1,2,2,Impide actuar y se descongela con ataques de fuego o al azar.
+
+HEAL
+ATTACK_UP
+SPEED_UP
+EVASION_UP
+DEFENSE_UP
+SP_DEFENSE_UP
+ATTACK_MAX
+all_stats_up
+copy_ability
+copy_stats
+defense_up+sp_defense_up
+sp_attack_up+sp_defense_up
+attack_up+defense_up
+attack_up+speed_up
+ingrain
+recycle
+redirect
+NO_MISS
+
+DEFENSE_DOWN
+FORCE_SWITCH
+CONFUSION
+ACCURACY_DOWN
+DISABLE
+SP_DEFENSE_DOWN
+STATS_PROTECT
+ATTACK_DOWN
+COPY_MOVE
+RESET_STATS
+CRITICAL_UP
+RANDOM_MOVE
+FLINCH
+TRANSFORM
+SUBSTITUTE
+TYPE_CHANGE
+TRAPPED
+NIGHTMARE
+PROTECT
+IGNORE_EVASION
+DESTINY_BOND
+PERISH_SONG
+SPIKES
+SANDSTORM
+PP_DRAIN
+attack_down+defense_down
+attack_down+sp_attack_down
+confusion+attack_up
+confusion+sp_attack_up
+grudge
+hp_share
+imprison
+item_swap
+knock_off
+magic_coat
+pass_stats
+prevent_sleep
+random_move
+snatch
+sp_attack_down
+taunt
+torment
+type_change
+item_steal
+sp_attack_down
+fire_weak
+attack_down+defense_down

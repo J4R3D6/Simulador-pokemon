@@ -83,6 +83,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         panelBuilders.put("items", this::createItemsView);
         //panelBuilders.put("processTurn",this::createprocessTurn);
         panelBuilders.put("pause",this::createPusePanel);
+        panelBuilders.put("text",this::moveText);
         JPanel initialPanel = panelBuilders.get("battle").get();
         initialPanel.setName("battle");
         mainPanel.add(initialPanel, "battle");
@@ -895,11 +896,11 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         return panel;
     }
     //
-    private JPanel createprocessTurn() {
+    private JPanel moveText() {
         // Crear una copia básica del panel superior
         JPanel panel = createUpPanel();
         JPanel framePanel = new ImagePanel(null,FRAME+this.frame+PNG_EXT);
-        JLabel battleText = new JLabel("ProcessTurn");
+        JLabel battleText = new JLabel(this.game.getLastMoves());
         battleText.setFont(Auxiliar.cargarFuentePixel(20));
         battleText.setOpaque(false);
         framePanel.add(battleText);
@@ -1094,20 +1095,29 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         try {
             // Ejecutar primera decisión
             this.game.takeDecision(decisionTrainer1);
+            showPanel("text");
             if(this.game.finishBattle()) {
                 battleListener.onBattleEnd(false);
                 return;
             }
-
-            // Ejecutar segunda decisión solo si la batalla no ha terminado
+            newTurn = true;
             this.game.takeDecision(decisionTrainer2);
+            Timer timer = new Timer(3000, e -> {
+                showPanel("text");
+            });
+            newTurn = false;
             if(this.game.finishBattle()) {
                 battleListener.onBattleEnd(false);
                 return;
             }
+            Timer timer2 = new Timer(6000, e -> {
+                resetForNextTurn();
+            });
+            timer2.setRepeats(false);
+            timer2.start();
+            timer.setRepeats(false);
+            timer.start();
 
-            // Si llegamos aquí, la batalla continúa
-            resetForNextTurn();
         } catch (POOBkemonException e) {
             System.err.println("Error al procesar turno: " + e.getMessage());
             resetForNextTurn();

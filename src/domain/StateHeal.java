@@ -5,7 +5,6 @@ public class StateHeal extends Attack {
 
 	public StateHeal(int idInside, String[] infoAttack,String [] infoStatus)throws POOBkemonException{
 		super(idInside,infoAttack);
-		this.health = Integer.parseInt(infoStatus[1]);
 	}
 
 	public String apllyEffect(Pokemon pokemon){

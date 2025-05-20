@@ -1,0 +1,78 @@
+Tipo,Duracion,EsPermanente,EsVolatil,Descripcion
+PARALYSIS,-1,1,2,Reduce la velocidad y puede impedir el movimiento en cada turno.
+BURN,-1,1,2,Causa daño al final de cada turno y reduce el ataque físico.
+POISON,-1,1,2,Causa daño constante al final de cada turno.
+BAD_POISON, -1,1,2,Causa daño constante PROGRESIVO al final de cada turno.
+SLEEP,random,2,2,Impide actuar durante varios turnos (entre 1 y 5).
+FREEZE,-1,2,2,Impide actuar y se descongela con ataques de fuego o al azar.
+
+HEAL,-1,0,1,Recupera puntos de salud, dependiendo del movimiento que lo cause.
+ATTACK_UP,-1,0,1,Aumenta la estadística de Ataque del usuario.
+DEFENSE_DOWN,-1,0,1,Reduce la estadística de Defensa del objetivo.
+FORCE_SWITCH,-1,0,1,Obliga al objetivo a cambiar de Pokémon.
+CONFUSION,random,0,1,El Pokémon puede fallar sus movimientos o dañarse a sí mismo durante 1 a 4 turnos.
+ACCURACY_DOWN,-1,0,1,Reduce la precisión del objetivo.
+DISABLE,4,0,1,Impide al objetivo usar su último movimiento durante 4 turnos.
+SP_DEFENSE_DOWN,-1,0,1,Reduce la Defensa Especial del objetivo.
+STATS_PROTECT,5,0,1,Previene la reducción de estadísticas del usuario durante 5 turnos.
+SPEED_DOWN,-1,0,1,Reduce la Velocidad del objetivo.
+ATTACK_DOWN,-1,0,1,Reduce la estadística de Ataque del objetivo.
+SPEED_UP,-1,0,1,Aumenta la estadística de Velocidad del usuario.
+EVASION_UP,-1,0,1,Aumenta la evasión del usuario, dificultando que sea golpeado.
+DEFENSE_UP,-1,0,1,Aumenta la estadística de Defensa del usuario.
+SP_DEFENSE_UP,-1,0,1,Aumenta la Defensa Especial del usuario.
+COPY_MOVE,-1,0,1,Copia el último movimiento del objetivo para su uso hasta que el usuario sea reemplazado.
+RESET_STATS,-1,0,1,Elimina todas las modificaciones de estadísticas de todos los Pokémon en combate.
+CRITICAL_UP,-1,0,1,Aumenta la probabilidad de realizar golpes críticos.
+RANDOM_MOVE,-1,0,1,Usa un movimiento aleatorio entre casi todos los disponibles.
+FLINCH,1,0,1,Evita que el objetivo actúe ese turno.
+TRANSFORM,-1,1,2,El usuario se convierte en una copia exacta del objetivo, incluidos tipos y movimientos.
+SUBSTITUTE,-1,1,1,El usuario crea un sustituto usando parte de sus PS, que recibe daño en su lugar.
+TYPE_CHANGE,-1,0,1,Cambia el tipo del usuario según el movimiento usado o recibido.
+TRAPPED,-1,0,1,Impide que el Pokémon objetivo huya o sea cambiado.
+NO_MISS,-1,1,1,Asegura que el próximo movimiento del usuario no falle.
+NIGHTMARE,-1,1,2,Inflige daño cada turno mientras el objetivo esté dormido.
+PROTECT,1,0,1,Evita todos los efectos de movimientos enemigos ese turno. Fallará si se usa consecutivamente.
+IGNORE_EVASION,-1,1,1,Permite que los ataques acierten aunque el objetivo haya aumentado su evasión.
+DESTINY_BOND,1,0,1,Si el usuario es debilitado ese turno, el atacante también lo será.
+PERISH_SONG,3,1,2,Todos los Pokémon que oigan esta canción se debilitarán tras 3 turnos si no son cambiados.
+SPIKES,-1,1,1,Coloca trampas en el campo enemigo que causan daño al entrar un Pokémon.
+SANDSTORM,5,0,1,Causa daño a todos los Pokémon que no sean Roca, Tierra o Acero durante 5 turnos.
+PP_DRAIN,-1,0,1,Reduce los PP del último movimiento del objetivo.
+ATTACK_MAX,-1,0,1,Maximiza la estadística de Ataque del usuario.
+all_stats_up,-1,-1,0,1,Aumenta todas las estadísticas del usuario.
+attack_down+defense_down,-1,-1,0,1,Reduce el Ataque y la Defensa del usuario.
+attack_down+sp_attack_down,-1,-1,0,1,Reduce el Ataque y el Ataque Especial del objetivo.
+confusion+attack_up,-1,-1,0,1,Confunde al objetivo y aumenta su Ataque.
+confusion+sp_attack_up,-1,-1,0,1,Confunde al objetivo y aumenta su Ataque Especial.
+copy_ability,-1,-1,0,1,Copia la habilidad del objetivo.
+copy_stats,-1,-1,0,1,Copia los aumentos o reducciones de estadísticas del objetivo.
+defense_up+sp_defense_up,-1,-1,0,1,Aumenta la Defensa y Defensa Especial del usuario.
+electric_weak,-1,5,0,1,Reduce la potencia de los movimientos de tipo Eléctrico durante cinco turnos.
+grudge,-1,-1,0,1,Si el usuario se debilita, reduce a 0 los PP del movimiento que lo debilitó.
+hp_share,-1,-1,0,1,Promedia los PS del usuario y el objetivo.
+imprison,-1,-1,0,1,Impide que el objetivo use movimientos que conozca también el usuario.
+ingrain,-1,-1,1,1,El usuario planta raíces que restauran PS en cada turno y le impiden retirarse.
+item_swap,-1,-1,0,1,Intercambia los objetos que portan el usuario y el objetivo.
+knock_off,-1,-1,0,1,Golpea y elimina el objeto del objetivo, aumentando el daño si tenía uno.
+magic_coat,-1,-1,0,1,Refleja ciertos movimientos de estado de vuelta al usuario original.
+pass_stats,-1,-1,0,1,Cede los cambios de estadísticas al Pokémon que entra en batalla.
+prevent_sleep,-1,3,0,1,Evita que los Pokémon se duerman durante tres turnos.
+random_move,-1,-1,0,1,Usa un movimiento aleatorio del equipo o del usuario mientras duerme.
+recycle,-1,-1,0,1,Permite reutilizar un objeto que se haya consumido durante el combate.
+redirect,-1,1,0,1,Hace que todos los ataques enemigos se dirijan al usuario.
+snatch,-1,-1,0,1,Roba el efecto del siguiente movimiento de estado usado por el oponente.
+sp_attack_down,-1,-1,0,1,Reduce el Ataque Especial del objetivo.
+sp_defense_down,-1,-1,0,1,Reduce la Defensa Especial del objetivo.
+sp_defense_up,-1,-1,0,1,Aumenta la Defensa Especial del usuario.
+taunt,-1,3,0,1,Impide que el objetivo use movimientos que no causen daño directo durante tres turnos.
+torment,-1,3,0,1,Evita que el objetivo use el mismo movimiento en turnos consecutivos.
+type_change,-1,-1,0,1,Cambia el tipo del usuario dependiendo del entorno.
+ignore_evasion,-1,-1,0,1,Permite golpear al objetivo ignorando cambios en evasión y tipo Fantasma.
+item_steal,-1,-1,0,1,Roba el objeto del objetivo si tiene uno.
+sp_attack_down,-1,-1,0,1,Reduce el Ataque Especial del usuario.
+fire_weak,-1,5,0,1,Reduce la potencia de los movimientos de tipo Fuego durante cinco turnos.
+sp_attack_up+sp_defense_up,-1,-1,0,1,Aumenta el Ataque Especial y la Defensa Especial del usuario.
+attack_up+defense_up,-1,-1,0,1,Aumenta el Ataque y la Defensa del usuario.
+attack_down+defense_down,-1,-1,0,1,Reduce el Ataque y la Defensa del objetivo.
+attack_up+speed_up,-1,-1,0,1,Aumenta el Ataque y la Velocidad del usuario.
