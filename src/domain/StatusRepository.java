@@ -10,7 +10,7 @@ import java.util.*;
  */
 public class StatusRepository {
 
-    private static final String STATUS_CSV = "resources/csv/estados.csv";
+    private static final String STATUS_CSV = "resources/csv/Estados.csv";
     private static TreeMap<Integer, String[]> estados = new TreeMap<>();
 
     public StatusRepository() {

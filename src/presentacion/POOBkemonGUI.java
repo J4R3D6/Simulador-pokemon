@@ -1226,6 +1226,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
                 } else {
                     animationTimer.stop();
                     detenerSonido();
+                    
                 }
             }
         });

@@ -55,7 +55,7 @@
 54,Mist,The user cloaks itself and its allies in a white mist that prevents any of their stats from being lowered for five turns.,Ice,status,0,100,30,ally,stats_protect,100
 55,Water Gun,The target is blasted with a forceful shot of water.,Water,special,40,100,25,,,0
 56,Hydro Pump,The target is blasted by a huge volume of water launched under great pressure.,Water,special,110,80,5,,,0
-57,Surf,The user attacks everything around it by swamping its surroundings with a giant wave. This can also be used for crossing water.,Water,special,90,100,15,,,0
+57,Surf,The user attacks everything around it by swamping its surroundings with a giant wave. This can alsno be used for crossing water.,Water,special,90,100,15,,,0
 58,Ice Beam,The target is struck with an icy-cold beam of energy. This may also leave the target frozen.,Ice,special,90,100,10,enemy,freeze,10
 59,Blizzard,A howling blizzard is summoned to strike opposing Pokémon. This may also leave the opposing Pokémon frozen.,Ice,special,110,70,5,enemy,freeze,10
 60,Psybeam,The target is attacked with a peculiar ray. This may also leave the target confused.,Psychic,special,65,100,20,enemy,confusion,10
