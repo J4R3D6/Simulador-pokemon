@@ -873,84 +873,98 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
         scrollContainer.add(scrollPane);
         scrollContainer.add(Box.createVerticalGlue());
         centerPanel.add(scrollContainer, BorderLayout.CENTER);
-
         final int[] pokemonActualIndex = {0};
+        ArrayList<ArrayList<Component>> buttonsPerPokemon = new ArrayList<>();
+        ArrayList<ArrayList<String[]>> moves = new ArrayList<>();
+        for (Integer i : pokemones){
+            moves.add(game.getCompatibleAttacks(i));
+        }
+        for (ArrayList<String[]> movesPokemon : moves){
+            ArrayList<Component> buttons = new ArrayList<>();
+            for (int i = 0; i < movesPokemon.size(); i++) {
+                final Integer pokemonId = i;
 
-        for (int i = 1; i <= 354; i++) {
-            final Integer pokemonId = i;
+                ImageIcon original = new ImageIcon(POKEMONES + "Normal/" + pokemones.get(0) + ".png");
+                Image scaled = original.getImage().getScaledInstance(138, 138, Image.SCALE_SMOOTH);
+                pokemonImage.setIcon(new ImageIcon(scaled));
 
-            ImageIcon original = new ImageIcon(POKEMONES + "Normal/" + pokemones.get(0) + ".png");
-            Image scaled = original.getImage().getScaledInstance(138, 138, Image.SCALE_SMOOTH);
-            pokemonImage.setIcon(new ImageIcon(scaled));
+                JButton pokemonButton = Auxiliar.crearBotonTransparente(this.game.getAttackId(Integer.parseInt(movesPokemon.get(i)[0])), new Rectangle(10, 10, 5, 5), false);
+                pokemonButton.setOpaque(false);
+                pokemonButton.setContentAreaFilled(false);
+                pokemonButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+                pokemonButton.setFocusPainted(true);
 
-            JButton pokemonButton = Auxiliar.crearBotonTransparente(this.game.getMoveInfo(i).toString(), new Rectangle(10, 10, 5, 5), false);
-            pokemonButton.setOpaque(false);
-            pokemonButton.setContentAreaFilled(false);
-            pokemonButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
-            pokemonButton.setFocusPainted(true);
+                pokemonButton.addActionListener(e -> {
+                    addButton.setVisible(true);
 
-            pokemonButton.addActionListener(e -> {
-                addButton.setVisible(true);
-
-                for (ActionListener al : addButton.getActionListeners()) {
-                    addButton.removeActionListener(al);
-                }
-
-                addButton.addActionListener(ae -> {
-                    if (selectedMoves1.size() < 24) {
-                        selectedMoves1.add(pokemonId);
-
-                        if (selectedMoves1.size() % 4 == 0) {
-                            pokemonActualIndex[0]++;
-                            if (pokemonActualIndex[0] < pokemones.size()) {
-                                ImageIcon pk = new ImageIcon(POKEMONES + "Normal/" + pokemones.get(pokemonActualIndex[0]) + ".png");
-                                Image pkscaled = pk.getImage().getScaledInstance(138, 138, Image.SCALE_SMOOTH);
-                                pokemonImage.setIcon(new ImageIcon(pkscaled));
-                                leftContentPanel.revalidate();
-                                leftContentPanel.repaint();
-                            }
-                        }
-
-                        if (selectedMoves1.size() == 24) {
-                            rightContentPanel.removeAll();
-                            rightContentPanel.add(characterImage2, BorderLayout.NORTH);
-                            rightContentPanel.add(doneButton, BorderLayout.SOUTH);
-                            rightContentPanel.revalidate();
-                            rightContentPanel.repaint();
-                            gridPanel.setBackgroundImage(MENU + "red.png");
-                            turnLabel.setText("Jugador 0 elige");
-                            turnLabel.setForeground(new Color(255, 100, 100));
-                        }
-
-                    } else if (selectedMoves1.size() == 24 && selectedMoves2.size() < 24) {
-                        selectedMoves2.add(pokemonId);
-                        if (selectedMoves2.size() % 4 == 0) {
-                            pokemonActualIndex[0]++;
-                            if (pokemonActualIndex[0] < pokemones.size()) {
-                                ImageIcon pk = new ImageIcon(POKEMONES + "Normal/" + pokemones.get(pokemonActualIndex[0]) + ".png");
-                                Image pkscaled = pk.getImage().getScaledInstance(138, 138, Image.SCALE_SMOOTH);
-                                pokemonImage.setIcon(new ImageIcon(pkscaled));
-                                leftContentPanel.revalidate();
-                                leftContentPanel.repaint();
-                            }
-                        }
-                        if (selectedMoves2.size() == 24 && !doneButton.isVisible()) {
-                            gridPanel.setBackgroundImage(MENU + "white.png");
-                            turnLabel.setText("Presione Listo");
-                            turnLabel.setForeground(Color.white);
-                            doneButton.setVisible(true);
-                        }
-
-                    } else if (selectedMoves1.size() == 24 && selectedMoves2.size() == 24 && doneButton.isVisible()) {
-                        Auxiliar.mostrarError("movimientos completos", "Porfavor Dar en Listo");
+                    for (ActionListener al : addButton.getActionListeners()) {
+                        addButton.removeActionListener(al);
                     }
 
-                    addButton.setVisible(false);
-                });
-            });
+                    addButton.addActionListener(ae -> {
+                        if (selectedMoves1.size() < 24) {
+                            selectedMoves1.add(Integer.valueOf(movesPokemon.get(pokemonId)[0]));
 
-            gridPanel.add(pokemonButton);
+                            if (selectedMoves1.size() % 4 == 0) {
+                                pokemonActualIndex[0]++;
+                                actualizarGrid(gridPanel,pokemonActualIndex[0],buttonsPerPokemon);
+                                if (pokemonActualIndex[0] < pokemones.size()) {
+                                    ImageIcon pk = new ImageIcon(POKEMONES + "Normal/" + pokemones.get(pokemonActualIndex[0]) + ".png");
+                                    Image pkscaled = pk.getImage().getScaledInstance(138, 138, Image.SCALE_SMOOTH);
+                                    pokemonImage.setIcon(new ImageIcon(pkscaled));
+                                    leftContentPanel.revalidate();
+                                    leftContentPanel.repaint();
+                                }
+                            }
+
+                            if (selectedMoves1.size() == 24) {
+                                rightContentPanel.removeAll();
+                                rightContentPanel.add(characterImage2, BorderLayout.NORTH);
+                                rightContentPanel.add(doneButton, BorderLayout.SOUTH);
+                                rightContentPanel.revalidate();
+                                rightContentPanel.repaint();
+                                gridPanel.setBackgroundImage(MENU + "red.png");
+                                turnLabel.setText("Jugador 2 elige");
+                                turnLabel.setForeground(new Color(255, 100, 100));
+                            }
+
+                        } else if (selectedMoves1.size() == 24 && selectedMoves2.size() < 24) {
+                            selectedMoves2.add(Integer.valueOf(movesPokemon.get(pokemonId)[0]));
+                            if (selectedMoves2.size() % 4 == 0) {
+                                pokemonActualIndex[0]++;
+                                if(selectedMoves2.size() <23){
+                                    actualizarGrid(gridPanel,pokemonActualIndex[0],buttonsPerPokemon);}
+                                if (pokemonActualIndex[0] < pokemones.size()) {
+                                    ImageIcon pk = new ImageIcon(POKEMONES + "Normal/" + pokemones.get(pokemonActualIndex[0]) + ".png");
+                                    Image pkscaled = pk.getImage().getScaledInstance(138, 138, Image.SCALE_SMOOTH);
+                                    pokemonImage.setIcon(new ImageIcon(pkscaled));
+                                    leftContentPanel.revalidate();
+                                    leftContentPanel.repaint();
+                                }
+                            }
+                            if (selectedMoves2.size() == 24 && !doneButton.isVisible()) {
+                                gridPanel.removeAll();
+                                gridPanel.setBackgroundImage(MENU + "white.png");
+                                turnLabel.setText("Presione Listo");
+                                turnLabel.setForeground(Color.white);
+                                doneButton.setVisible(true);
+                            }
+
+                        } else if (selectedMoves1.size() == 24 && selectedMoves2.size() == 24 && doneButton.isVisible()) {
+                            Auxiliar.mostrarError("movimientos completos", "Porfavor Dar en Listo");
+                        }
+
+                        addButton.setVisible(false);
+                    });
+                });
+                buttons.add(pokemonButton);
+            }
+            buttonsPerPokemon.add(buttons);
         }
+        for (Component component: buttonsPerPokemon.get(pokemonActualIndex[0])){
+            gridPanel.add(component);
+        }
+
 
         backButtonGameMode.addActionListener(e -> choosePokemon());
         doneButton.addActionListener(ev -> {
@@ -964,6 +978,13 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
         setContentPane(chooseMovesPanel);
         revalidate();
         repaint();
+    }
+
+    private void actualizarGrid(ImagePanel gridPanel, int pokemonActualIndex, ArrayList<ArrayList<Component>> buttonsPerPokemon) {
+        gridPanel.removeAll();
+        for (Component component: buttonsPerPokemon.get(pokemonActualIndex)){
+            gridPanel.add(component);
+        }
     }
     private void chooseItems() {
         JPanel chooseItemsPanel = new ImagePanel(new BorderLayout(), selectionPanel);

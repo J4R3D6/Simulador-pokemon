@@ -783,4 +783,12 @@ public class POOBkemon implements Serializable {
 	public void setOk(boolean ok){
 		this.ok = ok;
 	}
+	public ArrayList<String[]> getCompatibleAttacks(int pokemonId) {
+		ArrayList<String[]> compatibleAttacks = new MovesRepository().getCompatibleAttacks(pokemonId);
+		return compatibleAttacks;
+	}
+	public String getAttackId(int id) {
+		String move = new MovesRepository().getAttackId(id);
+		return move;
+	}
 }

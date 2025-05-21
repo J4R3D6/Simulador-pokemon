@@ -82,7 +82,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         panelBuilders.put("pokemon", this::createPokemonView);
         panelBuilders.put("attack", this::createAtaquesView);
         panelBuilders.put("items", this::createItemsView);
-        //panelBuilders.put("processTurn",this::createprocessTurn);
+        panelBuilders.put("text",this::moveText);
         panelBuilders.put("pause",this::createPusePanel);
         JPanel initialPanel = panelBuilders.get("battle").get();
         initialPanel.setName("battle");
@@ -927,6 +927,36 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         return panel;
     }
     //
+    private JPanel moveText() {
+        // Crear una copia básica del panel superior
+        JPanel panel = createUpPanel();
+        JPanel framePanel = new ImagePanel(null,FRAME+this.frame+PNG_EXT);
+        JLabel battleText = new JLabel(this.game.getLastMoves());
+        battleText.setFont(Auxiliar.cargarFuentePixel(20));
+        battleText.setOpaque(false);
+        framePanel.add(battleText);
+        framePanel.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                int w = framePanel.getWidth();
+                int h = framePanel.getHeight();
+                int fontSize = Math.max(12, h / 24);
+                battleText.setFont(Auxiliar.cargarFuentePixel(20));
+                battleText.setForeground(Color.white);
+                battleText.setBounds((int)(w * 0.03), (int)(h * 0.135), (int)(w * 0.94), (int)(h * 0.730));
+            }
+        });
+        panel.add(framePanel);
+        panel.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                int w = panel.getWidth();
+                int h = panel.getHeight();
+                framePanel.setBounds((int)(w * 0), (int)(h * 0.70), (int)(w * 1), (int)(h * 0.3));
+            }
+        });
+
+        return panel;
+    }
+    //
     private JPanel createPusePanel() {
         this.paused =true;
         pauseTimer();
@@ -1096,12 +1126,16 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         try {
             // Ejecutar primera decisión
             this.game.takeDecision(decisionTrainer1);
+            showPanel("text");
             if(this.game.finishBattle()) {
                 battleListener.onBattleEnd(false);
                 return;
             }
             newTurn = true;
             this.game.takeDecision(decisionTrainer2);
+            Timer timer = new Timer(3000, e -> {
+                showPanel("text");
+            });
             newTurn = false;
             if(this.game.finishBattle()) {
                 battleListener.onBattleEnd(false);
@@ -1112,6 +1146,8 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
             });
             timer2.setRepeats(false);
             timer2.start();
+            timer.setRepeats(false);
+            timer.start();
 
         } catch (POOBkemonException e) {
             System.err.println("Error al procesar turno: " + e.getMessage());
