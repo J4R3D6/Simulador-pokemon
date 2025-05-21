@@ -143,7 +143,7 @@ public class MovesRepository {
             try {
                 double multiplier = typeChart.getMultiplier(attackType, pokemonType);
 
-                if (multiplier > 0.99) {
+                if (multiplier > 1) {
                     compatibleAttacks.add(attack);
                 }
             } catch (Exception e) {

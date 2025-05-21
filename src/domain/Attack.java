@@ -85,6 +85,9 @@ public class Attack implements Serializable {
 	public String getType() {
 		return this.type;
 	}
+	public void setPPActual(int ppActual) {
+		this.ppActual = ppActual;
+	}
 
     public int getPower() {
 		return this.power;

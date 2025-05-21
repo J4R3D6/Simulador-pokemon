@@ -342,7 +342,6 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
                     }
 
                     // Actualizar información
-                    infoPane.setText("");
                     try {
                         String P = this.getListPokemones(i, pokemones);
                         infoPane.getStyledDocument().insertString(0, P, null);
@@ -722,7 +721,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
 	                        rightContentPanel.revalidate();
 	                        rightContentPanel.repaint();
 	                        gridPanel.setBackgroundImage(MENU + "red.png");
-	                        turnLabel.setText("Jugador 2 elige");
+	                        turnLabel.setText("Jugador 1 elige");
 	                        turnLabel.setForeground(new Color(255, 100, 100));
 	                    }
 	                } else if (selectedPokemons1.size() == 6 && selectedPokemons2.size() < 6) {
@@ -919,7 +918,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
                             rightContentPanel.revalidate();
                             rightContentPanel.repaint();
                             gridPanel.setBackgroundImage(MENU + "red.png");
-                            turnLabel.setText("Jugador 2 elige");
+                            turnLabel.setText("Jugador 0 elige");
                             turnLabel.setForeground(new Color(255, 100, 100));
                         }
 
@@ -1115,7 +1114,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
                 rightContentPanel.revalidate();
                 rightContentPanel.repaint();
                 gridPanel.setBackgroundImage(MENU + "red.png");
-                turnLabel.setText("Jugador 2 elige");
+                turnLabel.setText("Jugador 1 elige");
                 turnLabel.setForeground(new Color(255, 100, 100));
                 contador[0]++;
             }else{

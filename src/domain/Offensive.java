@@ -20,7 +20,7 @@ public class Offensive extends Machine {
         }
         Attack selectedAttack = null;
         for(Attack a: myActivePokemon.getAttacks()){
-            if(a.getPPActual()>0 && !(a instanceof StateHeal)){
+            if(a.getPPActual()>0){
                 selectedAttack = a;
                 break;
             } else if (selectedAttack == null && a.getPPActual() > 0) {

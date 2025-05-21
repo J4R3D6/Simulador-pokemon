@@ -277,6 +277,9 @@ public class POOBkemon implements Serializable {
 	 * @throws POOBkemonException Si hay errores en las decisiones
 	 */
 	public void takeDecision(String[] decisionTrainer) throws POOBkemonException {
+		for(String des : decisionTrainer){
+			System.out.println(des);
+		}
 		if(this.finishBattle)return;
 		this.checkBattleStatus();
 		// Validar que haya dos entrenadores
@@ -773,5 +776,11 @@ public class POOBkemon implements Serializable {
 		} catch (IOException e) {
 			throw new POOBkemonException("Error de E/S al abrir la batalla: " + e.getMessage());
 		}
+	}
+	public void addMove(String move){
+		this.moves.add(move);
+	}
+	public void setOk(boolean ok){
+		this.ok = ok;
 	}
 }

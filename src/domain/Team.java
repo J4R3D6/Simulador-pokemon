@@ -36,9 +36,12 @@ public class Team implements Serializable {
 				pokemonToActivate = pokemon;
 			}
 		}
-		// Validaciones
 		if (pokemonToActivate == null) {
-			throw new POOBkemonException( POOBkemonException.POKEMON_ID_NOT_FOUND + id + "Error Aqui");
+			System.out.println("Entrenador: " + trainer.getId());
+			for (Pokemon pokemon : pokemons) {
+				System.out.println(pokemon.getId());
+			}
+			throw new POOBkemonException( POOBkemonException.POKEMON_ID_NOT_FOUND + id );
 		}
 		if (pokemonToActivate.currentHealth <= 0) {
 			throw new POOBkemonException(POOBkemonException.POKEMON_WEAK_CHANGE);
