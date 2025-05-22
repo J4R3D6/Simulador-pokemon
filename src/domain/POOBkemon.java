@@ -277,9 +277,6 @@ public class POOBkemon implements Serializable {
 	 * @throws POOBkemonException Si hay errores en las decisiones
 	 */
 	public void takeDecision(String[] decisionTrainer) throws POOBkemonException {
-		for(String des : decisionTrainer){
-			System.out.println(des);
-		}
 		if(this.finishBattle)return;
 		this.checkBattleStatus();
 		// Validar que haya dos entrenadores

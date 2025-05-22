@@ -287,6 +287,7 @@ public class Pokemon implements Serializable {
 			if (!doesStateApply(stateAttack)) {
 				return attacker.name + " falló el ataque de estado!";
 			}
+			handleStateAttack(stateAttack,attacker);
 			return stateAttack.applyEffect(this, attacker);
 		} else {
 			return handleRegularAttack(damage, attacker);
@@ -487,7 +488,8 @@ public class Pokemon implements Serializable {
 				String.valueOf(this.levelRequirement), // 13 - XP requerido
 				String.valueOf(this.active),        // 14 - Estado (activo)
 				String.valueOf(this.weak),          // 15 - Pokemon debilitado
-				String.valueOf(this.shiny)          // 16 - Pokemon shiny
+				String.valueOf(this.shiny),          // 16 - Pokemon shiny
+				String.valueOf(this.principalState)  //17 - Estado principal del pokemon.
 		};
 	}
 
@@ -669,6 +671,7 @@ public class Pokemon implements Serializable {
 	public void reduceSpeed(int percentReduce) {
 		this.speed = this.speed - (this.speed * percentReduce / 100);
 	}
+	
 	public String getType() {
 		return type;
 	}
@@ -680,10 +683,13 @@ public class Pokemon implements Serializable {
 			this.currentHealth = this.maxHealth;
 		}
 	}
+
 	public void setCanAttack(boolean active){
 		this.canAttack = active;
 	}
+
 	public void modifyStat(String stat, double multiplicator){
+		//StringBuilder effectMessage = new StringBuilder();
 
 		switch (stat){
 			case "attack":

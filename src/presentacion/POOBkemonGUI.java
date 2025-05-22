@@ -551,13 +551,11 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     	onePlayer.addActionListener(e -> {
     		String machine = chooseMachine("Escoge maquina","Por escoger una maquina");
     		createTrainers("Player1",machine);
-            prepareItem();
 			choosePokemon();
     		});
     	twoPlayers.addActionListener(e -> {
     		createTrainers("Player1","Player2");
     		if(!booleanInput("Quiere inicial partida en survival?")){
-                prepareItem();
     			choosePokemon();
 
     		}else {
@@ -568,7 +566,6 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
     		String machine1 = chooseMachine("Escoge maquina1","Por escoger una maquina \n(En caso de ser cancelado se tomara Defensive)");
     		String machine2 = chooseMachine("Escoge maquina2","Por escoger una maquina \n(En caso de ser cancelado se tomara Defensive)");
     		createTrainers(machine1+"1",machine2+"2");
-            prepareItem();
     		choosePokemon();
     		});
     	backButtonMenu.addActionListener(e -> refresh(menuPanel));
@@ -987,6 +984,7 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
         }
     }
     private void chooseItems() {
+        prepareItem();
         JPanel chooseItemsPanel = new ImagePanel(new BorderLayout(), selectionPanel);
         chooseItemsPanel.setOpaque(false);
         //

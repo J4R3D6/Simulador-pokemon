@@ -246,7 +246,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         BarraVidaConImagen selectedHpBar = new BarraVidaConImagen(Integer.parseInt(curentplayer[5]));
         selectedHpBar.setValue(Integer.parseInt(curentplayer[6]));
 
-        JPanel currentPokemonEfect = new ImagePanel(null, status+"brn"+PNG_EXT);
+        JPanel currentPokemonEfect = new ImagePanel(null, status+curentplayer[17]+PNG_EXT);
         currentPokemonPanel.add(selectedPokemonImage);
         currentPokemonPanel.add(selectedNameLabel);
         currentPokemonPanel.add(selectedLevel);
@@ -273,6 +273,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         int[] pokemonMaxHPs = new int[pokeTeam.length];
         int[] pokemonIdPokedex = new int[pokeTeam.length];
         int[] pokemonId = new int[pokeTeam.length];
+        String[] pokemonEffects = new String[pokeTeam.length];
 
         try {
             for (int i = 0; i < pokeTeam.length; i++) {
@@ -283,6 +284,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
                 pokemonMaxHPs[i] = Integer.parseInt(pokemonInfo[5]);
                 pokemonIdPokedex[i] = Integer.parseInt(pokemonInfo[2]);
                 pokemonId[i] = Integer.parseInt(pokemonInfo[0]);
+                pokemonEffects[i] = game.getPokemonInfo(this.currentPlayer, pokeTeam[i])[17];
             }
         } catch (POOBkemonException e) {
             Log.record(e);
@@ -319,7 +321,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
             BarraVidaConImagen HpBar = new BarraVidaConImagen(pokemonMaxHPs[i]);
             HpBar.setValue(pokemonHPs[i]);
 
-            JPanel pokemonEfect = new ImagePanel(null, status+"slp"+PNG_EXT);
+            JPanel pokemonEfect = new ImagePanel(null, status+pokemonEffects[i]+PNG_EXT);
 
             pokemonPanel.add(pokemonEfect);
             pokemonPanel.add(PokemonImage);
@@ -543,6 +545,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
         int[] pokemonMaxHPs = new int[pokeTeam.length];
         int[] pokemonIdPokedex = new int[pokeTeam.length];
         int[] pokemonId = new int[pokeTeam.length];
+        String[] pokemonEfects = new String[pokeTeam.length];
         try {
             for (int i = 0; i < pokeTeam.length; i++) {
                 pokemonNames[i] = game.getPokemonInfo(this.currentPlayer, pokeTeam[i])[1];//game.getPokemonName(pokeTeam[i]);
@@ -551,6 +554,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
                 pokemonMaxHPs[i] = Integer.parseInt(game.getPokemonInfo(this.currentPlayer, pokeTeam[i])[5]);//game.getPokemonMaxHP(team[i]);
                 pokemonIdPokedex[i] = Integer.parseInt(game.getPokemonInfo(this.currentPlayer, pokeTeam[i])[2]);
                 pokemonId[i] = Integer.parseInt(game.getPokemonInfo(this.currentPlayer, pokeTeam[i])[0]);
+                pokemonEfects[i] = game.getPokemonInfo(this.currentPlayer,pokeTeam[i])[17];
             }
         } catch (POOBkemonException e) {
             throw new RuntimeException(e);
@@ -580,7 +584,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
             NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
             BarraVidaConImagen HpBar = new BarraVidaConImagen(pokemonMaxHPs[i]);//getPlayerCurrentPokemonMaxHP())
             HpBar.setValue(pokemonHPs[i]);//getPlayerCurrentPokemonHP() // game.getPlayerCurrentPokemonHP() <(game.getPlayerCurrentPokemonMaxHP()
-            JPanel pokemonEfect = new ImagePanel(null,status+"slp"+PNG_EXT);
+            JPanel pokemonEfect = new ImagePanel(null,status+pokemonEfects[i]+PNG_EXT);
             pokemonPanel.add(pokemonEfect);
             pokemonPanel.add(PokemonImage);
             pokemonPanel.add(NameLabel);
@@ -788,7 +792,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
 
         ImagePanel playerPanel = new ImagePanel(null, MENU + "player" + PNG_EXT);
         playerPanel.setOpaque(false);
-        JPanel playerEfects = new ImagePanel(null,status+"brn"+PNG_EXT);
+        JPanel playerEfects = new ImagePanel(null,status+player[17]+PNG_EXT);
         playerEfects.setOpaque(false);
         playerPanel.setVisible(true);
         playerPanel.add(playerEfects);
@@ -814,7 +818,7 @@ public class PokemonBattlePanel extends JPanel implements Auxiliar {
 
         ImagePanel enemyPanel = new ImagePanel(null, MENU + "enemy" + PNG_EXT);
         enemyPanel.setOpaque(false);
-        JPanel enemyEfects = new ImagePanel(null,status+"brn"+PNG_EXT);
+        JPanel enemyEfects = new ImagePanel(null,status+enemy[17]+PNG_EXT);
         enemyEfects.setOpaque(false);
         enemyPanel.add(enemyEfects);
         enemyPanel.add(enemyNameLabel);

@@ -15,6 +15,7 @@ public class State implements Serializable {
         BAD_POISON,     // Envenenamiento grave (daño progresivo)
         SLEEP,          // Duerme e impide atacar
         FREEZE,         // Congela e impide atacar
+
         CONFUSION,      // Confunde con chance de autodaño
         FLINCH,         // Impide atacar en ese turno
         TRAPPED,        // Impide cambiar Pokémon
@@ -119,7 +120,6 @@ public class State implements Serializable {
             this.isPermanent = info[2].equals("1");
             this.isVolatile = info[3].equals("1");
             this.description = info[4];
-
             // Inicializar daño base según tipo
             this.damage = calculateBaseDamage();
         } catch (Exception e) {
@@ -146,7 +146,7 @@ public class State implements Serializable {
                 return 0;
         }
     }
-
+    
     public State.StateType getType() {  // Especifica que StateType es interno a State
         return this.type;
     }
@@ -230,16 +230,22 @@ public class State implements Serializable {
                 applyStatUpEffect(pokemon, effectMessage);
                 break;
             case ATTACK_DOWN:
+                pokemon.modifyStat("attack",0.8);
                 break;
             case DEFENSE_DOWN:
+                pokemon.modifyStat("defense",0.8);
                 break;
             case SPEED_DOWN:
+                pokemon.modifyStat("speed",0.8);
                 break;
             case SP_ATTACK_DOWN:
+                pokemon.modifyStat("SP_attack",0.8);
                 break;
             case SP_DEFENSE_DOWN:
+                pokemon.modifyStat("SP_defense",0.8);
                 break;
             case EVASION_DOWN:
+                pokemon.modifyStat("evasion",0.8);
                 break;
             case ACCURACY_DOWN:
                 applyStatDownEffect(pokemon, effectMessage);
@@ -248,7 +254,8 @@ public class State implements Serializable {
                 applyConfusionEffect(pokemon, effectMessage);
                 break;
             case FLINCH:
-                applyStatDownEffect(pokemon, effectMessage);
+                //applyStatDownEffect(pokemon, effectMessage);
+                applyFlinchEffect(pokemon,effectMessage);
                 break;
             case LEECH_SEED:
                 applyLeechSeedEffect(pokemon, effectMessage);
@@ -335,7 +342,7 @@ public class State implements Serializable {
 
     // Métodos auxiliares para cada efecto
     private void applyBurnEffect(Pokemon pokemon, StringBuilder message) {
-        int damage = pokemon.maxHealth / 8;
+        damage = pokemon.maxHealth / 8;
         if (damage == 0) damage = 1;
         pokemon.takeDamage(damage);
         pokemon.modifyStat("attack",0.5); // Reduce ataque físico en 50%
@@ -343,13 +350,15 @@ public class State implements Serializable {
     }
 
     private void applyPoisonEffect(Pokemon pokemon, StringBuilder message) {
-        int damage = pokemon.maxHealth / 8;
+        this.damage = pokemon.maxHealth / 8;
+        if(damage <= 0){ damage = 1;}
         pokemon.takeDamage(damage);
         message.append(pokemon.getName()).append(" sufre ").append(damage).append(" de daño por veneno!");
     }
 
     private void applyBadPoisonEffect(Pokemon pokemon, StringBuilder message) {
-        int damage = (pokemon.maxHealth / 16) * intensity;
+        damage = (pokemon.maxHealth / 16) * intensity;
+        //if(damage <= 0){ damage = 1;}
         pokemon.takeDamage(damage);
         intensity++;
         message.append(pokemon.getName()).append(" sufre ").append(damage)
@@ -378,6 +387,11 @@ public class State implements Serializable {
         }
     }
 
+    private void applyFlinchEffect(Pokemon pokemon, StringBuilder message){
+        pokemon.setCanAttack(false);
+        message.append(pokemon.getName()).append(" no ataca este turno.");      
+    }
+
     private void applyFreezeEffect(Pokemon pokemon, StringBuilder message) {
         pokemon.setCanAttack(false);
         message.append(pokemon.getName()).append(" está congelado!");
@@ -403,7 +417,7 @@ public class State implements Serializable {
 
     private void applyConfusionEffect(Pokemon pokemon, StringBuilder message) {
         if (Math.random() < 0.33) { // 33% de golpearse a sí mismo
-            int damage = pokemon.getAttacks().get(0).getPower() / 2;
+            damage = pokemon.getAttacks().get(0).getPower() / 2;
             pokemon.takeDamage(damage);
             message.append(pokemon.getName()).append(" está confundido y se hirió a sí mismo!");
         } else {
@@ -531,7 +545,7 @@ public class State implements Serializable {
     }
 
     private void applyIngrainEffect(Pokemon pokemon, StringBuilder message) {
-        int heal = pokemon.maxHealth/ 16;
+        int heal = pokemon.maxHealth / 16;
         pokemon.heal(heal);
         message.append("¡").append(pokemon.getName()).append(" se arraigó y recuperó PS!");
     }
