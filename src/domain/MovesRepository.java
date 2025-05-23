@@ -106,23 +106,21 @@ public class MovesRepository {
          String[] info = {tipo,poder};
          return info;
      }
+
      //metodo para maquina (Experta)
-    //Metodo para que Jared modifique la recoleccion de datos
-    public ArrayList<String[]> getCompatibleAttacks(int pokemonId) {
+     public ArrayList<String[]> getCompatibleAttacks(int pokemonId) {
         ArrayList<String[]> compatibleAttacks = new ArrayList<>();
         PokemonRepository pokemonRepo = new PokemonRepository();
-        StatsRepository typeChart = new StatsRepository();
 
         String[] pokemonInfo = pokemonRepo.getPokemonId(pokemonId);
         if (pokemonInfo == null) return compatibleAttacks;
         String pokemonType = pokemonInfo[2];
+        String pokemonType2 = pokemonInfo[3] == "" ? pokemonType : pokemonInfo[3];
         for (Map.Entry<Integer, String[]> entry : movimientos.entrySet()) {
             String[] attack = entry.getValue();
             String attackType = attack[3];
             try {
-                double multiplier = typeChart.getMultiplier(attackType, pokemonType);
-
-                if (multiplier < 1.1) {
+                if (pokemonType.equalsIgnoreCase(attackType) || pokemonType2.equalsIgnoreCase(attackType) || attackType.equalsIgnoreCase("Normal")) {
                     compatibleAttacks.add(attack);
                 }
             } catch (Exception e) {

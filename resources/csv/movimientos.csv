@@ -353,4 +353,6 @@
 352,Water Pulse,The user attacks the target with a pulsing blast of water. This may also confuse the target.,Water,special,60,100,20,enemy,confusion,20
 353,Doom Desire,Two turns after this move is used the user blasts the target with a concentrated bundle of light.,Steel,special,140,100,5,,,0
 354,Psycho Boost,The user attacks the target at full power. The attack’s recoil harshly lowers the user’s Sp. Atk stat.,Psychic,special,140,90,5,ally,sp_attack_down,100
+355,Dreams On,The user attacks the target and that target fall asleep,Ghost,status,0,100,8,enemy,sleep,100
+356,IceHell,The user attacks the target.That target entry in a freeze mode,Ice,status,0,100,12,enemy,freeze,100
 357,Last Struggle,Attacks with a simple effect.,Normal,physical,10,101,-1,,,0

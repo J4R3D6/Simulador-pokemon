@@ -256,7 +256,6 @@ public class Pokemon implements Serializable {
 			} else if(infoAttack[4].equalsIgnoreCase("status")) {
 				String[] infoStatus = statusRepository.getStatusByName(infoAttack[9].toUpperCase());
 				if(infoStatus == null) {
-					System.out.println(infoAttack[9].toUpperCase());
 					infoStatus = statusRepository.getStatusByName("DEFENSE_UP");
 				}
 				attacks.add(new StateAttack(this.nextAttackId(), infoAttack, infoStatus));
@@ -277,21 +276,19 @@ public class Pokemon implements Serializable {
 	 * @throws POOBkemonException if damage calculation fails
 	 */
 	public String getDamage(Attack damage, Pokemon attacker) throws POOBkemonException {
-
+		String message = "";
 		if (!canReceiveDamage(attacker)) {
 			return "";
 		}
 
 		if (damage instanceof StateAttack) {
 			StateAttack stateAttack = (StateAttack) damage;
-			if (!doesStateApply(stateAttack)) {
-				return attacker.name + " falló el ataque de estado!";
-			}
-			handleStateAttack(stateAttack,attacker);
-			return "";
+			message = handleStateAttack(stateAttack,attacker);
 		} else {
-			return handleRegularAttack(damage, attacker);
+			message = handleRegularAttack(damage, attacker);
 		}
+		message = insertLineBreaks(message, 20);
+		return message;
 	}
 
 	private boolean canReceiveDamage(Pokemon attacker) {
@@ -300,34 +297,39 @@ public class Pokemon implements Serializable {
 
 	private String handleStateAttack(StateAttack stateAttack, Pokemon attacker) {
 		if (!doesStateApply(stateAttack)) {
-			return attacker.name + " falló el ataque de estado!";
+			return attacker.name + " falló el ataque de estado! ";
 		}
 
 		StatusRepository infoState = new StatusRepository();
 		String[] info = infoState.getStatusByName(stateAttack.getState());
 
 		if (info != null) {
-			applyStatusFromInfo(info, stateAttack, attacker);
+			return applyStatusFromInfo(info, stateAttack, attacker);
 		}
-		String name = stateAttack.affectsSelf() ? attacker.getName() : this.name;
-		String message = " [" + name + "] lanzó un estado";
-		return message;
+		return "";
 	}
 
 	private boolean doesStateApply(StateAttack stateAttack) {
+		if(stateAttack.getAccuracy()==100){return true;}
 		double prob = Math.random() * 100;
 		return prob < stateAttack.getAccuracy();
 	}
 
-	private void applyStatusFromInfo(String[] info, StateAttack stateAttack, Pokemon attacker) {
+	private String applyStatusFromInfo(String[] info, StateAttack stateAttack, Pokemon attacker) {
 		try {
 			Pokemon target = stateAttack.affectsSelf() ? attacker : this;
 			State estado = new State(info);
 			if (!estado.isImmune(target)) {
 				persistentDamage(estado,target);
+				if(stateAttack.affectsSelf()){
+					return " [" + target.getName() + "] se aplico " + stateAttack.getName();
+				}
+				return " [" + target.getName() + "] fue afectado por " + stateAttack.getName();
 			}
+			return target.getName() + " es inmune a " + stateAttack.getName();
 		} catch (IllegalArgumentException e) {
 			System.err.println("Tipo de estado inválido: " + info[0] + e.getMessage());
+			return "";
 		}
 	}
 
@@ -352,16 +354,16 @@ public class Pokemon implements Serializable {
 		this.isWeak();
 
 		attacker.spectorPP();
-
+	
 		return getDamageEffectivenessMessage(multiplicator) +
 				" [" + damage.getName() + "] causó " + (int)calculatedDamage + " puntos de daño!";
 	}
 
 	private String getDamageEffectivenessMessage(double multiplicator) {
 		if (multiplicator == 2.0) {
-			return " ¡Fue super efectivo! ";
+			return " ¡Fue super efectivo! \n";
 		} else if (multiplicator == 0.5) {
-			return " No fue muy efectivo... ";
+			return " No fue muy efectivo... \n";
 		}
 		return "";
 	}
@@ -419,7 +421,7 @@ public class Pokemon implements Serializable {
 		return Math.max(1, Math.round(damageValue));
 	}
 
-	void persistentDamage(State attackStateRival, Pokemon target) {
+	public void persistentDamage(State attackStateRival, Pokemon target) {
 		if (shouldBecomePrincipalState(attackStateRival, target)) {
 			setAsPrincipalState(attackStateRival, target);
 		} else if (shouldBeAddedAsSecondaryState(attackStateRival)) {
@@ -446,12 +448,15 @@ public class Pokemon implements Serializable {
 	private void addAsSecondaryState(State state,Pokemon target) {
 		target.addSecundariState(state);
 	}
+
 	public void addSecundariState(State state){
 		this.states.add(state);
 	}
+
 	public void addPrincipalState(State state) {
 		this.principalState = state;
 	}
+
 	/**
 	 * Obtiene la información del Pokémon en un arreglo de Strings.
 	 * @return Arreglo con toda la información del Pokémon
@@ -477,6 +482,22 @@ public class Pokemon implements Serializable {
 				String.valueOf(this.shiny),          // 16 - Pokemon shiny
 				String.valueOf(this.principalState)  //17 - Estado principal del pokemon.
 		};
+	}
+
+	private String insertLineBreaks(String text, int maxLineLength) {
+		StringBuilder result = new StringBuilder();
+		int lastBreak = 0;
+
+		while (lastBreak + maxLineLength < text.length()) {
+			int breakIndex = text.lastIndexOf(" ", lastBreak + maxLineLength);
+			if (breakIndex == -1) break; // No hay más espacios, salimos
+
+			result.append(text, lastBreak, breakIndex).append("\n");
+			lastBreak = breakIndex + 1; // continuar desde después del espacio
+		}
+		result.append(text.substring(lastBreak)); // agregar el resto
+
+		return result.toString();
 	}
 
 	/**
@@ -510,10 +531,12 @@ public class Pokemon implements Serializable {
 	 * Cura al Pokémon una cantidad específica de HP.
 	 * @param heal Cantidad de HP a curar
 	 */
-	private void heals(int heal) {
-		this.currentHealth = this.currentHealth + heal;
-		if(this.currentHealth > this.maxHealth) {
-			this.currentHealth = this.maxHealth;
+	public void heals(int heal) {
+		if(!this.weak){
+			this.currentHealth = this.currentHealth + heal;
+			if(this.currentHealth > this.maxHealth) {
+				this.currentHealth = this.maxHealth;
+			}
 		}
 	}
 
@@ -524,6 +547,8 @@ public class Pokemon implements Serializable {
 		if(this.currentHealth == 0) {
 			this.currentHealth = this.maxHealth/2;
 		}
+		this.weak = false;
+		this.principalState = null;
 	}
 
 	/**
@@ -619,14 +644,6 @@ public class Pokemon implements Serializable {
 		return type;
 	}
 
-	//efectos que he agregado hasta el momento (hice los más faciles XD)
-	public void heal(int PP){
-		this.currentHealth = this.currentHealth + PP;
-		if(this.currentHealth > this.maxHealth) {
-			this.currentHealth = this.maxHealth;
-		}
-	}
-
 	public void setCanAttack(boolean active){
 		this.canAttack = active;
 	}
@@ -656,12 +673,7 @@ public class Pokemon implements Serializable {
 				break;
 		}
 	}
-	public void addState(State state){
-		if(state.isPrincipal() && this.principalState != null) {
-		} else {
-			this.states.add(state);
-		}
-	}
+	
 	public void disableLastMove(){
 		this.attacks.get(this.attacks.size()-1).setPPActual(0);
 	}
@@ -684,10 +696,29 @@ public class Pokemon implements Serializable {
 	public void applyState(){
 		if(!(this.principalState == null) && this.activeState()) {
 			this.principalState.applyEffect(this);
+		}else if(this.principalState != null && this.principalState.getDuration() == 0){
+			principalState = null;
 		}
+		statesDelete();
 		for (State s : states) {
 			s.applyEffect(this);
 		}
 	}
 
+	public void deleteState(State state){
+		if(this.principalState == state){
+			principalState = null;
+		}
+	}
+
+	private void statesDelete(){
+		int stateCount = 0;
+		while(stateCount < this.states.size()){
+			if(this.states.get(stateCount).getDuration() == 0){
+				this.states.remove(stateCount);
+			}else{
+				stateCount ++;
+			}
+		}
+	}
 }

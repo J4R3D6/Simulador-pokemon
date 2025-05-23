@@ -96,7 +96,9 @@ public class State implements Serializable {
         CHARGE,         // Aumenta poder eléctrico siguiente turno
         PERISH_BODY,    // Activa Perish Song al contacto físico
         OCTOLOCK,      // Reduce defensa y evasión cada turno
-        FIRE_WEAK
+        FIRE_WEAK,
+
+        REDIRECT
     }
 
     private StateType type;
@@ -169,7 +171,7 @@ public class State implements Serializable {
      * @return Mensaje descriptivo del efecto aplicado
      */
     public String applyEffect(Pokemon pokemon) {
-        if (pokemon == null || !isActive()) {
+        if (pokemon == null || !isActive() || pokemon.getWeak()) {
             return "";
         }
 
@@ -195,7 +197,9 @@ public class State implements Serializable {
                 applyFreezeEffect(pokemon, effectMessage);
                 break;
             case HEAL:
-                applyHealEffect(pokemon, effectMessage);
+                if(!pokemon.getWeak()){
+                    applyHealEffect(pokemon, effectMessage);
+                }
                 break;
             case ATTACK_UP:
                 pokemon.modifyStat("attack",1.2);
@@ -315,21 +319,28 @@ public class State implements Serializable {
             default:
                 break;
         }
-
-        if (duration > 0) {
-            duration--;
-            if (duration == 0) {
-                effectMessage.append(pokemon.getName()).append(" se ha curado de ").append(type.name().toLowerCase());
-            }
+        if(isHeal(this,pokemon)){
+            effectMessage.append(pokemon.getName()).append(" se ha curado de ").append(type.name().toLowerCase());
         }
         pokemon.isWeak();
         return effectMessage.toString();
     }
 
+    private boolean isHeal(State state, Pokemon pokemon){
+        if (state.duration > 0) {
+            duration--;
+            if (duration == 0) {
+                pokemon.deleteState(this);
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Métodos auxiliares para cada efecto
     private void applyBurnEffect(Pokemon pokemon, StringBuilder message) {
         damage = pokemon.maxHealth / 8;
-        if (damage == 0) damage = 1;
+        if (damage == 0) {damage = 1;}
         pokemon.takeDamage(damage);
         pokemon.modifyStat("attack",0.5); // Reduce ataque físico en 50%
         message.append(pokemon.getName()).append(" sufre ").append(damage).append(" de daño por quemadura!");
@@ -343,18 +354,14 @@ public class State implements Serializable {
     }
 
     private void applyBadPoisonEffect(Pokemon pokemon, StringBuilder message) {
-        damage = (pokemon.maxHealth / 16) * intensity;
-        this.ShowData("Intentando sacar " + damage + " de vida por veneno");
+        damage = (pokemon.maxHealth / 25);
         if(damage <= 0){ damage = 1;}
+        damage *= intensity;
         pokemon.takeDamage(damage);
         pokemon.isWeak();
         intensity++;
         message.append(pokemon.getName()).append(" sufre ").append(damage)
-                .append(" de daño por envenenamiento grave (").append(intensity).append("x)!");
-    }
-
-    public void ShowData(String data){
-        System.out.println(data);
+                .append(" de daño \npor envenenamiento grave (").append(intensity).append("x)!");
     }
 
     private void applyParalysisEffect(Pokemon pokemon, StringBuilder message) {
@@ -396,8 +403,9 @@ public class State implements Serializable {
     }
 
     private void applyHealEffect(Pokemon pokemon, StringBuilder message) {
-        int healAmount = pokemon.maxHealth / 2;
-        pokemon.heal(healAmount);
+        int healAmount = (int) (pokemon.maxHealth * 0.05);
+        if(healAmount == 0) { healAmount = 1; }
+        pokemon.heals(healAmount);
         message.append(pokemon.getName()).append(" recuperó ").append(healAmount).append(" PS!");
     }
 
@@ -426,7 +434,7 @@ public class State implements Serializable {
 
     @Override
     public String toString() {
-        return type.name() + (duration > 0 ? " (" + duration + " turnos restantes)" : "");
+        return type.name(); //+ (duration > 0 ? " (" + duration + " turnos restantes)" : "");
     }
 
     // Métodos auxiliares adicionales para completar la implementación
@@ -538,7 +546,7 @@ public class State implements Serializable {
 
     private void applyIngrainEffect(Pokemon pokemon, StringBuilder message) {
         int heal = pokemon.maxHealth / 16;
-        pokemon.heal(heal);
+        pokemon.heals(heal);
         message.append("¡").append(pokemon.getName()).append(" se arraigó y recuperó PS!");
     }
 
@@ -580,7 +588,7 @@ public class State implements Serializable {
     }
 
     private void applyGrudgeEffect(Pokemon pokemon, StringBuilder message) {
-        pokemon.modifyStat("attack", 1.7);
+        pokemon.modifyStat("attack", 0.8);
         message.append("¡").append(pokemon.getName()).append(" guarda rencor!");
     }
 

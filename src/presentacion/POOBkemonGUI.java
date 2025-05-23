@@ -1,4 +1,4 @@
-package presentacion;
+package presenscion;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -10,12 +10,9 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicReference;
 
 import domain.*;
 
@@ -32,9 +29,6 @@ public class POOBkemonGUI extends JFrame implements Auxiliar{
 	private JPanel IntroductionPanel;
 	private JPanel menuPanel;
 	private JPanel gameMode;
-	private JPanel machinesPanel;
-    private JPanel gamePanel;
-    private JLabel character;
     //
     private JMenuBar menuBar;
     private JMenu menuArchivo;
