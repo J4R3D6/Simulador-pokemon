@@ -218,7 +218,6 @@ public class Pokemon implements Serializable {
 	public int getId() { return this.id; }
 	public String getName() { return this.name; }
 	public boolean getWeak() { return this.weak; }
-	public ArrayList<State> getStates() { return this.states; }
 	public ArrayList<Attack> getAttacks() { return this.attacks; }
 
 	/**
@@ -282,13 +281,14 @@ public class Pokemon implements Serializable {
 		if (!canReceiveDamage(attacker)) {
 			return "";
 		}
+
 		if (damage instanceof StateAttack) {
 			StateAttack stateAttack = (StateAttack) damage;
 			if (!doesStateApply(stateAttack)) {
 				return attacker.name + " falló el ataque de estado!";
 			}
 			handleStateAttack(stateAttack,attacker);
-			return stateAttack.applyEffect(this, attacker);
+			return "";
 		} else {
 			return handleRegularAttack(damage, attacker);
 		}
@@ -307,11 +307,10 @@ public class Pokemon implements Serializable {
 		String[] info = infoState.getStatusByName(stateAttack.getState());
 
 		if (info != null) {
-			applyStatusFromInfo(info);
+			applyStatusFromInfo(info, stateAttack, attacker);
 		}
-
-		String message = " [" + attacker.getName() + "] dejó afectado a " + this.getName();
-		System.out.println(message);
+		String name = stateAttack.affectsSelf() ? attacker.getName() : this.name;
+		String message = " [" + name + "] lanzó un estado";
 		return message;
 	}
 
@@ -320,12 +319,12 @@ public class Pokemon implements Serializable {
 		return prob < stateAttack.getAccuracy();
 	}
 
-	private void applyStatusFromInfo(String[] info) {
+	private void applyStatusFromInfo(String[] info, StateAttack stateAttack, Pokemon attacker) {
 		try {
+			Pokemon target = stateAttack.affectsSelf() ? attacker : this;
 			State estado = new State(info);
-			if (!isImmune(estado)) {
-				persistentDamage(estado);
-				System.out.print(applyStatus());
+			if (!estado.isImmune(target)) {
+				persistentDamage(estado,target);
 			}
 		} catch (IllegalArgumentException e) {
 			System.err.println("Tipo de estado inválido: " + info[0] + e.getMessage());
@@ -340,13 +339,11 @@ public class Pokemon implements Serializable {
 		double multiplicator = statsRepository.getMultiplier(info[0], this.type);
 		if (multiplicator == 0.0) {
 			attacker.spectorPP();
-			System.out.print(applyStatus());
 			return " No afecta a " + this.name + "...";
 		}
 
 		if (!doesAttackHit(damage, attacker)) {
 			attacker.spectorPP();
-			System.out.print(applyStatus());
 			return attacker.name + " falló el ataque!";
 		}
 
@@ -355,7 +352,6 @@ public class Pokemon implements Serializable {
 		this.isWeak();
 
 		attacker.spectorPP();
-		System.out.print(applyStatus());
 
 		return getDamageEffectivenessMessage(multiplicator) +
 				" [" + damage.getName() + "] causó " + (int)calculatedDamage + " puntos de daño!";
@@ -423,49 +419,39 @@ public class Pokemon implements Serializable {
 		return Math.max(1, Math.round(damageValue));
 	}
 
-	void persistentDamage(State attackStateRival) {
-		if (shouldBecomePrincipalState(attackStateRival)) {
-			setAsPrincipalState(attackStateRival);
+	void persistentDamage(State attackStateRival, Pokemon target) {
+		if (shouldBecomePrincipalState(attackStateRival, target)) {
+			setAsPrincipalState(attackStateRival, target);
 		} else if (shouldBeAddedAsSecondaryState(attackStateRival)) {
-			addAsSecondaryState(attackStateRival);
+			addAsSecondaryState(attackStateRival, target);
 		}
 	}
 
-	private boolean shouldBecomePrincipalState(State state) {
-		return principalState == null && state.isPrincipal();
+	private boolean shouldBecomePrincipalState(State state, Pokemon target) {
+		return target.principalIsNull() && state.isPrincipal();
 	}
 
-	private void setAsPrincipalState(State state) {
-		principalState = state;
+	private boolean principalIsNull(){
+		return this.principalState == null;
+	}
+
+	private void setAsPrincipalState(State state, Pokemon target) {
+		target.addPrincipalState(state);
 	}
 
 	private boolean shouldBeAddedAsSecondaryState(State state) {
 		return !state.isPrincipal();
 	}
 
-	private void addAsSecondaryState(State state) {
+	private void addAsSecondaryState(State state,Pokemon target) {
+		target.addSecundariState(state);
+	}
+	public void addSecundariState(State state){
 		this.states.add(state);
 	}
-
-
-	public String applyStatus() {
-		states.removeIf(state -> state.getDuration() == 0);
-		if (principalState != null && principalState.getDuration() == 0) {
-			principalState = null;
-		}
-
-		StringBuilder result = new StringBuilder();
-
-		if (principalState != null) {
-			result.append(principalState.applyEffect(this));
-		}
-
-		for (State s : states) {
-			result.append(s.applyEffect(this));
-		}
-		return result.toString();
+	public void addPrincipalState(State state) {
+		this.principalState = state;
 	}
-
 	/**
 	 * Obtiene la información del Pokémon en un arreglo de Strings.
 	 * @return Arreglo con toda la información del Pokémon
@@ -583,46 +569,7 @@ public class Pokemon implements Serializable {
 		}
 	}
 
-	/**
-	 * Verifica si el Pokémon es inmune a un estado específico
-	 * @param state El estado a verificar
-	 * @return true si el Pokémon es inmune, false en caso contrario
-	 */
-	public boolean isImmune(State state) {
-		if (state == null || state.getType() == null) {
-			return false;
-		}
 
-		String stateType = String.valueOf(state.getType());
-		String pokemonType = this.type.trim().toUpperCase();
-
-		// Inmunidades basadas en tipos de Pokémon
-		switch (stateType) {
-			case "PARALYSIS":
-				// Pokémon Eléctricos son inmunes a parálisis
-				return pokemonType.equals("ELECTRIC");
-
-			case "POISON":
-				return pokemonType.equals("POISON");
-			case "BAD_POISON":
-				// Pokémon de tipo Veneno y Acero son inmunes a envenenamiento
-				return pokemonType.equals("POISON") || pokemonType.equals("STEEL");
-
-			case "BURN":
-				// Pokémon de tipo Fuego son inmunes a quemaduras
-				return pokemonType.equals("FIRE");
-
-			case "FREEZE":
-				// Pokémon de tipo Hielo son inmunes a congelación
-				return pokemonType.equals("ICE");
-
-			case "SLEEP":
-				return false;
-
-			default:
-				return false;
-		}
-	}
 
 	public void takeDamage( int damage ) {
 		this.currentHealth -= damage;
@@ -646,10 +593,6 @@ public class Pokemon implements Serializable {
 		for (Attack at : this.attacks) {
 			at.usePP();
 		}
-	}
-
-	public void endTurn() {
-		states.removeIf(state -> !state.isActive());
 	}
 
 	public boolean hasState(String stateName) {
@@ -689,8 +632,6 @@ public class Pokemon implements Serializable {
 	}
 
 	public void modifyStat(String stat, double multiplicator){
-		//StringBuilder effectMessage = new StringBuilder();
-
 		switch (stat){
 			case "attack":
 				this.attack = (int)(this.attack*multiplicator);
@@ -715,6 +656,12 @@ public class Pokemon implements Serializable {
 				break;
 		}
 	}
+	public void addState(State state){
+		if(state.isPrincipal() && this.principalState != null) {
+		} else {
+			this.states.add(state);
+		}
+	}
 	public void disableLastMove(){
 		this.attacks.get(this.attacks.size()-1).setPPActual(0);
 	}
@@ -729,6 +676,18 @@ public class Pokemon implements Serializable {
 	}
 	public boolean isFree(){
 		return this.free;
+	}
+	private boolean activeState(){
+		return (true);
+	}
+	//aplicar daño
+	public void applyState(){
+		if(!(this.principalState == null) && this.activeState()) {
+			this.principalState.applyEffect(this);
+		}
+		for (State s : states) {
+			s.applyEffect(this);
+		}
 	}
 
 }

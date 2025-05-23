@@ -1,6 +1,7 @@
 package domain;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -8,7 +9,7 @@ import java.util.*;
 /**
  * Repositorio para leer y consultar estados alterados desde un archivo CSV.
  */
-public class StatusRepository {
+public class StatusRepository implements Serializable {
 
     private static final String STATUS_CSV = "resources/csv/Estados.csv";
     private static TreeMap<Integer, String[]> estados = new TreeMap<>();

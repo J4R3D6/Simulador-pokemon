@@ -37,10 +37,6 @@ public class Team implements Serializable {
 			}
 		}
 		if (pokemonToActivate == null) {
-			System.out.println("Entrenador: " + trainer.getId());
-			for (Pokemon pokemon : pokemons) {
-				System.out.println(pokemon.getId());
-			}
 			throw new POOBkemonException( POOBkemonException.POKEMON_ID_NOT_FOUND + id );
 		}
 		if (pokemonToActivate.currentHealth <= 0) {
@@ -122,6 +118,11 @@ public class Team implements Serializable {
 			if (p.getId() == pokemonID) {
 				p.timeOver();
 			}
+		}
+	}
+	public void applyEffect(){
+		for (Pokemon p : pokemons) {
+			p.applyState();
 		}
 	}
 }

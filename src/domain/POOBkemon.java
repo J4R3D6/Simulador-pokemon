@@ -19,6 +19,7 @@ public class POOBkemon implements Serializable {
 	protected static POOBkemon game;
 	private int pokemonLvl = 1;
 	private int winner = -1;
+	private int counter = 1;
 
 
 	/**
@@ -222,7 +223,6 @@ public class POOBkemon implements Serializable {
 		String[] infoPokemon = info.getPokemonId(id);
 		Pokemon pokemon = new Pokemon(nid,infoPokemon,attackIds, this.random, this.pokemonLvl);
 		this.nextIdPokemon();
-		System.out.print(this.nid);
 		return pokemon;
 	}
 
@@ -278,6 +278,10 @@ public class POOBkemon implements Serializable {
 	 */
 	public void takeDecision(String[] decisionTrainer) throws POOBkemonException {
 		if(this.finishBattle)return;
+		if(this.counter % 2 == 0) {
+			this.applyStates();
+		}
+		this.counter++;
 		this.checkBattleStatus();
 		// Validar que haya dos entrenadores
 		if (this.teams.size() < 2) {
@@ -298,7 +302,6 @@ public class POOBkemon implements Serializable {
 				switch (action) {
 					case "Attack":
 						if (decision.length < 3) throw new POOBkemonException("Faltan parámetros para Attack");
-						System.out.println();
 						int attackId = Integer.parseInt(decision[1]);
 						int pokemonId1 = Integer.parseInt(decision[2]);
 						int trainerId = Integer.parseInt(decision[3]);
@@ -764,7 +767,7 @@ public class POOBkemon implements Serializable {
 	public static POOBkemon open(File archivo) throws POOBkemonException {
 		try (ObjectInputStream reader = new ObjectInputStream(
 				new BufferedInputStream(new FileInputStream(archivo)))) {
-			System.out.println("La partida fue abierta con exito.");
+
 			return (POOBkemon) reader.readObject();
 		} catch (FileNotFoundException e) {
 			throw new POOBkemonException("Archivo no encontrado al intentar abrir: " + archivo.getAbsolutePath());
@@ -787,5 +790,10 @@ public class POOBkemon implements Serializable {
 	public String getAttackId(int id) {
 		String move = new MovesRepository().getAttackId(id);
 		return move;
+	}
+	private void applyStates(){
+		for (Team team : teams) {
+			team.applyEffect();
+		}
 	}
 }

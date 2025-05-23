@@ -7,6 +7,7 @@ import java.io.Serializable;
  * Maneja efectos persistentes, duración, y aplicación de daño/efectos cada turno.
  */
 public class State implements Serializable {
+
     public enum StateType {
         // Estados de daño/condición negativa
         PARALYSIS,      // Paraliza reduciendo velocidad y puede impedir ataque
@@ -94,7 +95,8 @@ public class State implements Serializable {
         ROOTED,         // No puede cambiar pero cura PS
         CHARGE,         // Aumenta poder eléctrico siguiente turno
         PERISH_BODY,    // Activa Perish Song al contacto físico
-        OCTOLOCK        // Reduce defensa y evasión cada turno
+        OCTOLOCK,      // Reduce defensa y evasión cada turno
+        FIRE_WEAK
     }
 
     private StateType type;
@@ -104,7 +106,6 @@ public class State implements Serializable {
     private int damage;
     private String description;
     private int intensity = 1; // Valor de envenenamiento grave (1 = 1/8 de vida)
-
     /**
      * Crea un nuevo estado.
      * @param info Array con la información del estado [tipo, duración, permanente, volátil, descripción]
@@ -153,18 +154,6 @@ public class State implements Serializable {
 
     public int getDuration() {
         return duration;
-    }
-
-    public boolean isPermanent() {
-        return isPermanent;
-    }
-
-    public boolean isVolatile() {
-        return isVolatile;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     /**
@@ -324,18 +313,15 @@ public class State implements Serializable {
                 applyImprisonEffect(pokemon, effectMessage);
                 break;
             default:
-                effectMessage.append("Efecto de estado no implementado: ").append(type.name());
                 break;
         }
 
-        // Reducir duración y verificar si expiró
         if (duration > 0) {
             duration--;
             if (duration == 0) {
                 effectMessage.append(pokemon.getName()).append(" se ha curado de ").append(type.name().toLowerCase());
             }
         }
-
         pokemon.isWeak();
         return effectMessage.toString();
     }
@@ -358,11 +344,17 @@ public class State implements Serializable {
 
     private void applyBadPoisonEffect(Pokemon pokemon, StringBuilder message) {
         damage = (pokemon.maxHealth / 16) * intensity;
-        //if(damage <= 0){ damage = 1;}
+        this.ShowData("Intentando sacar " + damage + " de vida por veneno");
+        if(damage <= 0){ damage = 1;}
         pokemon.takeDamage(damage);
+        pokemon.isWeak();
         intensity++;
         message.append(pokemon.getName()).append(" sufre ").append(damage)
                 .append(" de daño por envenenamiento grave (").append(intensity).append("x)!");
+    }
+
+    public void ShowData(String data){
+        System.out.println(data);
     }
 
     private void applyParalysisEffect(Pokemon pokemon, StringBuilder message) {
@@ -595,5 +587,44 @@ public class State implements Serializable {
     private void applyImprisonEffect(Pokemon pokemon, StringBuilder message) {
         pokemon.setProtected(true);
         message.append("¡").append(pokemon.getName()).append(" se Protege!");
+    }
+
+    /**
+     * Verifica si el Pokémon es inmune a un estado específico
+     * @return true si el Pokémon es inmune, false en caso contrario
+     */
+    public boolean isImmune( Pokemon target) {
+        if ( this.getType() == null) {
+            return false;
+        }
+
+        String stateType = String.valueOf(this.getType());
+        String pokemonType = target.type.trim().toUpperCase();
+
+        switch (stateType) {
+            case "PARALYSIS":
+                // Pokémon Eléctricos son inmunes a parálisis
+                return pokemonType.equalsIgnoreCase("ELECTRIC");
+
+            case "POISON":
+                return pokemonType.equalsIgnoreCase("POISON");
+            case "BAD_POISON":
+                // Pokémon de tipo Veneno y Acero son inmunes a envenenamiento
+                return pokemonType.equalsIgnoreCase("POISON") || pokemonType.equals("STEEL");
+
+            case "BURN":
+                // Pokémon de tipo Fuego son inmunes a quemaduras
+                return pokemonType.equalsIgnoreCase("FIRE");
+
+            case "FREEZE":
+                // Pokémon de tipo Hielo son inmunes a congelación
+                return pokemonType.equalsIgnoreCase("ICE");
+
+            case "SLEEP":
+                return false;
+
+            default:
+                return false;
+        }
     }
 }
